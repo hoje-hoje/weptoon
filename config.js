@@ -6,8 +6,8 @@ window.CONFIG = {
 
   /* ① 리포지토리 정보 — 관리자 페이지가 여기에 커밋한다 */
   repo: {
-    owner:  "여기에-깃허브아이디",     // 예: "hyoje"
-    name:   "webtoon-stars",          // 리포지토리 이름
+    owner:  "hoje-hoje",     // 예: "hyoje"
+    name:   "weptoon",          // 리포지토리 이름
     branch: "main",
   },
 
