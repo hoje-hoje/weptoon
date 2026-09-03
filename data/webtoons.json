@@ -336,42 +336,6 @@
       "comments": []
     },
     {
-      "id": "어글리후드",
-      "title": "어글리후드",
-      "author": "미애",
-      "platform": "네이버",
-      "url": "",
-      "genre": "로맨스",
-      "tags": [
-        "액션",
-        "SF",
-        "히어로",
-        "주의사항"
-      ],
-      "covers": [
-        "covers/어글리후드-1.jpg"
-      ],
-      "status": "연재중",
-      "weekday": "토",
-      "episodes": 324,
-      "seasons": 1,
-      "start": "",
-      "autoUpdate": false,
-      "lastChecked": null,
-      "needsCheck": false,
-      "reviews": [
-        {
-          "writer": "ys",
-          "rating": 4.5,
-          "summary": "외계인이 유일신으로 군림한 미친 세상,\n바꾸고 싶다면 사탄이 되어라",
-          "review": "",
-          "note": "느낀점. 외쳐 갓미애 -​ 추천하는 웹툰 양식대로 써줘요! #주의사항 이상한 짓 하면, 관리자가 아니라 뷰어로 바꿀게요.",
-          "date": "2026-08-20"
-        }
-      ],
-      "comments": []
-    },
-    {
       "id": "전지적-독자-시점",
       "title": "전지적 독자 시점",
       "author": "싱숑 / UMI / 슬리피-C",
