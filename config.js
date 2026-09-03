@@ -16,6 +16,7 @@ window.CONFIG = {
     { id: "HJ", name: "HJ", color: "#f5b93a" },
     { id: "ys", name: "ys", color: "#6ee7b7" },
     { id: "sj", name: "sj", color: "#93c5fd" },
+    { id: "kge", name: "kge", color: "#c4b5fd" }
   ],
 
   /* ③ Supabase — 댓글과 즐겨찾기용.
