@@ -1124,7 +1124,10 @@
     {
       "id": "별을-품은-소드마스터",
       "title": "별을 품은 소드마스터",
-      "author": "홍대의, 주노",
+      "authors": [
+        "홍대의",
+        "주노"
+      ],
       "platform": "네이버",
       "url": "",
       "genres": [
@@ -1140,11 +1143,16 @@
       "status": "연재중",
       "weekday": "",
       "episodes": 0,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [
+        [
+          "유섭",
+          "별품소를 까는 사람은 판타지를 읽는다고 할 자격이 없다."
+        ]
+      ],
       "reviews": [
         {
           "writer": "HJ",
@@ -1152,14 +1160,8 @@
           "summary": "높지 않아도, 스스로 빛나길 원한다면\n그것은 별일 것이다.",
           "review": "",
           "note": "쇼아라의 블라드 정통 기사가 되어라",
-          "date": "2026-08-20"
+          "date": "2026-09-03"
         }
-      ],
-      "comments": [
-        [
-          "유섭",
-          "별품소를 까는 사람은 판타지를 읽는다고 할 자격이 없다."
-        ]
       ]
     },
     {
