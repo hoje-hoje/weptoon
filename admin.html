@@ -629,9 +629,7 @@ document.querySelectorAll("#segMode button").forEach((b,i)=> b.onclick = () => {
   $("linkMode").classList.toggle("hide", i===1);
   $("manualMode").classList.toggle("hide", i===0);
 });
-$("toonBtn").onclick = () => window.open(
-  "https://www.toongalpi.kr/search?keyword=" + encodeURIComponent($("i-title").value||""),
-  "_blank","noopener");
+$("toonBtn").onclick = () => window.open("https://www.toongalpi.kr/", "_blank","noopener");
 
 /* 링크에서 제목·작가·표지·화수 긁기 */
 const PROXIES = [
