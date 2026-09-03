@@ -324,43 +324,6 @@
       ]
     },
     {
-      "id": "오늘도-사랑스럽개",
-      "title": "오늘도 사랑스럽개",
-      "author": "이혜",
-      "platform": "네이버",
-      "url": "",
-      "genres": [
-        "로맨스"
-      ],
-      "tags": [
-        "판타지",
-        "로맨스",
-        "주의사항"
-      ],
-      "covers": [
-        "covers/오늘도-사랑스럽개-1.jpg"
-      ],
-      "status": "연재중",
-      "weekday": "",
-      "episodes": 0,
-      "seasons": 1,
-      "start": "",
-      "autoUpdate": false,
-      "lastChecked": null,
-      "needsCheck": false,
-      "reviews": [
-        {
-          "writer": "ys",
-          "rating": 4.5,
-          "summary": "",
-          "review": "",
-          "note": "​ 추천하는 웹툰 양식대로 써줘요! #주의사항 이상한 짓 하면, 관리자가 아니라 뷰어로 바꿀게요.",
-          "date": "2026-08-20"
-        }
-      ],
-      "comments": []
-    },
-    {
       "id": "전지적-독자-시점",
       "title": "전지적 독자 시점",
       "author": "싱숑 / UMI / 슬리피-C",
