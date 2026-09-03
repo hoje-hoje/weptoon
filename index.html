@@ -407,14 +407,14 @@ const spo = t => esc(t).replace(/\|\|([^|]+?)\|\|/g,
   (m,x)=>`<span class="spo" onclick="this.classList.add('on')" title="스포일러 — 눌러서 보기">${x}</span>`);
 
 function pass(w){
-  if ((w.genre === ADULT) !== adult) return false;
+  if ((w.genres||[]).includes(ADULT) !== adult) return false;
   if (avg(w) < minScore - 1e-9) return false;
   if (stat==="연재중" && isEnd(w)) return false;
   if (stat==="완결" && !isEnd(w)) return false;
   if (cond.has("신작") && !isNew(w)) return false;
   if (cond.has("50화 이하") && w.episodes > 50) return false;
   if (cond.has("즐겨찾기") && !favs.has(w.id)) return false;
-  if (sel.genre.size && !sel.genre.has(w.genre)) return false;
+  if (sel.genre.size && !(w.genres||[]).some(g=>sel.genre.has(g))) return false;
   if (sel.platform.size && !sel.platform.has(w.platform)) return false;
   if (sel.writer.size && !w.reviews.some(r=>sel.writer.has(r.writer))) return false;
   if (query) {
@@ -435,7 +435,7 @@ function card(w){
         ${stars(avg(w), w.reviews.length)}
         <div class="tags">
           <span class="tag" style="color:${PCOLOR[w.platform]||""}">${esc(w.platform)}</span>
-          <span class="tag">${esc(w.genre)}</span>
+          ${(w.genres||[]).map(g=>`<span class="tag">${esc(g)}</span>`).join("")}
           ${w.tags.map(t=>`<span class="tag">#${esc(t)}</span>`).join("")}
         </div>
         <div class="body">${spo(r0.summary)}</div>
@@ -463,7 +463,7 @@ function render(){
   if (view==="home"){
     const groups = adult ? [ADULT] : GENRES;
     m.innerHTML = groups.map(g=>{
-      const r = list.filter(w=>w.genre===g); if(!r.length) return "";
+      const r = list.filter(w=>(w.genres||[]).includes(g)); if(!r.length) return "";
       r.sort((a,b)=>avg(b)-avg(a));
       return `<section class="row">
         <div class="rowhead"><h2>${esc(g==ADULT?"성인 웹툰":g)}</h2><i>${r.length}편</i></div>
@@ -502,7 +502,7 @@ async function open_(id){
           <dt>연재</dt><dd>${isEnd(w) ? `${esc(w.status)}${w.episodes?` · 총 ${w.episodes}화`:""}`
             : `${w.weekday?esc(w.weekday)+"요일 · ":""}${w.episodes||"?"}화`}</dd>
           <dt>시작</dt><dd>${w.start ? esc(w.start).replace(/-/g,". ") + (isNew(w)?" · 신작":"") : "모름"}</dd>
-          <dt>장르</dt><dd>${esc(w.genre)} ${w.tags.map(t=>"#"+esc(t)).join(" ")}</dd>
+          <dt>장르</dt><dd>${(w.genres||[]).map(esc).join(" · ")} ${w.tags.map(t=>"#"+esc(t)).join(" ")}</dd>
           ${w.url?`<dt>보러가기</dt><dd><a href="${esc(w.url)}" target="_blank" rel="noopener">${esc(w.platform)}에서 열기</a></dd>`:""}
         </dl>
       </div>

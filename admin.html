@@ -256,10 +256,12 @@ legend{font-size:12.5px;color:var(--fg-dim);padding-right:12px}
         <div class="f wide"><label>작가 — 여러 명이면 하나씩 엔터</label>
           <div class="chipbox" id="authors"></div></div>
         <div class="f"><label>플랫폼</label><select id="i-platform"></select></div>
-        <div class="f"><label>장르 — 19로 두면 성인 웹툰 쪽에만 나온다</label><select id="i-genre"></select></div>
+        <div class="f"><label>연재 상태</label><select id="i-status"></select></div>
+        <div class="f wide"><label>장르 — 여러 개 고를 수 있다 · 19를 넣으면 성인 웹툰 쪽에만 나온다</label>
+          <div class="selrow"><select id="i-genrepick"></select></div>
+          <div class="chipbox" id="genres"></div></div>
         <div class="f wide"><label>웹툰 주소 — 비워둬도 된다</label><input id="i-url"></div>
         <div class="f wide"><label>해시태그</label><div class="chipbox" id="tags"></div></div>
-        <div class="f"><label>연재 상태</label><select id="i-status"></select></div>
         <div class="f"><label>연재 요일</label><select id="i-weekday">
           <option value="">없음</option><option>월</option><option>화</option><option>수</option>
           <option>목</option><option>금</option><option>토</option><option>일</option></select></div>
@@ -330,7 +332,7 @@ const WCOLOR = Object.fromEntries(C.admins.map(a=>[a.id,a.color]));
 let TOKEN = localStorage.getItem("gh_token") || "";
 let ME = localStorage.getItem("gh_me") || "";
 let store = { updated:"", items:[] }, sha = "", cur = null, mode = 0;
-let fWriter = "", covers = [], tags = [], authors = [];
+let fWriter = "", covers = [], tags = [], authors = [], genres = [];
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -422,7 +424,7 @@ function visible(){
   const g = $("fGenre").value, p = $("fPlat").value;
   return store.items.filter(w =>
     (!fWriter || w.reviews.some(r=>r.writer===fWriter)) &&
-    (!g || w.genre===g) && (!p || w.platform===p) &&
+    (!g || (w.genres||[]).includes(g)) && (!p || w.platform===p) &&
     (!q || w.title.toLowerCase().includes(q))
   );
 }
@@ -453,7 +455,13 @@ $("newBtn").onclick = () => {
 
 /* ══ 폼 ══ */
 $("i-platform").innerHTML = Object.keys(C.platforms).map(p=>`<option>${p}</option>`).join("");
-$("i-genre").innerHTML = [...C.genres, ADULT].map(g=>`<option>${g}</option>`).join("");
+$("i-genrepick").innerHTML = `<option value="">장르 추가…</option>` +
+  [...C.genres, ADULT].map(g=>`<option>${g}</option>`).join("");
+$("i-genrepick").onchange = () => {
+  const v = $("i-genrepick").value;
+  if (v && !genres.includes(v)){ genres.push(v); drawChips("genres", genres); }
+  $("i-genrepick").value = "";
+};
 $("i-status").innerHTML = STATUSES.map(s=>`<option>${s}</option>`).join("");
 
 function load(w){
@@ -461,7 +469,6 @@ function load(w){
   const r = w ? (w.reviews.find(x=>x.writer===ME) || {}) : {};
   $("i-title").value = w?.title || "";
   $("i-platform").value = w?.platform || "네이버";
-  $("i-genre").value = w?.genre || C.genres[0];
   $("i-url").value = w?.url || "";
   $("i-link2").value = w?.url || "";
   $("i-status").value = STATUSES.includes(w?.status) ? w.status : "연재중";
@@ -475,8 +482,9 @@ function load(w){
   rate(r.rating ?? 4.0);
   tags = [...(w?.tags || [])];
   authors = w ? (w.authors ? [...w.authors] : (w.author ? [w.author] : [])) : [];
+  genres = [...(w?.genres || [])];
   covers = (w?.covers || []).map(v=>({kind:"path", v}));
-  drawChips("tags", tags); drawChips("authors", authors);
+  drawChips("tags", tags); drawChips("authors", authors); drawChips("genres", genres);
   drawCovers(); prev("a"); prev("b"); drawOthers(); drawList();
   $("autohint").textContent = w?.lastChecked
     ? `마지막 확인 ${w.lastChecked}${w.needsCheck?" · 확인 실패":""}` : "아직 확인한 적이 없다";
@@ -503,11 +511,12 @@ function drawOthers(){
 }
 
 /* ══ 칩 (작가 · 태그) ══ */
+const CHIP_PH = { tags:"태그", authors:"작가 이름", genres:"장르" };
 function drawChips(host, arr){
   const box = $(host);
   box.innerHTML = arr.map((t,i)=>
     `<span class="t">${host==="tags"?"#":""}${esc(t)}<button data-i="${i}">✕</button></span>`).join("")
-    + `<input placeholder="${host==="tags"?"태그":"작가 이름"} 입력 후 엔터">`;
+    + `<input placeholder="${CHIP_PH[host]||"입력"} 입력 후 엔터">`;
   box.querySelectorAll("[data-i]").forEach(b => b.onclick = () => {
     arr.splice(+b.dataset.i,1); drawChips(host, arr);
   });
@@ -515,7 +524,9 @@ function drawChips(host, arr){
   inp.onkeydown = e => {
     if (e.key==="Enter" && inp.value.trim()){
       e.preventDefault();
-      arr.push(inp.value.trim().replace(/^#/,"")); drawChips(host, arr);
+      const v = inp.value.trim().replace(/^#/,"");
+      if (host!=="genres" || !arr.includes(v)) arr.push(v);
+      drawChips(host, arr);
       $(host).querySelector("input").focus();
     }
   };
@@ -751,7 +762,7 @@ $("saveBtn").onclick = async () => {
       id, title, authors: [...authors],
       platform: $("i-platform").value,
       url: $("i-url").value.trim(),
-      genre: $("i-genre").value,
+      genres: [...genres],
       tags: [...tags],
       covers: paths,
       status: $("i-status").value,
@@ -811,7 +822,7 @@ $("delBtn").onclick = async () => {
 const fix = () => slide("segMode", mode);
 fix(); if(document.fonts) document.fonts.ready.then(fix);
 addEventListener("resize", fix);
-drawChips("tags", tags); drawChips("authors", authors); drawCovers(); prev("a"); prev("b");
+drawChips("tags", tags); drawChips("authors", authors); drawChips("genres", genres); drawCovers(); prev("a"); prev("b");
 if (TOKEN && ME){ $("gate").classList.add("off"); boot(); }
 </script>
 </body>
