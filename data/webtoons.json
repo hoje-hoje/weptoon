@@ -1728,10 +1728,12 @@
     {
       "id": "앞집나리",
       "title": "앞집나리",
-      "author": "민송아",
+      "authors": [
+        "민송아"
+      ],
       "platform": "네이버",
       "url": "",
-      "genre": "로맨스",
+      "genre": "19",
       "tags": [
         "로맨스",
         "19"
@@ -1742,12 +1744,20 @@
       "status": "완결",
       "weekday": "",
       "episodes": 0,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-09-03"
+        },
         {
           "writer": "ys",
           "rating": 4.2,
@@ -1756,8 +1766,7 @@
           "note": "너무 숭해요",
           "date": "2026-08-20"
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "id": "암호는-002",
