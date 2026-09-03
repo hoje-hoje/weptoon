@@ -22,8 +22,8 @@ window.CONFIG = {
         비워두면 즐겨찾기는 이 기기에만 저장되고 댓글은 읽기 전용이 된다.
         나중에 채워 넣어도 된다. */
   supabase: {
-    url:     "",   // 예: "https://abcdefgh.supabase.co"
-    anonKey: "",   // 예: "eyJhbGciOi..."
+    url:     "https://yeltekwtusvqdztsqpes.supabase.co",   // 예: "https://yeltekwtusvqdztsqpes.supabase.co"
+    anonKey: "sb_publishable_qmIDdvfe7AVvXsrB_drGKg_Ae7O7K6w",   // 예: "eyJhbGciOi..."
   },
 
   /* 분류 — 나중에 늘리고 싶으면 여기만 고친다 */
