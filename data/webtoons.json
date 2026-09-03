@@ -283,7 +283,7 @@
       "authors": [
         "QRQ"
       ],
-      "platform": "네이버",
+      "platform": "탑툰",
       "url": "",
       "genres": [
         "19"
@@ -296,7 +296,7 @@
       "covers": [
         "covers/동아리-1.jpg"
       ],
-      "status": "연재중",
+      "status": "완결",
       "weekday": "",
       "episodes": 0,
       "start": "",
@@ -307,7 +307,7 @@
       "reviews": [
         {
           "writer": "HJ",
-          "rating": 4,
+          "rating": 4.6,
           "summary": "",
           "review": "",
           "note": "",
