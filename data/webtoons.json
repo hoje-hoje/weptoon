@@ -1686,16 +1686,16 @@
     {
       "id": "브리아노의-연구소",
       "title": "브리아노의 연구소",
-      "author": "",
-      "platform": "네이버",
+      "authors": [],
+      "platform": "기타",
       "url": "",
       "genres": [
         "등등"
       ],
       "tags": [
         "SF",
-        "스릴?러",
-        "인간"
+        "인간",
+        "스릴러"
       ],
       "covers": [
         "covers/브리아노의-연구소-1.jpg"
@@ -1703,11 +1703,16 @@
       "status": "완결",
       "weekday": "",
       "episodes": 0,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [
+        [
+          "김시우",
+          "머리색이 파워레인져"
+        ]
+      ],
       "reviews": [
         {
           "writer": "HJ",
@@ -1715,14 +1720,8 @@
           "summary": "이게..뭐지?\n천재 미스터리 박사 브리아노의 연구소에\n들어가게 된 일반인의 삶",
           "review": "처음 볼때는 뭔지 몰랐는데.\n다 봐도 모르겠음.\nSF라는 장르를 잘 다뤘다고 생각함",
           "note": "너 혹시 두리안이야?",
-          "date": "2026-08-20"
+          "date": "2026-09-03"
         }
-      ],
-      "comments": [
-        [
-          "김시우",
-          "머리색이 파워레인져"
-        ]
       ]
     },
     {
