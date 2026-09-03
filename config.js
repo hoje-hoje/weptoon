@@ -29,6 +29,9 @@ window.CONFIG = {
 
   /* 분류 — 나중에 늘리고 싶으면 여기만 고친다 */
   genres:    ["판타지", "스릴러", "로맨스", "일상", "등등"],
+
+  adultGenre: "19",
+
   platforms: {
     "네이버": { color: "#00c73c", host: "comic.naver.com" },
     "카카오": { color: "#f0b90b", host: "webtoon.kakao.com" },
@@ -36,6 +39,8 @@ window.CONFIG = {
     "탑툰":   { color: "#ff5c7a", host: "toptoon.com" },
     "기타":   { color: "#9a94a8", host: "" },
   },
+
+  statuses: ["연재중", "휴재", "시즌1 완결", "시즌2 완결", "시즌3 완결", "시즌4 완결", "완결"],
 
   /* 신작 기준 — 며칠 이내에 시작한 작품을 신작으로 볼지 */
   newDays: 183,
