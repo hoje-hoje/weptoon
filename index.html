@@ -207,14 +207,6 @@ h1.t{font-size:27px;font-weight:600;line-height:1.28;word-break:keep-all}
 .cmtbox button:disabled{opacity:.4;cursor:default}
 .empty{text-align:center;color:var(--fg-dim);padding:90px 20px;line-height:1.8}
 
-/* 맨 아래 19 버튼 */
-footer{border-top:1px solid var(--line);margin-top:40px;padding:34px 24px 60px;text-align:center}
-footer p{font-size:12.5px;color:var(--fg-dim);margin-bottom:14px}
-.btn19{width:52px;height:52px;border-radius:999px;border:1px solid var(--line);background:none;
-  color:var(--fg-dim);font-family:'Instrument Serif',serif;font-size:21px;cursor:pointer;transition:.18s}
-.btn19:hover{border-color:#ff5c7a;color:#ff5c7a}
-html[data-adult="1"] .btn19{border-color:#ff5c7a;color:#ff5c7a;background:rgba(255,92,122,.12)}
-
 /* 중간 너비 — 표지는 크게 두되 여백만 줄인다 */
 @media(max-width:1100px){
   :root{ --tile-w:230px; --feed-w:260px; --sheet-w:680px; --detail-w:250px; }
@@ -292,11 +284,6 @@ html[data-adult="1"] .btn19{border-color:#ff5c7a;color:#ff5c7a;background:rgba(2
 </header>
 
 <main id="main"><p class="empty">불러오는 중…</p></main>
-
-<footer>
-  <p id="footnote">성인 웹툰은 따로 모아뒀다</p>
-  <button class="btn19" id="btn19" title="성인 웹툰">19</button>
-</footer>
 
 <div class="scrim" id="scrim"></div>
 <aside class="sheet" id="sheet"><div id="sheetin"></div></aside>
@@ -453,8 +440,6 @@ function card(w){
 
 function render(){
   const m = document.getElementById("main"), list = DATA.filter(pass);
-  document.getElementById("footnote").textContent = adult
-    ? "일반 웹툰으로 돌아가려면 눌러라" : "성인 웹툰은 따로 모아뒀다";
   if (!list.length){
     m.innerHTML = `<p class="empty">${adult ? "성인 웹툰으로 등록된 작품이 없다.<br>관리자 화면에서 장르를 19로 두면 여기에 모인다."
       : "조건에 맞는 웹툰이 없다.<br>별점을 낮추거나 조건을 하나 꺼보자."}</p>`;
@@ -612,9 +597,14 @@ document.addEventListener("click", async e => {
   t.setAttribute("aria-pressed", sel[k].has(v)); after();
 });
 document.getElementById("scrim").onclick = close_;
-document.getElementById("btn19").onclick = () => setAdult(!adult);
 document.getElementById("exit19").onclick = () => setAdult(false);
-document.getElementById("brand").onclick = () => { if(adult) setAdult(false); };
+document.getElementById("brand").onclick = () => {
+  if (adult) return setAdult(false);
+  const pw = prompt("비밀번호");
+  if (pw === null) return;
+  if (pw === C.adultPassword) setAdult(true);
+  else alert("틀렸다");
+};
 document.getElementById("tbtn").onclick = () => {
   const r = document.documentElement;
   r.dataset.theme = r.dataset.theme==="dark" ? "light" : "dark";
