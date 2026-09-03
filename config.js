@@ -35,7 +35,7 @@ window.CONFIG = {
   /* 성인 웹툰 들어갈 때 물어보는 비밀번호 — 원하는 걸로 바꾸면 된다.
      로고를 누르면 이게 뜬다. 페이지 소스에 그대로 보이는 값이라
      진짜 보안은 아니고, 아무나 못 들어오게 막는 정도다. */
-  adultPassword: "여기에-비밀번호를-정해서-넣기",
+  adultPassword: "abcd9988",
 
   platforms: {
     "네이버": { color: "#00c73c", host: "comic.naver.com" },
