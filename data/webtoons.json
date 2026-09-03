@@ -1047,7 +1047,10 @@
     {
       "id": "말년용사",
       "title": "말년용사",
-      "author": "후딩 / 신마니",
+      "authors": [
+        "후딩",
+        "신마니"
+      ],
       "platform": "네이버",
       "url": "",
       "genres": [
@@ -1064,11 +1067,11 @@
       "status": "연재중",
       "weekday": "",
       "episodes": 0,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
         {
           "writer": "HJ",
@@ -1076,10 +1079,9 @@
           "summary": "전역 하루 전, 이세계에 소환된 병장의\n이야기.\n액션 능력물.",
           "review": "싸움의 연출력이 지림. 캐릭터들의\n동작이랑 능력까지 지리는 연출력\n능력들이 모두 신박하고, 그 능력을 쓰는\n방식도 이야기를 전개하는데 막힘이 없다.\n이세계 소환물",
           "note": "말레",
-          "date": "2026-08-20"
+          "date": "2026-09-03"
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "id": "아카데미에서-살아남기",
