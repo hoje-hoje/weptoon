@@ -3258,7 +3258,9 @@
     {
       "id": "오늘의-한요일은-여자다",
       "title": "오늘의 한요일은 여자다",
-      "author": "송극장",
+      "authors": [
+        "송극장"
+      ],
       "platform": "네이버",
       "url": "",
       "genres": [
@@ -3274,14 +3276,14 @@
         "covers/오늘의-한요일은-여자다-1.jpg",
         "covers/오늘의-한요일은-여자다-2.jpg"
       ],
-      "status": "연재중",
+      "status": "시즌1 완결",
       "weekday": "목",
       "episodes": 0,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
         {
           "writer": "HJ",
@@ -3289,7 +3291,7 @@
           "summary": "",
           "review": "",
           "note": "볼때마다 현타온다.. 예쁜데 거부감든다…",
-          "date": "2026-08-20"
+          "date": "2026-09-03"
         },
         {
           "writer": "sj",
@@ -3299,8 +3301,7 @@
           "note": "",
           "date": "2026-08-20"
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "id": "백투더찬비",
