@@ -51,20 +51,15 @@ body{background:var(--bg);color:var(--fg);font-family:Pretendard,sans-serif;-web
 .selrow{display:flex;gap:7px}
 .selrow select{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:7px;
   padding:7px 9px;color:var(--fg);font:inherit;font-size:12.5px}
-.list{overflow-y:auto;flex:1}
-.ghead{position:sticky;top:0;background:var(--bg);padding:9px 14px 6px;font-size:11.5px;
+.list{overflow-y:auto;flex:1;padding:10px}
+.ghead{position:sticky;top:0;background:var(--bg);margin:-10px -10px 10px;padding:9px 14px;font-size:11.5px;
   color:var(--fg-dim);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:7px;z-index:1}
 .ghead i{width:8px;height:8px;border-radius:99px;font-style:normal}
-.item{display:flex;align-items:center;gap:11px;padding:10px 14px;cursor:pointer;
-  border-bottom:1px solid var(--line);border-left:2px solid transparent}
-.item:hover{background:var(--surface)}
-.item.on{background:var(--surface);border-left-color:var(--score)}
-.thumb{width:32px;height:43px;border-radius:3px;flex:0 0 auto;background:var(--raise);
-  background-size:cover;background-position:center}
-.item .tt{flex:1;min-width:0}
-.item .tt div{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.item .tt span{font-size:11px;color:var(--fg-dim)}
-.item .r{font-family:'Instrument Serif',serif;font-size:16px;color:var(--score)}
+.cgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ci{aspect-ratio:3/4;border-radius:5px;cursor:pointer;background:var(--raise);
+  background-size:cover;background-position:center;border:2px solid transparent}
+.ci:hover{border-color:var(--fg-dim)}
+.ci.on{border-color:var(--score)}
 .newbtn{margin:11px 13px;padding:10px;border:1px dashed var(--line);border-radius:8px;background:none;
   color:var(--fg-dim);font:inherit;font-size:14px;cursor:pointer}
 .newbtn:hover{color:var(--fg);border-color:var(--fg-dim)}
@@ -436,16 +431,11 @@ function drawList(){
   const head = fWriter
     ? `<div class="ghead"><i style="background:${WCOLOR[fWriter]||"#888"}"></i>${esc(fWriter)} 가 쓴 ${rows.length}편</div>`
     : `<div class="ghead">전체 ${rows.length}편</div>`;
-  $("list").innerHTML = head + (rows.map(w => {
-    const a = avgOf(w);
+  const grid = rows.length ? `<div class="cgrid">${rows.map(w => {
     const bg = w.covers?.[0] ? `background-image:url("${esc(w.covers[0])}")` : "";
-    const who = w.reviews.map(r=>r.writer).join(" ");
-    return `<div class="item ${cur&&cur.id===w.id?"on":""}" data-id="${esc(w.id)}">
-      <div class="thumb" style="${bg}"></div>
-      <div class="tt"><div>${esc(w.title)}</div>
-        <span>${esc(w.genre)} · ${esc(w.platform)}${isEnd(w)?" · "+esc(w.status):""} · ${esc(who)}</span></div>
-      ${a!=null?`<span class="r">${a.toFixed(1)}</span>`:""}
-    </div>`;}).join("") || `<p class="hint" style="padding:20px 14px">없다.</p>`);
+    return `<div class="ci ${cur&&cur.id===w.id?"on":""}" data-id="${esc(w.id)}" title="${esc(w.title)}" style="${bg}"></div>`;
+  }).join("")}</div>` : `<p class="hint" style="padding:10px 4px">없다.</p>`;
+  $("list").innerHTML = head + grid;
 }
 $("q").oninput = drawList;
 $("fGenre").onchange = drawList;
@@ -454,7 +444,12 @@ $("list").onclick = e => {
   const el = e.target.closest("[data-id]"); if(!el) return;
   load(store.items.find(w=>w.id===el.dataset.id));
 };
-$("newBtn").onclick = () => load(null);
+$("newBtn").onclick = () => {
+  mode = 0; slide("segMode", 0);
+  $("linkMode").classList.remove("hide");
+  $("manualMode").classList.add("hide");
+  load(null);
+};
 
 /* ══ 폼 ══ */
 $("i-platform").innerHTML = Object.keys(C.platforms).map(p=>`<option>${p}</option>`).join("");
