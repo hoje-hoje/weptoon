@@ -105,42 +105,6 @@
       "comments": []
     },
     {
-      "id": "내일",
-      "title": "내일",
-      "author": "라마",
-      "platform": "네이버",
-      "url": "",
-      "genre": "로맨스",
-      "tags": [
-        "판타지",
-        "사회고발",
-        "힐링",
-        "주의사항"
-      ],
-      "covers": [
-        "covers/내일-1.jpg"
-      ],
-      "status": "완결",
-      "weekday": "",
-      "episodes": 0,
-      "seasons": 1,
-      "start": "",
-      "autoUpdate": false,
-      "lastChecked": null,
-      "needsCheck": false,
-      "reviews": [
-        {
-          "writer": "ys",
-          "rating": 4.6,
-          "summary": "사람 살리는 저승사자 이야기.",
-          "review": "에피소드식이기도 하고호불호 타는 사람이\n좀 있을거같긴 한데 소재가 소재이다 보니\n한번쯤은 읽어보는 것도 나쁘지 않음",
-          "note": "​ 추천하는 웹툰 양식대로 써줘요! #주의사항 이상한 짓 하면, 관리자가 아니라 뷰어로 바꿀게요.",
-          "date": "2026-08-20"
-        }
-      ],
-      "comments": []
-    },
-    {
       "id": "연애혁명",
       "title": "연애혁명",
       "author": "232",
