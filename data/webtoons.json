@@ -2591,42 +2591,6 @@
       "comments": []
     },
     {
-      "id": "이상하고-아름다운",
-      "title": "이상하고 아름다운",
-      "author": "허니비",
-      "platform": "네이버",
-      "url": "",
-      "genre": "로맨스",
-      "tags": [
-        "판타지",
-        "로맨스",
-        "순정",
-        "주의사항"
-      ],
-      "covers": [
-        "covers/이상하고-아름다운-1.jpg"
-      ],
-      "status": "완결",
-      "weekday": "",
-      "episodes": 0,
-      "seasons": 1,
-      "start": "",
-      "autoUpdate": false,
-      "lastChecked": null,
-      "needsCheck": false,
-      "reviews": [
-        {
-          "writer": "ys",
-          "rating": 4,
-          "summary": "도깨비나라에 들어가서 생기는 이야기",
-          "review": "",
-          "note": "​ 추천하는 웹툰 양식대로 써줘요! #주의사항 이상한 짓 하면, 관리자가 아니라 뷰어로 바꿀게요.",
-          "date": "2026-08-20"
-        }
-      ],
-      "comments": []
-    },
-    {
       "id": "전생연분",
       "title": "전생연분",
       "author": "재아, HAE",
