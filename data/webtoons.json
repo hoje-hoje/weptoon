@@ -2845,8 +2845,10 @@
     {
       "id": "fff급-관심용사",
       "title": "FFF급 관심용사",
-      "author": "깡무",
-      "platform": "네이버",
+      "authors": [
+        "깡무"
+      ],
+      "platform": "카카오",
       "url": "",
       "genres": [
         "판타지"
@@ -2857,14 +2859,14 @@
       "covers": [
         "covers/fff급-관심용사-1.jpg"
       ],
-      "status": "연재중",
+      "status": "완결",
       "weekday": "",
       "episodes": 0,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
         {
           "writer": "HJ",
@@ -2872,10 +2874,9 @@
           "summary": "주인공 개X끼\n클리셰 파괴",
           "review": "단순 재미 미친 용사 와우!\n미친놈인가? 아 착한가? 아 아니였노",
           "note": "주인공 또라이 새끼",
-          "date": "2026-08-20"
+          "date": "2026-09-03"
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "id": "빌런의-프로파일러",
