@@ -2937,11 +2937,11 @@
     {
       "id": "빌런의-프로파일러",
       "title": "빌런의 프로파일러",
-      "author": "",
+      "authors": [],
       "platform": "네이버",
       "url": "",
       "genres": [
-        "등등"
+        "추리"
       ],
       "tags": [
         "해시태그",
@@ -2953,11 +2953,11 @@
       "status": "연재중",
       "weekday": "",
       "episodes": 0,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
         {
           "writer": "HJ",
@@ -2965,10 +2965,9 @@
           "summary": "",
           "review": "",
           "note": "",
-          "date": "2026-08-20"
+          "date": "2026-09-04"
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "id": "용사파티만화",
