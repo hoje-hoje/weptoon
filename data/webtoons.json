@@ -3732,6 +3732,43 @@
           "date": "2026-09-04"
         }
       ]
+    },
+    {
+      "id": "마니또",
+      "title": "마니또",
+      "authors": [],
+      "platform": "탑툰",
+      "url": "",
+      "genres": [
+        "19",
+        "로맨스",
+        "일상"
+      ],
+      "tags": [
+        "대학생활",
+        "4커플"
+      ],
+      "covers": [
+        "covers/마니또-1788502080556-0.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "comments": [],
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.4,
+          "summary": "순애 로맨스... 대학생활",
+          "review": "주인공 커플들이 언제 이어질지 기대되면서 보게됨. 다른 커플들 서사도 다 재밌음",
+          "note": "",
+          "date": "2026-09-04"
+        }
+      ]
     }
   ]
 }
