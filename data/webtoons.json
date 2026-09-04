@@ -1524,11 +1524,14 @@
     {
       "id": "헬크래프트",
       "title": "헬크래프트",
-      "author": "나락, 영기",
+      "authors": [
+        "나락, 영기"
+      ],
       "platform": "네이버",
       "url": "",
       "genres": [
-        "판타지"
+        "판타지",
+        "스릴러"
       ],
       "tags": [
         "지옥",
@@ -1540,11 +1543,11 @@
       "status": "완결",
       "weekday": "",
       "episodes": 0,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
         {
           "writer": "HJ",
@@ -1552,10 +1555,9 @@
           "summary": "",
           "review": "",
           "note": "당신의 지옥은 무엇인가",
-          "date": "2026-08-20"
+          "date": "2026-09-04"
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "id": "도굴왕",
