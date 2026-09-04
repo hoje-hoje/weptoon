@@ -1326,44 +1326,6 @@
       ]
     },
     {
-      "id": "오늘의-순정망화",
-      "title": "오늘의 순정망화",
-      "author": "",
-      "platform": "네이버",
-      "url": "",
-      "genres": [
-        "로맨스"
-      ],
-      "tags": [
-        "순정",
-        "로맨스",
-        "개그",
-        "주의사항"
-      ],
-      "covers": [
-        "covers/오늘의-순정망화-1.jpg"
-      ],
-      "status": "완결",
-      "weekday": "",
-      "episodes": 242,
-      "seasons": 1,
-      "start": "",
-      "autoUpdate": false,
-      "lastChecked": null,
-      "needsCheck": false,
-      "reviews": [
-        {
-          "writer": "ys",
-          "rating": 4.3,
-          "summary": "그랜드 마스터 고등학교의 초엘리트\n동아리 삼국시대 앞에 나타난 가야! 가야의\n마음을 얻는 건 누구?\n(진짜줄거리가이거임)",
-          "review": "",
-          "note": "​ 추천하는 웹툰 양식대로 써줘요! #주의사항 이상한 짓 하면, 관리자가 아니라 뷰어로 바꿀게요.",
-          "date": "2026-08-20"
-        }
-      ],
-      "comments": []
-    },
-    {
       "id": "대학원-탈출일지",
       "title": "대학원 탈출일지",
       "author": "요다",
