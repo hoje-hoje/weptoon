@@ -3700,11 +3700,11 @@
     {
       "id": "데드포인트",
       "title": "데드포인트",
-      "author": "",
+      "authors": [],
       "platform": "네이버",
       "url": "",
       "genres": [
-        "등등"
+        "스포츠"
       ],
       "tags": [
         "클라이밍",
@@ -3717,11 +3717,11 @@
       "status": "연재중",
       "weekday": "",
       "episodes": 0,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
         {
           "writer": "HJ",
@@ -3729,10 +3729,9 @@
           "summary": "청소년 시기의 고민을 클라이밍으로\n풀어내는 작품. 클라이밍마다 재밌는\n이야기가 있고 풀어내는 능력이 좋음",
           "review": "솔직히 클라이밍을 잘 몰라서 원래 저런지\n잘 모르겠어요..\n암튼 잠재의 한계에 대해서 설명해줌.",
           "note": "",
-          "date": "2026-08-20"
+          "date": "2026-09-04"
         }
-      ],
-      "comments": []
+      ]
     }
   ]
 }
