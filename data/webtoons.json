@@ -585,16 +585,16 @@
     {
       "id": "낫오버",
       "title": "낫오버",
-      "author": "",
+      "authors": [],
       "platform": "네이버",
       "url": "",
       "genres": [
-        "등등"
+        "스포츠"
       ],
       "tags": [
-        "야구의",
         "포수",
-        "투수"
+        "투수",
+        "야구의 전술"
       ],
       "covers": [
         "covers/낫오버-1.jpg"
@@ -602,11 +602,11 @@
       "status": "연재중",
       "weekday": "",
       "episodes": 0,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
         {
           "writer": "HJ",
@@ -614,10 +614,9 @@
           "summary": "",
           "review": "",
           "note": "순간의 승리냐 전체의 게임의 승리냐 전술",
-          "date": "2026-08-20"
+          "date": "2026-09-04"
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "id": "시든-꽃에-눈물을",
