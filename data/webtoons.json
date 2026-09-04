@@ -417,7 +417,11 @@
     {
       "id": "sss급-죽어야-사는-헌터",
       "title": "SSS급 죽어야 사는 헌터",
-      "author": "신노아, 네이다, Bill K",
+      "authors": [
+        "신노아",
+        "네이다",
+        "BIll K"
+      ],
       "platform": "네이버",
       "url": "",
       "genres": [
@@ -431,14 +435,14 @@
       "covers": [
         "covers/sss급-죽어야-사는-헌터-1.jpg"
       ],
-      "status": "연재중",
+      "status": "휴재",
       "weekday": "목",
       "episodes": 150,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
         {
           "writer": "HJ",
@@ -446,10 +450,9 @@
           "summary": "제목이 제일 문제이지만, 저거보다 완벽한\n제목을 찾기 어려운 웹툰.\n판타지 헌터물 좋아하는 사람에게 추천.",
           "review": "탑등반물, 헌터물, 등등 너무나도\n카카오스러운 클리셰적인 소재들을\n사용하지만,\n그 소재들을 잘 활용하고, 표현력이 지림.\n‘‘죽음’에 대해서 고민하게 하는 웹툰.\n어떤 인간의 트라우마를 계속해서 보게\n되는..",
           "note": "죽음을 수확하는 자. (死王)",
-          "date": "2026-08-20"
+          "date": "2026-09-04"
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "id": "잔불의-기사",
