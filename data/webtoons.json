@@ -39,11 +39,13 @@
     {
       "id": "뷰티풀-군바리",
       "title": "뷰티풀 군바리",
-      "author": "설이, 윤성원",
+      "authors": [
+        "설이, 윤성원"
+      ],
       "platform": "네이버",
       "url": "",
       "genres": [
-        "등등"
+        "군대"
       ],
       "tags": [
         "군대",
@@ -55,12 +57,20 @@
       "status": "완결",
       "weekday": "",
       "episodes": 0,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.3,
+          "summary": "여자도 군대를 가는 세계관.\n작가가 실제로 이렇게 될 것처럼 치밀하게 표현함",
+          "review": "그림 실력이 해가 갈수록 상승함. 여자가 군대간다는 논란의 여지를 말하기 위한 작품이 아니라 만약 여자가 군대간다면 이렇게 살지 않을까? 하는 이야기임. 등장인물들의 군대에서의 삶과 전역 후 삶 같은 거를 기대하면서 볼 수 있다",
+          "note": "",
+          "date": "2026-09-04"
+        },
         {
           "writer": "kge",
           "rating": 4.8,
@@ -69,8 +79,7 @@
           "note": "​",
           "date": "2026-08-20"
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "id": "낮에-뜨는-달",
