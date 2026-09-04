@@ -3589,8 +3589,12 @@
     {
       "id": "랭커를-위한-바른-생활-안내서",
       "title": "랭커를 위한 바른 생활 안내서",
-      "author": "심상, 직믹, 테제",
-      "platform": "네이버",
+      "authors": [
+        "심상",
+        "직믹",
+        "테제"
+      ],
+      "platform": "카카오",
       "url": "",
       "genres": [
         "판타지"
@@ -3604,11 +3608,11 @@
       "status": "연재중",
       "weekday": "월",
       "episodes": 65,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
         {
           "writer": "HJ",
@@ -3616,10 +3620,9 @@
           "summary": "처음에는 조금 루즈 하지만, 가볍게 계속\n보기 좋은 판타지 탑 등반물.",
           "review": "상당히 클리셰적인 작품이라고 말할 수 도\n있지만, 생각보다 나쁘지 않은 작품\n탑 등반물 세계관의 최강의 인생을 보는\n듯한 느낌.",
           "note": "죠.",
-          "date": "2026-08-20"
+          "date": "2026-09-04"
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "id": "오로지-너를-이기고-싶어",
