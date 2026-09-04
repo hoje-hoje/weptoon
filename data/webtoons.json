@@ -1760,11 +1760,11 @@
     {
       "id": "고고농구",
       "title": "고고농구",
-      "author": "",
+      "authors": [],
       "platform": "네이버",
       "url": "",
       "genres": [
-        "등등"
+        "스포츠"
       ],
       "tags": [
         "해시태그",
@@ -1776,11 +1776,11 @@
       "status": "연재중",
       "weekday": "",
       "episodes": 0,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
         {
           "writer": "HJ",
@@ -1788,10 +1788,9 @@
           "summary": "",
           "review": "",
           "note": "농구에 미친 또라이들의 집합소",
-          "date": "2026-08-20"
+          "date": "2026-09-04"
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "id": "미연",
