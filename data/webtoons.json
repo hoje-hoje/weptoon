@@ -546,11 +546,15 @@
     {
       "id": "체크포인트",
       "title": "체크포인트",
-      "author": "송가 / 은소",
+      "authors": [
+        "송가",
+        "은소"
+      ],
       "platform": "네이버",
-      "url": "",
+      "url": "https://comic.naver.com/webtoon/list?titleId=677452",
       "genres": [
-        "등등"
+        "회귀",
+        "추리"
       ],
       "tags": [
         "회귀물",
@@ -559,25 +563,24 @@
       "covers": [
         "covers/체크포인트-1.jpg"
       ],
-      "status": "연재중",
+      "status": "시즌3 완결",
       "weekday": "",
       "episodes": 119,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
         {
           "writer": "HJ",
           "rating": 4.4,
           "summary": "4년마다 돌아오는 레전드 웹툰.\n능력을 극한으로 쓰는 웹툰.",
-          "review": "체크포인트 라는 주인공의 능력의 극한의\n극한까지 생각해서 만든 작품.\n매 시즌 마다 엄청난 작화와 스토리를\n보여주는 레전드 웹툰.",
+          "review": "체크포인트 라는 주인공의 능력의 극한의\n극한까지 생각해서 만든 작품.\n매 시즌 마다 엄청난 스토리를\n보여주는 레전드 웹툰.",
           "note": "로또 조심해. 4년 언제오냐..",
-          "date": "2026-08-20"
+          "date": "2026-09-04"
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "id": "낫오버",
