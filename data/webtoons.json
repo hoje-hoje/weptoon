@@ -1709,11 +1709,11 @@
     {
       "id": "스쿨-오브-스트릿",
       "title": "스쿨 오브 스트릿",
-      "author": "",
+      "authors": [],
       "platform": "네이버",
       "url": "",
       "genres": [
-        "등등"
+        "댄스"
       ],
       "tags": [
         "댄스"
@@ -1724,11 +1724,11 @@
       "status": "연재중",
       "weekday": "",
       "episodes": 0,
-      "seasons": 1,
       "start": "",
       "autoUpdate": false,
       "lastChecked": null,
       "needsCheck": false,
+      "comments": [],
       "reviews": [
         {
           "writer": "HJ",
@@ -1736,10 +1736,9 @@
           "summary": "춤에 대해서 잘 알 수 있게 되는 웹툰.",
           "review": "",
           "note": "",
-          "date": "2026-08-20"
+          "date": "2026-09-04"
         }
-      ],
-      "comments": []
+      ]
     },
     {
       "id": "브리아노의-연구소",
