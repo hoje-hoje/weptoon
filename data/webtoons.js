@@ -1,0 +1,3712 @@
+{
+  "updated": "2026-09-03",
+  "items": [
+    {
+      "id": "백투더도희",
+      "title": "백투더도희",
+      "author": "장사휘",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "도희누나"
+      ],
+      "covers": [
+        "covers/백투더도희-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 4.99,
+          "summary": "쌍방 사랑의 행운을 만끽하는 18세 강견오.\n그 상대는 같은 반의 초미녀 백찬비. 항상\n먼저 직진해오는 찬비와의 썸을 즐기던\n것도 잠시, 찬비는 사고로 최근 1년의\n기억을 잃게 되고 견오를 좋아했다는\n기억까지 잃게 된다! 순식간에 짝사랑이\n돼버린 견오. 과연 예전의 쌍방 사랑의\n시기로 돌아갈 수 있을까? …근데 우리\n서로 좋아한 거 확실하지?",
+          "review": "도희누나는 사랑입니다.",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "뷰티풀-군바리",
+      "title": "뷰티풀 군바리",
+      "author": "설이, 윤성원",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "등등"
+      ],
+      "tags": [
+        "군대",
+        "여경"
+      ],
+      "covers": [
+        "covers/뷰티풀-군바리-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "kge",
+          "rating": 4.8,
+          "summary": "여자가 군대가는 세계관. 군대 악습을 겪고\n주인공이 없애가는 과정을 보여줌..\n깔끔한 전개. 걍 재밌음. 몰입해서 보기\n좋은 웹툰",
+          "review": "일단 그림체가 점점 이뻐짐. 캐릭터마다\n개성이 확실함. 뻔한 스토리가 아닌\n개성있는 웹툰.",
+          "note": "​",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "낮에-뜨는-달",
+      "title": "낮에 뜨는 달",
+      "author": "헤윰",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "로맨스릴러",
+        "과거",
+        "현재",
+        "치밀함"
+      ],
+      "covers": [
+        "covers/낮에-뜨는-달-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4.6,
+          "summary": "기어이 이 품이 날 부수는구나.",
+          "review": "현재와 과거를 넘나드는 전개, 말도 안되는\n몰입감, 대사 하나하나의 감정선과 복선, 그\n사이에서의 설렘과 두려움, “전생” 이라는\n요소. 아, 정말 무서울 정도로 재밌어요.\n난 여기 고여있는데, 넌 한없이\n흘러가는구나.",
+          "note": "함께 나락까지 갈까…",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "연애혁명",
+      "title": "연애혁명",
+      "author": "232",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "연애",
+        "혁명",
+        "로맨스",
+        "학원물",
+        "청춘",
+        "클리셰"
+      ],
+      "covers": [
+        "covers/연애혁명-1.jpg",
+        "covers/연애혁명-2.jpg",
+        "covers/연애혁명-3.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 442,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4.5,
+          "summary": "감정선의 신",
+          "review": "초반부의 과하게 불편한 고구마, 그\n고구마가 전혀 심미적이지 못한점, 그\n과정의 필연적 필요성을 못느끼기 때문에,\n이 작품은 4.5를 넘을 수는 없습니다.\n그런데, 그러면 저~~아래에 있는 백투더\n찬비와 다를바가 없어보이지만, 그렇지\n않습니다. 후반부의 몰입감과 감정선은\n모든 네이버 웹툰 로맨스 장르를 통틀어서\n이겨낼 작품이 몇 없을정도로\n훌륭합니다.",
+          "note": "조금만 더 빨리 인정하고 조금만 더 솔직했다면.",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "kge",
+          "rating": 4.7,
+          "summary": "명작은 이유가 있다. 약간의 답답함이\n존재하나 깔끔하게 이유 설명해줌. 호불호\n없을 로맨스",
+          "review": "사실 이거 안본사람 없음. 아직 안봤으면 꼭\n보기를..학창시절에 일어날 법한 일들과\n고민들을 담고 있음.",
+          "note": "왕자와 공주 -​ -​",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "sj",
+          "rating": 4.5,
+          "summary": "평범하면서 금사빠인 고등학생 순정남\n공주영은 까칠하고 차가운 여학생\n왕자림을 보고 사랑에 빠져버린다. 너무\n다른 둘, 괜찮을까?",
+          "review": "만약 딱 한개의 럽코만 볼 수 있다면, 청춘\n블라썸과 함께 꼽을 수 있는 작품. 클리셰\n반전이 독특함 중~후반부의 답답함만\n넘긴다면, 결말로 깔끔하게 마무리 할 수\n있음. 여러번 봐야 진가가 나옴",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": [
+        [
+          "서진",
+          "연애혁명 7회독 했습니다.."
+        ]
+      ]
+    },
+    {
+      "id": "이두나",
+      "title": "이두나!",
+      "author": "민송아",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "이두나!",
+        "치밀함",
+        "아이돌"
+      ],
+      "covers": [
+        "covers/이두나-1.jpg",
+        "covers/이두나-2.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 154,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4.6,
+          "summary": "논란과 사고로 인해서 연예계 은퇴를\n선언한 드림스윗 두나, 그 두나가 아랫집에\n산다.\n가슴시린 러브코미디",
+          "review": "가슴시린, 뭔가 짠한 로맨스 장르의\n대표이자, 최고중 하나라고 생각함. 특히\n결말부분, 납득할 수 있는 신파가 정말\n마음에 드는 작품이다.\n“어쩔 수 없음의 미학”",
+          "note": "이두나!",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "sj",
+          "rating": 4.5,
+          "summary": "(구)아이돌, 첫사랑, 소개팅녀까지 한 집에\n모였다! 민송아 작가의 두근두근 누나\n리스트! 대학생 이원준은 개강을 맞아\n셰어하우스에 입주한다. 은퇴한 아이돌\n이두나가 아래층에 살고 있다는 것을 알게\n되는데..",
+          "review": "명작은 설명이 필요가 없음",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": [
+        [
+          "효제",
+          "너무 좋아"
+        ],
+        [
+          "영진",
+          "실신함"
+        ]
+      ]
+    },
+    {
+      "id": "청춘-블라썸",
+      "title": "청춘 블라썸",
+      "author": "홍덕, NEMONE",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "봄",
+        "여름",
+        "가을",
+        "겨울",
+        "치밀함",
+        "청춘"
+      ],
+      "covers": [
+        "covers/청춘-블라썸-1.jpg",
+        "covers/청춘-블라썸-2.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 130,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4.6,
+          "summary": "“푸르지 않아도 괜찮아!” 모두는 각자의\n사연을 품고, 사계절을 살아간다.",
+          "review": "가슴시린 로맨스의 극 상위권 중 하나인\n웹툰이다. 인물간의 서사는 완벽하고, 그\n감정선 또한 말이 필요없는 명작.\n가슴 아픈 학창시절 속, 피어나는 사랑마저\n없다면 너무 가혹하지 않은가?",
+          "note": "청 춘",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "sj",
+          "rating": 4.45,
+          "summary": "“푸르지 않아도 괜찮아!” 이제 막 청춘을\n시작하고 있는 아이들. 그리고 마냥\n아름답지만은 않은 그 시절의 기억들.\n봄으로 가기 위한 그들의 성장통. 봄, 여름,\n가을, 겨울... 사계절의 빛깔로 담아낸\n풋풋하고 알싸한 아이들의 청춘 스토리.",
+          "review": "연혁과 함께 투톱. 여름에 고점이었다\n가을에 잠깐 하강하고 겨울에 다시 올라감.\n청춘을 웹툰으로 표현한다면",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "동아리",
+      "title": "동아리",
+      "authors": [
+        "QRQ"
+      ],
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "19"
+      ],
+      "tags": [
+        "로맨스",
+        "19",
+        "캠퍼스"
+      ],
+      "covers": [
+        "covers/동아리-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "comments": [],
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-09-03"
+        },
+        {
+          "writer": "ys",
+          "rating": 4.5,
+          "summary": "",
+          "review": "",
+          "note": "숨막혀…",
+          "date": "2026-08-20"
+        }
+      ]
+    },
+    {
+      "id": "오늘도-사랑스럽개",
+      "title": "오늘도 사랑스럽개",
+      "author": "이혜",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "판타지",
+        "로맨스",
+        "주의사항"
+      ],
+      "covers": [
+        "covers/오늘도-사랑스럽개-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4.5,
+          "summary": "",
+          "review": "",
+          "note": "​ 추천하는 웹툰 양식대로 써줘요! #주의사항 이상한 짓 하면, 관리자가 아니라 뷰어로 바꿀게요.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "전지적-독자-시점",
+      "title": "전지적 독자 시점",
+      "author": "싱숑 / UMI / 슬리피-C",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "전독시",
+        "작가",
+        "독자",
+        "주인공"
+      ],
+      "covers": [
+        "covers/전지적-독자-시점-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "수",
+      "episodes": 260,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.4,
+          "summary": "소설을 다 본 사람으로써는 솔직히 4.5지만,\n현재 기준으로는 4.1 아직, 안 나온게 너무\n많음",
+          "review": "클리셰에 지친 사람에게 추천하고 싶은\n작품.\n입문작으로도 재밌는 작품!\n클리셰를 개연성이라는 단어로 풀어낸,\n이야기를 이야기의 소재로 쓴 레전드 작품.\n꼭 소설을 봤으면 하는…",
+          "note": "어느 이야기를 가장 좋아하는 독자는 그 누구보다 쉽게 그 이야기에 동화되지 않을까?",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": [
+        [
+          "유섭",
+          "감다살"
+        ],
+        [
+          "재우",
+          "개좋음 (안 봄)"
+        ],
+        [
+          "영진",
+          "맛잘알"
+        ]
+      ]
+    },
+    {
+      "id": "sss급-죽어야-사는-헌터",
+      "title": "SSS급 죽어야 사는 헌터",
+      "author": "신노아, 네이다, Bill K",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "제목이제일문제",
+        "죽음",
+        "탑등반물"
+      ],
+      "covers": [
+        "covers/sss급-죽어야-사는-헌터-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "목",
+      "episodes": 150,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.4,
+          "summary": "제목이 제일 문제이지만, 저거보다 완벽한\n제목을 찾기 어려운 웹툰.\n판타지 헌터물 좋아하는 사람에게 추천.",
+          "review": "탑등반물, 헌터물, 등등 너무나도\n카카오스러운 클리셰적인 소재들을\n사용하지만,\n그 소재들을 잘 활용하고, 표현력이 지림.\n‘‘죽음’에 대해서 고민하게 하는 웹툰.\n어떤 인간의 트라우마를 계속해서 보게\n되는..",
+          "note": "죽음을 수확하는 자. (死王)",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "잔불의-기사",
+      "title": "잔불의 기사",
+      "author": "환댕",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "기사",
+        "능력",
+        "지략캐",
+        "판타지",
+        "액션",
+        "주의사항"
+      ],
+      "covers": [
+        "covers/잔불의-기사-1.jpg",
+        "covers/잔불의-기사-2.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "월",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.4,
+          "summary": "죽은 동생을 연기하는 형.\n‘강함’을 연기한다.",
+          "review": "캐릭터들 간의 서사와 감정표현 능력들을\n잘 표현함.\n하지만, 뭐라뭐라해도 역시 최고는 전투신.\n주인공 생각의 독백과 그거를 표현하는\n작화.\n재밌다.\n근데, 사실 몰아봐야 재밌다.\n전투신이 아니면 일주일마다 보기에는\n루즈..!",
+          "note": "나 진 견? 거짓을 진실로 만든다.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": [
+        [
+          "유섭",
+          "“효제의 4.4”"
+        ]
+      ]
+    },
+    {
+      "id": "킬러-배드로",
+      "title": "킬러 배드로",
+      "author": "김정현, 임리나",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "액션",
+        "회춘",
+        "킬러"
+      ],
+      "covers": [
+        "covers/킬러-배드로-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 104,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.4,
+          "summary": "액션 탑. 킬러계의 전설 배드로가\n회춘하다?\n킬러물을 보겠다면 이거를 보세요.",
+          "review": "주인공이 옆의 무기를 쓰는 방식, 전략에\n대한 고찰이 너무 재밌음.\n적들의 능력들이 다 특이하고, 킬러 세계관\n자체가 엄청 좋음.\n인삐가 하나도 안남.",
+          "note": "나이가 들었다고.. 전설이 아닌 건 아니니까..",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "광장",
+      "title": "광장",
+      "author": "오세형 / 김균태",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "등등"
+      ],
+      "tags": [
+        "한국판"
+      ],
+      "covers": [
+        "covers/광장-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 63,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.4,
+          "summary": "연출이 레전드. 기본적인 흑백 그림체에\n색을 넣는게 너무 좋음. 저 쨍한 색감이\n너무 좋음.\n동생이 죽고 나서 복수 하는 스토리",
+          "review": "액션신을 너무 잘 그림. 인물이 어떻게\n움직였는지를 그림으로 바로 이해가 됨.\n인물 간의 서사가 너무 좋음.\n정말 깔끔한 마무리.",
+          "note": "이보다 더 좋은 느와르는 나오기가 힘들다.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": [
+        [
+          "영진",
+          "인물들간의 복잡한 감정선이 기가 막힘"
+        ]
+      ]
+    },
+    {
+      "id": "체크포인트",
+      "title": "체크포인트",
+      "author": "송가 / 은소",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "등등"
+      ],
+      "tags": [
+        "회귀물",
+        "도박"
+      ],
+      "covers": [
+        "covers/체크포인트-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 119,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.4,
+          "summary": "4년마다 돌아오는 레전드 웹툰.\n능력을 극한으로 쓰는 웹툰.",
+          "review": "체크포인트 라는 주인공의 능력의 극한의\n극한까지 생각해서 만든 작품.\n매 시즌 마다 엄청난 작화와 스토리를\n보여주는 레전드 웹툰.",
+          "note": "로또 조심해. 4년 언제오냐..",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "낫오버",
+      "title": "낫오버",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "등등"
+      ],
+      "tags": [
+        "야구의",
+        "포수",
+        "투수"
+      ],
+      "covers": [
+        "covers/낫오버-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.4,
+          "summary": "",
+          "review": "",
+          "note": "순간의 승리냐 전체의 게임의 승리냐 전술",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "시든-꽃에-눈물을",
+      "title": "시든 꽃에 눈물을",
+      "authors": [
+        "개"
+      ],
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "19"
+      ],
+      "tags": [
+        "로맨스",
+        "19",
+        "치밀함"
+      ],
+      "covers": [
+        "covers/시든-꽃에-눈물을-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "comments": [],
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-09-03"
+        },
+        {
+          "writer": "ys",
+          "rating": 4.4,
+          "summary": "엄청난 빚을 떠안기고, 아이를 잃게 한\n것으로 모자라,\n한참 어린 여자와 내 눈앞에서 몸을 섞었다.\n상처 입은 삶은 볼품 없이 시들어 버려질\n예정이었다.\n그런데-",
+          "review": "진짜 호불호 많은 장르지만, 저는 재밌게\n봤습니다. 19 모먼트가 별로 안나오기도\n하고, 그 특유의 숨막히는 긴장감과 “신뢰”\n라는 감정을 어디까지 믿을수있을까 싶은\n작품입니다.",
+          "note": "숨막혀…",
+          "date": "2026-08-20"
+        }
+      ]
+    },
+    {
+      "id": "러브퀘스트",
+      "title": "러브퀘스트",
+      "authors": [
+        "QRQ"
+      ],
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "19"
+      ],
+      "tags": [
+        "로맨스",
+        "19",
+        "오피스"
+      ],
+      "covers": [
+        "covers/러브퀘스트-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "comments": [],
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-09-03"
+        },
+        {
+          "writer": "ys",
+          "rating": 4.4,
+          "summary": "",
+          "review": "",
+          "note": "숨막혀…",
+          "date": "2026-08-20"
+        }
+      ]
+    },
+    {
+      "id": "화산귀환",
+      "title": "화산귀환",
+      "author": "LICO",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "주의사항"
+      ],
+      "covers": [
+        "covers/화산귀환-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "kge",
+          "rating": 4.4,
+          "summary": "",
+          "review": "",
+          "note": "​ 추천하는 웹툰 양식대로 써줘요! #주의사항 이상한 짓 하면, 관리자가 아니라 뷰어로 바꿀게요.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "독립일기",
+      "title": "독립일기",
+      "author": "자까",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "일상"
+      ],
+      "tags": [
+        "일상"
+      ],
+      "covers": [
+        "covers/독립일기-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 205,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 4.4,
+          "summary": "분명 휴재 중인데 연재 중인 이 신박한\n상황은 뭐지...? 자까 작가만 할 수 있는\n신개념 휴재연재물! 10일 20일 30일마다\n찾아올 예정이니 관심구독 꾹꾹\n눌러주세요!",
+          "review": "일상물 입문작",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "이직로그",
+      "title": "이직로그",
+      "author": "이하안, 우시목",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "해시태그",
+        "장르",
+        "오피스",
+        "로맨스",
+        "이직",
+        "아직"
+      ],
+      "covers": [
+        "covers/이직로그-1.jpg",
+        "covers/이직로그-2.jpg",
+        "covers/이직로그-3.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "월",
+      "episodes": 31,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.3,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "ys",
+          "rating": 4.5,
+          "summary": "“왠지 선, 안넘을것 같아서요.”\n다른 사람에게 힘을 주는,\n나와는 다른 세계의 사람",
+          "review": "난 오피스 로맨스웹툰이 막장이 아닐 수\n있다는걸 처음 알았어요.\n남주가 정말 섬세한데, 이 감정선 묘사가\n진짜 지려요. 이건 오피스 로맨스를\n좋아한다? 근데 막장에 질리고, “진짜”\n로맨스를 보고싶다? 강추 입니다.\n+지금다시 생각해보면 얘 이길웹툰이\n없어요…",
+          "note": "언제나 의욕적이고 주변사람에게에너지를 주는… 효제 PICK",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "sj",
+          "rating": 4.4,
+          "summary": "스타트업 회사에 재직 중인 '조이'와 '맥스'.\n조이는 눈에 띄는 외모와 뛰어난 사교성,\n완벽한 실력의 소유자인 반면 맥스는\n존재감 제로에 대인기피증, 혼밥\n마스터이다. 그런 두 사람이 한 팀, 바로\n옆자리에서 공존하게 되었고 같은 팀이 된\n첫날, 맥스는 조이의 모니터에서 보면 안 될\n것을 보고 말았다! 그 순간부터 그의 평온한\n회사 생활은 뒤틀리기 시작하는데…!",
+          "review": "신선하고 깔끔함. 에스더랑 이어지지\n않은건 매우 안타까운 부분 2부에서는 조이\n버리고 에스더랑 행복하자 막시무스",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "속아주고싶어",
+      "title": "속아주고싶어",
+      "author": "케남",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "해시태그",
+        "장르",
+        "로맨스",
+        "치밀함"
+      ],
+      "covers": [
+        "covers/속아주고싶어-1.jpg",
+        "covers/속아주고싶어-2.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "ys",
+          "rating": 4.5,
+          "summary": "내가 너랑 사귀고 싶어했다고? 언제?",
+          "review": "일단 단순하게보자면 여주가 되게\n매력적입니다. 또, 작가가 웹툰에서 복선을\n늘어놓는 방식이나, 감정을 표현하는\n방식이라던가, 이런 제가 중요하게 여기는\n부분들이 세련되게 표현됩니다.\n아니, 그냥 한번 읽어보세요.",
+          "note": "그래도, 속아주고싶었다.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "이번생도-잘-부탁해",
+      "title": "이번생도 잘 부탁해",
+      "author": "이혜",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "환생",
+        "치밀함",
+        "전전전세"
+      ],
+      "covers": [
+        "covers/이번생도-잘-부탁해-1.jpg",
+        "covers/이번생도-잘-부탁해-2.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4.4,
+          "summary": "이번생은 오로지 너를 위해서.",
+          "review": "그림체의 장벽… 이건 어쩔 수 없는 것\n같긴합니다. 하지만 솔직히 스토리적인\n요소, 인물간의 서사와 서로에게 취하는\n태도 같은 제가 명작을 고르는 기준에\n부합하는 요소가 너무 많아요. 정말\n명작입니다. 그림체도 시간이 지나면서\n나아지고, 관계를 풀어가는 과정이 정말\n일품입니다.",
+          "note": "난 이렇게까지 서브커플에 진심인적이 없었어. -서진 : 쌉인정",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "sj",
+          "rating": 4.3,
+          "summary": "전생을 기억하는 삶은 어떨까? 매번 전생을\n기억하는 무료한 삶을 살던 18회차 인생,\n윤주원이란 이름으로 살던 12살에 서하를\n만나게 된다. 특별할 거 없던 그 아이가\n무료한 삶을 특별하게 만들어주었지만\n교통사고로 18회차 인생이 끝나고 만다.\n다시 태어난 19회차 인생, 윤주원에서\n반지음이란 이름으로 다시 서하를 만나러\n간다.",
+          "review": "다음생에도 볼 작품",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "똑닮은-딸",
+      "title": "똑닮은 딸",
+      "author": "이담",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "스릴러"
+      ],
+      "tags": [
+        "해시태그",
+        "장르"
+      ],
+      "covers": [
+        "covers/똑닮은-딸-1.jpg",
+        "covers/똑닮은-딸-2.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "sj",
+          "rating": 4.4,
+          "summary": "'우리 엄마가 살인마인 것 같다.' 성적 우수,\n품행 단정, 모범적인 자식인 길소명은\n엄마가 요구하는 기준에 맞춰 완벽한 딸로\n살아왔다. 그러나 남동생이 강물에서\n시체로 떠오른 그 날, 소명의 머릿속엔\n섬뜩한 의혹이 피어오른다. 자식의 인생에\n방해되는 모든 것을 없애려는 엄마와\n그녀에게서 벗어나려는 딸, 두 사람의\n잔혹한 모녀 스릴러! 2020 지상최대공모전\n2기 우수상 수상작.",
+          "review": "명소민 무서워잉",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "사람의-탈",
+      "title": "사람의 탈",
+      "author": "우주돌",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "조선",
+        "액션판타지",
+        "범."
+      ],
+      "covers": [
+        "covers/사람의-탈-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 75,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.3,
+          "summary": "조선시대라는 배경이 너무 좋음.\n탈이라는 요소를 잘 사용한 작품. 액션신에\n공을 들이신게 보임.",
+          "review": "지금 딱 시즌1 끝남.\n나쁘지 않은 액션신. 좋은 소재. 깔끔.\n범들의 서사도 넣어주는 재밌다고 느낌.\n탈만의 그 오묘한 표정조차도 이용하는\n작품.",
+          "note": "관객이 광대를 볼때, 광대도 탈 안에서 관객을 본답니다.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "말년용사",
+      "title": "말년용사",
+      "author": "후딩 / 신마니",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "말년병장",
+        "이세계",
+        "액션"
+      ],
+      "covers": [
+        "covers/말년용사-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.3,
+          "summary": "전역 하루 전, 이세계에 소환된 병장의\n이야기.\n액션 능력물.",
+          "review": "싸움의 연출력이 지림. 캐릭터들의\n동작이랑 능력까지 지리는 연출력\n능력들이 모두 신박하고, 그 능력을 쓰는\n방식도 이야기를 전개하는데 막힘이 없다.\n이세계 소환물",
+          "note": "말레",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "아카데미에서-살아남기",
+      "title": "아카데미에서 살아남기",
+      "author": "기린그린, 코리타",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "판타지",
+        "아카데미",
+        "지능캐",
+        "마법"
+      ],
+      "covers": [
+        "covers/아카데미에서-살아남기-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.3,
+          "summary": "삼류 엑스트라에 빙의해서 이야기의 끝을\n편안히 맞이하기 위한 노력을 하는 스토리\n자급자족 생활과 히로인들의 케미가\n재밌다.",
+          "review": "처음 봤을때는 그냥 작화 좋은 양산형\n아카데미물인줄 알았지만, 너무 재밌음.\n주인공이 똑똑하게 위험을 대처함.\n귀환자의 마법은 특별해야 합니다와\n비슷한 느낌도 나지만, 아무래도 그림체가\n정말 좋음.​\n주인공 얼굴이 딱 삼류악당과 주인공 그\n사이",
+          "note": "진짜 살아남기 빡세다.. 로르텔.. 루시.. 정실은 로르텔 (누구야)",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "별을-품은-소드마스터",
+      "title": "별을 품은 소드마스터",
+      "author": "홍대의, 주노",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "정통",
+        "기사"
+      ],
+      "covers": [
+        "covers/별을-품은-소드마스터-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.3,
+          "summary": "높지 않아도, 스스로 빛나길 원한다면\n그것은 별일 것이다.",
+          "review": "",
+          "note": "쇼아라의 블라드 정통 기사가 되어라",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": [
+        [
+          "유섭",
+          "별품소를 까는 사람은 판타지를 읽는다고 할 자격이 없다."
+        ]
+      ]
+    },
+    {
+      "id": "평행도시",
+      "title": "평행도시",
+      "author": "고다",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "스릴러"
+      ],
+      "tags": [
+        "좀비물",
+        "세계멸망",
+        "’액션’"
+      ],
+      "covers": [
+        "covers/평행도시-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 150,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.3,
+          "summary": "사실 이 웹툰의 진가는 바로 ‘파쿠르’\n파쿠르를 통해 진행되는 액션이 정말 좋음.\n사실 진짜는 스토리는 시즌2부터…",
+          "review": "소재가 너무 맘에 드는 소재들.\n주인공의 파쿠르가 정말 정말 잘\n표현되어있음.\n파쿠르가 뭐냐고요? 아 그럼 일단 보세요.\n파쿠르를 안다고요? 아 그럼 무조건\n보세요.\n작화가 너무 좋음.. 멸망된 세계를 정말 잘\n표현하는 소재들과 맛있는 인물들의 서사.",
+          "note": "D.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "청춘-러브썸",
+      "title": "청춘 러브썸",
+      "author": "홍덕, NEMONE",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "푸름",
+        "청춘의"
+      ],
+      "covers": [
+        "covers/청춘-러브썸-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "화",
+      "episodes": 53,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4.3,
+          "summary": "모두의 사연은 그 잔향이 남아.\n푸름의 잔향이 코끝을 스칠때, 또 다른\n청춘이!\n청춘 블라썸. 그 후속작.",
+          "review": "홍덕은 홍덕이고, NEMONE는 네모네다.\n전설의 귀환. 물론, 전작에 비해서는 조금\n낮은 평가를 받을 수 밖에 없어요. 하지만,\n충분히 누군가에게 당당히 추천할 수 있고,\n제가 추구하는 “로맨스” 장르의 중요한\n점들을 전부 챙긴, 아쉬움이 없는\n웹툰입니다. 다만, 뭔가… 뭔가 청춘\n블라썸이라는 거대한 그림자에 가려진\n느낌을 지울 수 없는…",
+          "note": "푸름, 그 잔향이 남아.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "중간에서-만나",
+      "title": "중간에서 만나",
+      "author": "조흰, 윤김",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "30",
+        "20"
+      ],
+      "covers": [
+        "covers/중간에서-만나-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "수",
+      "episodes": 97,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4.3,
+          "summary": "30살 노잼인생, 여름. 그 앞에 떨어진\n연하남.\n섬세하고 다정한 그 연하남과의 로맨스.",
+          "review": "뭐랄까 납득을 시키는 방향성을 너무 잘\n잡음. 감정선은 말할것도 없고, 사랑에서\n나이는 무엇인지, 어떤 의미를 가지는지,\n중요한지, 등등. 현실적인 스토리로 이걸\n풀어내면서 동시에 재미요소도 포기하지\n않은 정~말 재밌는 웹툰중 하나!",
+          "note": "사랑에서 나이란, 뭘까?",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "소꿉친구-컴플렉스",
+      "title": "소꿉친구 컴플렉스",
+      "authors": [
+        "은하이"
+      ],
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "19"
+      ],
+      "tags": [
+        "로맨스",
+        "19"
+      ],
+      "covers": [
+        "covers/소꿉친구-컴플렉스-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "comments": [],
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-09-03"
+        },
+        {
+          "writer": "ys",
+          "rating": 4.3,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ]
+    },
+    {
+      "id": "오늘의-순정망화",
+      "title": "오늘의 순정망화",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "순정",
+        "로맨스",
+        "개그",
+        "주의사항"
+      ],
+      "covers": [
+        "covers/오늘의-순정망화-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 242,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4.3,
+          "summary": "그랜드 마스터 고등학교의 초엘리트\n동아리 삼국시대 앞에 나타난 가야! 가야의\n마음을 얻는 건 누구?\n(진짜줄거리가이거임)",
+          "review": "",
+          "note": "​ 추천하는 웹툰 양식대로 써줘요! #주의사항 이상한 짓 하면, 관리자가 아니라 뷰어로 바꿀게요.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "대학원-탈출일지",
+      "title": "대학원 탈출일지",
+      "author": "요다",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "일상"
+      ],
+      "tags": [
+        "대학원"
+      ],
+      "covers": [
+        "covers/대학원-탈출일지-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 208,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 4.3,
+          "summary": "연구에 꿈을 가지고 대학원을 선택한\n병아리 요다. 예상과는 다르게 연구에 관심\n없는 교수님과 똥군기의 연구실 분위기에\n당황한다. 요다는 과연 무사히 대학원을\n탈출할 수 있을 것인가?!",
+          "review": "우리 미래라서 재밌진 않음",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "무한의-마법사",
+      "title": "무한의 마법사",
+      "author": "테미스,김치우",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "소년성장",
+        "마법이란",
+        "정통판타지"
+      ],
+      "covers": [
+        "covers/무한의-마법사-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "수",
+      "episodes": 140,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "정통 판타지를 좋아하는 사람에게 추천.\n일반적인 소년 성장 판타지 같지만, 작품 속\n디테일들이 재밌는 작품.",
+          "review": "이 세계관 속 마법이 무엇인지 잘 설명해줌.\nTMI같은 다양한 디테일들이 살아있는 작품\n마법을 정말 파고 또 판 작품같음.\n마법 아카데미물로 시작함.",
+          "note": "전지 + 전능 = 마법",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": [
+        [
+          "영진",
+          "효제의 안목을 맹목적으로 믿게됨"
+        ],
+        [
+          "유섭",
+          "오케이 너 재능있어 계속해"
+        ]
+      ]
+    },
+    {
+      "id": "오늘만-사는-기사-이현민-가나라-이안-소울풍",
+      "title": "오늘만 사는 기사 이현민/가나라/이안/소울풍",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "정통판타지",
+        "벽",
+        "싸움"
+      ],
+      "covers": [
+        "covers/오늘만-사는-기사-이현민-가나라-이안-소울풍-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "토",
+      "episodes": 70,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "기사가 되어가는 과정.\n미치광이 소대의 소대장이 성장하는\n스토리.\n은은한 개그 포인트와 검의 길을 걷는\n주인공이 좋음.",
+          "review": "간단한 죽음 회귀 소재를 정말 재미있게\n표현함.\n그림체가 전투라는 배경에 딱 맞는 그림체.\n정통 판타지에 죽음 회귀라는 소재를 하나\n넣은 작품이라고 보면 됨. 반복하는 오늘.",
+          "note": "벽 그까짓거 또 넘으면 되지 뭐.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "별과-사슬이-뜨는-섬",
+      "title": "별과 사슬이 뜨는 섬",
+      "author": "어패류메기, 훌리",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "판타지",
+        "헌터물",
+        "사슬"
+      ],
+      "covers": [
+        "covers/별과-사슬이-뜨는-섬-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "소년성장 헌터물.\n주인공의 능력이 특이해서 보는 재미가\n있음.\n사슬 이라는 매개체를 잘 표현함.\n주인공 동생과 주인공 사이의 인물관계도\n재밌다.",
+          "review": "전투신 자체 구성이 나쁘지 않음. 그림체도\n작붕까지 말한 꺼는 없음.\n능력들이 아무래도 많이 나오니까 그\n능력을 어떻게 작가가 이용했는지 보는\n거에 따라 재미가 달라지는 작품.\n아직까지는 재밌음.",
+          "note": "너 봉인.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "헬크래프트",
+      "title": "헬크래프트",
+      "author": "나락, 영기",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "지옥",
+        "72악마"
+      ],
+      "covers": [
+        "covers/헬크래프트-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "",
+          "review": "",
+          "note": "당신의 지옥은 무엇인가",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "도굴왕",
+      "title": "도굴왕",
+      "author": "산지직송",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "회귀",
+        "유물",
+        "신화"
+      ],
+      "covers": [
+        "covers/도굴왕-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "유물이 묻힌 무덤이 있는 세계.\n이 유물을 모두 도굴하는 도굴왕이 되는\n이야기",
+          "review": "솔직히 카카오 판타지 탑 5 안에 든다고\n보는 웹툰. ‘유물’이라는 매개체를 통해\n신화를 이야기하는 점이 상당히 재밌음.",
+          "note": "고물도 시간이 지나면 보물이 되는거야.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "강남도깨비",
+      "title": "강남도깨비",
+      "author": "이경민, 송준혁",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "도깨비"
+      ],
+      "covers": [
+        "covers/강남도깨비-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "도깨비\n학원 액션 판타지 웹툰\n황금의 피를 노리는 도깨비들.",
+          "review": "도깨비라는 소재에 황금의 피라는 신선한\n소재를 이용한 작품\n액션 신을 정말 잘 그리심.\n주인공 변신폼이 좀 멋있음\n액션이 좀 더 활발하면 좋겠음",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "꼬리잡기",
+      "title": "꼬리잡기",
+      "author": "바쉬",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "스릴러"
+      ],
+      "tags": [
+        "갇힌공간",
+        "암흑공간",
+        "붕괴"
+      ],
+      "covers": [
+        "covers/꼬리잡기-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 100,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "정말 아무도 없는 공간의 무서움.\n이야기의 전개만의 공포를 느끼게 될 수\n있음",
+          "review": "스토리가 정말 좋은 스릴러. 이야기의\n전개로 사람을 긴장감에 휩싸이게 만듦.\n끝까지 볼때까지 이야기를 예상할 수 없음.\n전혀 처음 보는 결말..\n결말이 조금 당황스러울 수도? 근데 나는\n안 당황스럽고 재미있었음.",
+          "note": "아 무서워",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "좀비-묵시록-82-08",
+      "title": "좀비 묵시록 82 08",
+      "author": "바쉬",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "스릴러"
+      ],
+      "tags": [
+        "좀비",
+        "웹소설"
+      ],
+      "covers": [
+        "covers/좀비-묵시록-82-08-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "",
+          "review": "웹소설 원작이라 그런지 이야기가 짜임새\n있음.\n좀비물이라 공포감 너무 좋음",
+          "note": "나도 총 잘 쏴야지",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "스쿨-오브-스트릿",
+      "title": "스쿨 오브 스트릿",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "등등"
+      ],
+      "tags": [
+        "댄스"
+      ],
+      "covers": [
+        "covers/스쿨-오브-스트릿-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "춤에 대해서 잘 알 수 있게 되는 웹툰.",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "브리아노의-연구소",
+      "title": "브리아노의 연구소",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "등등"
+      ],
+      "tags": [
+        "SF",
+        "스릴?러",
+        "인간"
+      ],
+      "covers": [
+        "covers/브리아노의-연구소-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "이게..뭐지?\n천재 미스터리 박사 브리아노의 연구소에\n들어가게 된 일반인의 삶",
+          "review": "처음 볼때는 뭔지 몰랐는데.\n다 봐도 모르겠음.\nSF라는 장르를 잘 다뤘다고 생각함",
+          "note": "너 혹시 두리안이야?",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": [
+        [
+          "김시우",
+          "머리색이 파워레인져"
+        ]
+      ]
+    },
+    {
+      "id": "고고농구",
+      "title": "고고농구",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "등등"
+      ],
+      "tags": [
+        "해시태그",
+        "장르"
+      ],
+      "covers": [
+        "covers/고고농구-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "",
+          "review": "",
+          "note": "농구에 미친 또라이들의 집합소",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "미연",
+      "title": "미연",
+      "author": "서녜",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "아름다울",
+        "고울",
+        "치밀함"
+      ],
+      "covers": [
+        "covers/미연-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "수",
+      "episodes": 25,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4.2,
+          "summary": "얼어붙은 기억, 그 끝에 서있는 너.",
+          "review": "일단 그림체 정말 정말 이쁘고요. 겨울을\n색깔로 표현하는 미친 웹툰이에요. 미연이\n단순이 타임패러독스를 통한 시간이상을\n겪는 것이 아니라, 해리성 기억상실을 통한\n현실적인 시간루프 속에 갖힘을\n일인칭으로 서술해서 독자들의 흥미를\n극도로 올려주는 내용입니다. 정말\n재밌고요. 잔잔하게 몰아치는 파도같은\n웹툰입니다.",
+          "note": "얼어붙은 시간",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "앞집나리",
+      "title": "앞집나리",
+      "authors": [
+        "민송아"
+      ],
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "19"
+      ],
+      "tags": [
+        "로맨스",
+        "19"
+      ],
+      "covers": [
+        "covers/앞집나리-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "comments": [],
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-09-03"
+        },
+        {
+          "writer": "ys",
+          "rating": 4.2,
+          "summary": "",
+          "review": "",
+          "note": "너무 숭해요",
+          "date": "2026-08-20"
+        }
+      ]
+    },
+    {
+      "id": "암호는-002",
+      "title": "암호는 002!",
+      "author": "파도",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "형제",
+        "삼각관계"
+      ],
+      "covers": [
+        "covers/암호는-002-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 4.2,
+          "summary": "수정은 반년 동안 짝사랑하던 같은 반\n도진에게 고백을 결심하지만 길거리에서\n만난 도진은 수정을 알아보지 못하고\n지나간다. 충격을 받은 수정은 교실에\n들어가지 못하고 체육 창고로 도망친다.\n거기서 만난 재윤이 수정이 도진과 잘될 수\n있도록 도와준다고 하는데.. 네가 무슨\n수로? 짝남 동생과 펼치는 짝남 꼬시기\n대작전!",
+          "review": "그림체가 여름을 형상화한 느낌. 무난한\n로맨스 중 1티어",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "사랑하는-여름-하늘",
+      "title": "사랑하는 여름 하늘",
+      "author": "소장",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "여름"
+      ],
+      "covers": [
+        "covers/사랑하는-여름-하늘-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 4.2,
+          "summary": "사람보다 하늘을 더 좋아해 카메라로 하늘\n사진만 찍는 기후. 그러던 어느 여름,\n옆자리에 \"하늘\"이 전학을 온다.",
+          "review": "제목부터 내용까지 여름 그 자체",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "오피스-누나-이야기",
+      "title": "오피스 누나 이야기",
+      "author": "팔메이로, 김자네, 와삭바삭",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "오피스",
+        "현실",
+        "유부녀"
+      ],
+      "covers": [
+        "covers/오피스-누나-이야기-1.jpg",
+        "covers/오피스-누나-이야기-2.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 65,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.3,
+          "summary": "어떤 마흔에 가까운 남자의 돌아보는 인생\n이야기.\n회사에서 만난 와이프? 아니, 누나와\n그로인해 바뀐 한 남자의 이야기",
+          "review": "놀랍게도 이 웹툰은 작가님의 실제 있었던\n일을 웹툰화한 것.\n어른들의 로맨스, 실제 있었던 일인 만큼\n현실에 가깝고 또 가깝게 서술되어 있음. 한\n사람의 인생이 작동하는 원리를 본 느낌.\n오피스 누나분의 저 행동들이 너무 내 취향.\n배우고 싶은 똑똑한 행동들…",
+          "note": "오피스 누나 이야기",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "ys",
+          "rating": 4.1,
+          "summary": "뭐랄까, 이건 오피스 와이프?\n아니야, 이건 오피스 누나.",
+          "review": "제 로맨스 취향은 “개연성 + 배울점 + 서사”\n입니다. 놀랍게도 이 웹툰은 이 3박자를\n전부 갖춘 웹툰입니다. 작가가 “왜? 이러면\n된거 아니야?” 라고 하다면, 독자의 대답은\n“아… 그렇긴 한데…”라고 돌아올법한 그런\n웹툰이죠. 정직하게 제 3자의 입장에서는\n이해할 수 있지만, 몰입을 통한 공감을 하긴\n어렵지 않나 라는 생각을 하게되는\n웹툰입니다.",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "별이삼샵",
+      "title": "별이삼샵",
+      "author": "혀노",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "까칠",
+        "y2k"
+      ],
+      "covers": [
+        "covers/별이삼샵-1.jpg",
+        "covers/별이삼샵-2.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "일",
+      "episodes": 216,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 3.9,
+          "summary": "엥?????? 3.9????? 라고 발작하지\n말아주세요.",
+          "review": "있잖아요. 이건 로맨스가 아니에요.\n솔직히 고백씬 하나는 정말 원탑이지만,\n연애, 로맨스에 관련된 감정선이 부족해요.\n하지만 그에 비해서 세계관이 우리가\n추억할 수 있는 세대가 아닌데다, 무겁기\n까지 해버리니... 한마디로, 주관적인\n평가를 하는 제 입장에서는 4.0 즉,\n“누군가의 명작” 에는 들어가지 못한다.\n라고 할 수 있습니다.\n(물론, 로맨스가 아닌 다른 관점으로 보면\n4.0 이상일 수 있습니다!)",
+          "note": "*23#",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "sj",
+          "rating": 4.4,
+          "summary": "자니? 발신자 제한번호로 그녀에게 마음을\n전했던 이야기. '남과여' 혀노 작가가 담아낸\n촌스럽지만 풋풋했던 2000년대 그 시절.",
+          "review": "겪어보지 못한 2000년대의 감성을 느껴볼\n수 있어서 좋음. 별이삼샵 -> 연애혁명 ->\n여자사람친구 순으로 시대적 배경이\n현재에 가까워지는데, 각각의 시대적\n배경이 드러나 있어서 좋음",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "샤money즘",
+      "title": "샤MONEY즘",
+      "author": "나락, 영기",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "스릴러",
+        "귀신"
+      ],
+      "covers": [
+        "covers/샤money즘-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "월",
+      "episodes": 20,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.1,
+          "summary": "무당물 + 돈 전혀 생각지도 못한 소재를\n현대화시켰다는 점이 매우 재미있음.\n5화까지만 봐도 연출이 지린다는 것을 알\n수 있음.",
+          "review": "살 날림 전문 무당이라는 아주 재미있는\n요소를 가지고 전개되는 이야기.\n그냥 재미있음\n솔직히 4.2정도 주고 싶은데, 아직 신작이라\n고민이 되어서 4.1..",
+          "note": "ㅇ",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "용사-출연-마왕-연출",
+      "title": "용사 출연 마왕 연출",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "해시태그",
+        "장르"
+      ],
+      "covers": [
+        "covers/용사-출연-마왕-연출-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.1,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "해골전령-이야기",
+      "title": "해골전령 이야기",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "라이트",
+        "용사"
+      ],
+      "covers": [
+        "covers/해골전령-이야기-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.1,
+          "summary": "마왕을 잡고 나서 마왕의 저주?를 받게된\n주인공의 몇년 뒤 이야기.",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "신의-언어",
+      "title": "신의 언어",
+      "author": "장래혁",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "판타지",
+        "c언어",
+        "마계",
+        "퇴마"
+      ],
+      "covers": [
+        "covers/신의-언어-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 334,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.1,
+          "summary": "결말이 좀 그런 작품.\n사실 장르를 특정하기 힘든 판타지 웹툰",
+          "review": "무당 하기 싫어서 신을 휴대폰에 가두는\n작품.\n깔끔한 작화와 독특한 소재의 웹툰.\n끝이 조금 아쉽지만 재밌다.",
+          "note": "두억시니 개간지.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "오버-더-문",
+      "title": "오버 더 문",
+      "author": "포르토 / 이승준",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "스릴러"
+      ],
+      "tags": [
+        "단편",
+        "스릴러",
+        "깔끔한"
+      ],
+      "covers": [
+        "covers/오버-더-문-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 42,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.1,
+          "summary": "일단 짧아서 추천하기 좋음.\n스릴러치고는 그렇게 막 무섭지는 않음.",
+          "review": "달이라는 키워드에 맞게 밤에 진행되는\n웹툰.\n아주 잘 표현한 은은한 긴장감과 마지막\n깔끔한 반전까지.\n말 그대로 깔끔한 스릴러 이야기 한편.",
+          "note": "나랑 같이 달 보러 갈래?",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "장편단편선",
+      "title": "장편단편선",
+      "author": "기주주",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "스릴러"
+      ],
+      "tags": [
+        "해시태그",
+        "장르"
+      ],
+      "covers": [
+        "covers/장편단편선-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.1,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "천재-만재-백재",
+      "title": "천재, 만재, 백재!",
+      "author": "심모람",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "일상"
+      ],
+      "tags": [
+        "가족",
+        "힐링",
+        "학교"
+      ],
+      "covers": [
+        "covers/천재-만재-백재-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.1,
+          "summary": "",
+          "review": "",
+          "note": "화이팅! 천재",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "아가씨는-못말려",
+      "title": "아가씨는 못말려",
+      "author": "김연우",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "일상"
+      ],
+      "tags": [
+        "빵",
+        "학교",
+        "로맨스",
+        "컷툰",
+        "집사"
+      ],
+      "covers": [
+        "covers/아가씨는-못말려-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.1,
+          "summary": "컷툰. 좋아하는 남자와 이어지게 위해\n노력하는 주인공 이야기.",
+          "review": "빵 맛있겠다.\nㅎㅎㅎㅎㅎㅎ",
+          "note": "이게.. 로맨스…! 현대 판타지?.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "유미의-세포들",
+      "title": "유미의 세포들",
+      "author": "이동건",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "로맨스",
+        "일상",
+        "주의사항"
+      ],
+      "covers": [
+        "covers/유미의-세포들-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4.1,
+          "summary": "유미는 지금 무슨 생각을 하고 있을까?\n그녀의 머릿속에서 바쁘게 움직이는\n세포들 이야기!",
+          "review": "그림체가 초반에 비해 굉장히 많이\n바뀌었음. 초반 그림체가 진입장벽일 수\n있음\n하지만 수요일, 토요일 연재였는데 둘다\n1위를 차지함. 명작엔 이유가 있다.\n컷툰인데, 신박한 연출이 꽤 많음",
+          "note": "​ 추천하는 웹툰 양식대로 써줘요! #주의사항 이상한 짓 하면, 관리자가 아니라 뷰어로 바꿀게요.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "귀령",
+      "title": "귀령",
+      "author": "가나라, 소희, 월하야담",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "퇴마"
+      ],
+      "covers": [
+        "covers/귀령-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 4.1,
+          "summary": "배꽃향기 가득한 지리산 자락의 작은 암자\n세암당. 남도 만신의 후예이자 천궁 선녀의\n환생 하연은 금강저를 통해 영의 세계에\n개입할 수 있는 청년, 건우를 만나 세상의\n슬픔과 한을 풀고 악귀를 퇴치해 나간다.",
+          "review": "귀비나리보단 재밌음, 여주가 예쁨",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "내-최애는-막차를-탄다",
+      "title": "내 최애는 막차를 탄다",
+      "author": "직씨",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "로맨스",
+        "어른",
+        "색감",
+        "음악",
+        "막차"
+      ],
+      "covers": [
+        "covers/내-최애는-막차를-탄다-1.jpg",
+        "covers/내-최애는-막차를-탄다-2.jpg",
+        "covers/내-최애는-막차를-탄다-3.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4.2,
+          "summary": "나만 아는 가수를 같이 좋아하는 막차를\n같이 타는 그녀…?\n미묘한 상황의 인연을 보는 재미",
+          "review": "매 1화 마다 나오는 포스터 같은 그림의\n색감이 상당히 이쁘다.\n충분히 겪을 수 있는 고민들을 던지고\n해결하는 과정을 보여준다.\n조금 야하다;;",
+          "note": "",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "ys",
+          "rating": 4.1,
+          "summary": "매일 같은시간, 내 최애는 막차를 탄다.",
+          "review": "도파민인데, 좀더 시원하고 깜끔한 느낌?\n그리고 그 도파민속에 은근히 허를 찌르는\n핵심이 숨어있었음. 처음 봤을때 느낀\n선입견에 비해서는 좋은편!",
+          "note": "사람의 마음은 강물과 같아서…",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "sj",
+          "rating": 3.9,
+          "summary": "“오늘도 막차에서 만난 그녀, 그녀와 말할\n수 있다면!” 대학생 이여운은 늦게까지\n일하고 매일 막차를 탄다. 그때마다\n마주치는 기타를 멘 여자 신해인. 우연인 듯\n인연인 듯 만나는 두 사람은 서로의 최애가\n인디 뮤지션 “긴 오후”라는 걸 알게 되고\n점점 가까워지게 된다.",
+          "review": "탑툰가라",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "짝사랑의-마침표",
+      "title": "짝사랑의 마침표",
+      "author": "숭어",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "짝사랑",
+        "학교"
+      ],
+      "covers": [
+        "covers/짝사랑의-마침표-1.jpg",
+        "covers/짝사랑의-마침표-2.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4,
+          "summary": "그래도 나도 이젠 사랑받아보고 싶어",
+          "review": "일단 그림체가 넘사벽임. 너무 제\n취향인데요, 게다가 하고싶은 말이 정말\n취향저격인 웹툰입니다. 사랑은 거절, 성공,\n싸움 여러가지 갈래로 번질 수 있습니다.\n‘그걸 어떻게 받아들이는가’가 우리의\n성장의 계기가 될 수 있겠죠. 이 웹툰에서는\n느낄 수 있는 점이 많습니다. 여러분도 꼭\n느끼시길 바랄게요!",
+          "note": "마침표를 찍으면 새로운 문장이 시작된다는 뜻이잖아!",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "sj",
+          "rating": 4.1,
+          "summary": "고백 성공률 0%의 짝사랑마스터 해리.\n굴욕적인 19번째 실연장면을 우연히\n예찬에게 들키고 만다. 다시는 아무도 안\n좋아하겠다고 다짐했지만, 또 짝사랑을\n시작해버린 해리는 20번째 실연을 막기\n위해 예찬의 도움을 받기로 하는데... 과연\n이번 사랑은 성공할 수 있을까?",
+          "review": "일단 그림체가 굉장히좋고, 스토리도\n무난함",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "작두",
+      "title": "작두",
+      "author": "232, POGO",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "십이지신",
+        "한국전통퓨전물",
+        "천간,",
+        "동양",
+        "학원"
+      ],
+      "covers": [
+        "covers/작두-1.jpg",
+        "covers/작두-2.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "kge",
+          "rating": 4,
+          "summary": "3점대 후반이나 232작가이기에 4점 줌.",
+          "review": "십이지신이라는 요소를 이용한\n퇴마+소년물\n신선한 주제로 흥미를 이끌어냄",
+          "note": "​",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "sj",
+          "rating": 4.1,
+          "summary": "미신따윈 믿지않는 주인공 '권용진'. 그의 만\n16세의 생일이 지나자 눈 앞에 펼쳐진 믿을\n수 없는 일들.",
+          "review": "여주, 묘, 축",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "위닝샷",
+      "title": "위닝샷",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "등등"
+      ],
+      "tags": [
+        "야구",
+        "투수"
+      ],
+      "covers": [
+        "covers/위닝샷-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "순정말고-순종",
+      "title": "순정말고 순종",
+      "author": "슈안",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "로맨스",
+        "코미디"
+      ],
+      "covers": [
+        "covers/순정말고-순종-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4,
+          "summary": "지루한 드라마는 이제 끝",
+          "review": "이 작가와 배우라는 직업을 너무 잘\n살리기도했고, 유명인과 일반인의 관계도\n너무 잘살렸어요. 뭐라 그래야할까.\n개인적으로 몰입이 엄청 잘된 케이스?\n솔직히 말자면, 스토리적 몰입이 아니라,\n캐릭터한테 공감하는 몰입은 이 웹툰이\n정말 훌륭하다고 생각해요.\n+ 개그가 너무 내 취향임",
+          "note": "거짓말같이 남자친구 등장",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "나타나주세요",
+      "title": "나타나주세요!",
+      "author": "김기현",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "정지혜",
+        "치밀함"
+      ],
+      "covers": [
+        "covers/나타나주세요-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 123,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4,
+          "summary": "나타주세요!\n타임 패러독스, 추리, 로맨스의 완벽한\n조화.",
+          "review": "근데 있짜나요… 난 정말 재밌다고\n생각해요…\n추리하는 맛도 있고, 로맨스적인 요소도\n정말정말 좋다고 생각해요…\n하지만, 그림체에 호불호가 생길 수 있다.",
+          "note": "지용이는 그림을 찢어… (그.찢.남)",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "청춘계시록",
+      "title": "청춘계시록",
+      "author": "한서",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "청춘",
+        "학원",
+        "사이비"
+      ],
+      "covers": [
+        "covers/청춘계시록-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "일",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4,
+          "summary": "같은반 사이비 교주의 아들과의\n간떨어지는 동거!",
+          "review": "그림체, 객관적으로 봤을때, 정말 극극\n상위권이지만, 스토리적인 신파극, 감동을\n주기에는 아직 무리가 있고, 빌드업을 쌓는\n중이라서 달달하고 다 좋은데, 스토리의\n소재에 비해서 무게감이 조금 아쉬운\n편이죠.",
+          "note": "알콩달콩 스릴넘치는 동거!",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "벙커의-낮",
+      "title": "벙커의 낮",
+      "author": "2면지",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "치밀함"
+      ],
+      "covers": [
+        "covers/벙커의-낮-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 4,
+          "summary": "보류",
+          "review": "아직 판단하기에는 너무 어려워요.\n뭔가 도박수를 두고있는 느낌… 잘하면\n명작, 못하면 망작이 되어버릴것 같은 그런\n웹툰입니다!",
+          "note": "재밌는데 불쾌해…",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "전생연분",
+      "title": "전생연분",
+      "author": "재아, HAE",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "전생"
+      ],
+      "covers": [
+        "covers/전생연분-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 4,
+          "summary": "'내가 후궁에게 살해당한 조선의 왕비?!'\n시험을 보다가 갑자기 전생을 떠올리게 된\n민주. 크게 당황하지만, 전생보다 중요한\n것은 대입이었기에 애써 마음을 추스른다.\n하지만 전생의 철천지 원수였던 후궁이\n민주를 찾아오고 뒤이어 전생에\n남편이었던 왕까지 나타나면서 민주의\n수험생활은 위기를 맞는데.... '전생이고\n나발이고 제발 공부 좀 하자!!'",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "인어를-위한-수영교실",
+      "title": "인어를 위한 수영교실",
+      "author": "용찬",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "수영"
+      ],
+      "covers": [
+        "covers/인어를-위한-수영교실-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 4,
+          "summary": "헤엄에 서툰 인어를 위한 수영 교실! 초아는\n수영을 배워 그리워하던 바다로 다시\n돌아갈 수 있을까?",
+          "review": "정석, 무난",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "귀비나리",
+      "title": "귀비나리",
+      "author": "신희빈, 곰시",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "스릴러",
+        "퇴마"
+      ],
+      "covers": [
+        "covers/귀비나리-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 4,
+          "summary": "영적 능력을 가진 고등학생 태린은 어느 날\n귀신의 사연을 알게 된다. 귀신보다 사람이\n더 위험한 걸 알게 된 태린은 소꿉친구인\n창우와 귀신들의 한을 풀어 주기로\n결심하는데…",
+          "review": "퇴마 웹툰이 별로 없어서 나름 메니아 층이\n있는 편",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "20-중반-성공이란-무엇인가",
+      "title": "20 중반, 성공이란 무엇인가",
+      "author": "김동훈",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "일상"
+      ],
+      "tags": [
+        "동기부여"
+      ],
+      "covers": [
+        "covers/20-중반-성공이란-무엇인가-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 4,
+          "summary": "- 4.5\n'솔직히 내가 성공 안 하면 누가 하냐?' 자기\n객관화 0%의 성공 집착남 동훈이의\n이십춘기 성장통...",
+          "review": "공부자극, 뭔가 불쾌함",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "fff급-관심용사",
+      "title": "FFF급 관심용사",
+      "author": "깡무",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "판타지"
+      ],
+      "covers": [
+        "covers/fff급-관심용사-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.9,
+          "summary": "주인공 개X끼\n클리셰 파괴",
+          "review": "단순 재미 미친 용사 와우!\n미친놈인가? 아 착한가? 아 아니였노",
+          "note": "주인공 또라이 새끼",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "빌런의-프로파일러",
+      "title": "빌런의 프로파일러",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "등등"
+      ],
+      "tags": [
+        "해시태그",
+        "장르"
+      ],
+      "covers": [
+        "covers/빌런의-프로파일러-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.9,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "용사파티만화",
+      "title": "용사파티만화",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "등등"
+      ],
+      "tags": [
+        "판타지",
+        "용사",
+        "음지",
+        "B급"
+      ],
+      "covers": [
+        "covers/용사파티만화-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.9,
+          "summary": "귀여운 용사가 나쁜 마왕 잡으러 가는\n이야기!",
+          "review": "용사가 나쁘고.. 마왕이 착해요..\n단편적인 구성으로써 진행됨.\n조금.. 음지임.",
+          "note": "음…",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "여우애담",
+      "title": "여우애담",
+      "author": "이도광",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "구미호",
+        "이해",
+        "사극"
+      ],
+      "covers": [
+        "covers/여우애담-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 150,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.9,
+          "summary": "로맨스 인척하는 피폐 로맨스.\n로맨스라기 보다는 신파에 가까운듯?\n로맨스 보다는 좀 더 인물간의 서사를\n좋아하는 사람에게 추천!",
+          "review": "로맨스를 기대하고 보시는 것보다는\n인간과 인간이 아닌 구미호가 어떻게\n서로를 이해하는지 천천히 설명해 주는\n웹툰.\n이외에도 조선시대 우리 실제 역사를\n담아서 현실감이 상당히 산다.",
+          "note": "아 제발 좀 행복하라고",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "우리-길드-아이돌",
+      "title": "우리 길드 아이돌",
+      "author": "꼬보",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "로맨스",
+        "온라인"
+      ],
+      "covers": [
+        "covers/우리-길드-아이돌-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.9,
+          "summary": "온라인 게임에서 만난 사람과의 이야기\n근데 그 사람이 옛날에 만났던 소꿉 음\n아이돌?",
+          "review": "신비한 색감의 그림체\n작가분이 코디를 신경쓰는게 보인다.\n여러가지 tmi 스러운 다양한 세부설정이\n재밌다.\n거의 말도 안되는 관계라서 이게 어떻게\n될지 기대하며 보게된다.",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "사지선다",
+      "title": "사지선다",
+      "author": "팀 네잎",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "로맨스",
+        "학교"
+      ],
+      "covers": [
+        "covers/사지선다-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.9,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "스트릿-워크-아웃",
+      "title": "스트릿 워크 아웃",
+      "author": "장부규",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "등등"
+      ],
+      "tags": [
+        "스트릿",
+        "맨몸운동"
+      ],
+      "covers": [
+        "covers/스트릿-워크-아웃-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.9,
+          "summary": "스트릿 워크아웃 이라는 장르를 사람들이\n잘 모름에도 불구하고 재미있게 풀어냄.",
+          "review": "맨몸 운동에 철봉이 더해진 작품인 만큼\n몸의 묘사가 뛰어나고, 철봉에서의 움직임\n역시 역동적으로 표현한다.\n동적인 움직임을 정적인 세계에 표현하는\n것이 어려운데 나쁘지 않게 해냈다.",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "인과관계",
+      "title": "인과관계",
+      "author": "강환영",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "스킨십"
+      ],
+      "covers": [
+        "covers/인과관계-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 3.9,
+          "summary": "나, 닿으면 토해.",
+          "review": "저는 느낀점이나 배울 수 있는점이 있으면\n4.0을 주고 시작하는데, 이건 딱 느낀점이\n있어서 4.0을 준 케이스 입니다. 작가가\n하고싶은 말이 딱 보이고, 재미있어요.\n그 반면, 세탁기를 돌리는 느낌이 너무\n심하고, 개연성이 떨어진다고 느낄 수 있을\n것 같아요.\n그리고 참고로 이 웹툰, 여성향 웹툰입니다.\n남주 게이같이 그리는거 개 싫어하는데 또\n보다보니 익숙해지는 것 같은…",
+          "note": "보는 내가 다 울렁거려요.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "같은학교-친구",
+      "title": "같은학교 친구",
+      "author": "유유",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "순애"
+      ],
+      "covers": [
+        "covers/같은학교-친구-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "토",
+      "episodes": 96,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 3.9,
+          "summary": "바르게 살아가는 하루 하루가 모여,\n부드럽고 사랑스런 관계를 만들다.",
+          "review": "재밌는데, 스토리적으로 무게감이 있거나\n감동을 주는 서사가 있지는 않습니다.\n달달하고 가벼운 순애물, 부드러운 느낌의\n로맨스 웹툰을 원한다면 추천할만합니다!",
+          "note": "사랑스런 순애",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": [
+        [
+          "효제",
+          "아 내가 더 먼저 봤어."
+        ]
+      ]
+    },
+    {
+      "id": "여자사람친구",
+      "title": "여자사람친구",
+      "author": "이상돌",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "2020년대"
+      ],
+      "covers": [
+        "covers/여자사람친구-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "일",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 3.9,
+          "summary": "그저 여자'사람'친구. 그 이상도 이하도\n아니었던 친구가 방학 동안 예뻐져서\n나타났다. 이쁘다. 처음으로 쟤한테 설렐\n정도로.",
+          "review": "로맨스 웹툰 중에 가장 최근을 배경으로\n둬서 공감되는 부분이 많음. 아직 휴재라\n모른다.",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "수호소녀",
+      "title": "수호소녀",
+      "author": "엠제이",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "불사"
+      ],
+      "covers": [
+        "covers/수호소녀-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 3.9,
+          "summary": "불사의 몸을 지닌 고등학교 1학년 천소영은\n같은 반 인기남 류희재를 좋아한다.\n어째서인지 자꾸 죽을 위기에 처하는\n희재를 구하기 위해 소영은 몸을 던진다.\n구해주고 지켜지는 두 사람의 관계 속에\n묘한 싹이 자라나기 시작하는데.. 과연\n그들의 목숨과 운명은?!",
+          "review": "",
+          "note": "H2",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "작전명-순정",
+      "title": "작전명 순정",
+      "author": "꼬까리, 들덤",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "삼각관계"
+      ],
+      "covers": [
+        "covers/작전명-순정-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 3.9,
+          "summary": "내 남자친구와 절친의 키스를 목격했다.\n그것도 하필이면 재수 없는 같은 반 남자애\n'고은혁'과 함께. 안 그래도 혼란스러운데..\n사람마다 평생 받을 사랑의 양이\n정해져있다고?? 심지어 내가 받을 수 있는\n사랑의 양은 '0'??? 알거지 운명을\n바꿔보려는 수애와, 그런 수애에게 말려든\n은혁의 맞바람 작전! 바람피우는 '척'만\n하려고 했는데 점점 진짜로 끌린다?! 이\n계획... 과연 성공할 수 있을까?",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "소녀의-세계",
+      "title": "소녀의 세계",
+      "author": "모랑지",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "삼각관계"
+      ],
+      "covers": [
+        "covers/소녀의-세계-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 3.9,
+          "summary": "완벽해 보이지만 사실 외로웠던 백조들과\n맘씨 착한 오리가 만나 여러 갈등을 함께\n겪으며 진짜 친구가 되어가는 소녀들의 찐\n우정물",
+          "review": "초~중반은 재밌음 후반으로 갈수록 너무\n루즈해짐",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "오늘의-한요일은-여자다",
+      "title": "오늘의 한요일은 여자다",
+      "author": "송극장",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "등등"
+      ],
+      "tags": [
+        "아이돌",
+        "TS",
+        "Ts",
+        "예쁨"
+      ],
+      "covers": [
+        "covers/오늘의-한요일은-여자다-1.jpg",
+        "covers/오늘의-한요일은-여자다-2.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "목",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.9,
+          "summary": "",
+          "review": "",
+          "note": "볼때마다 현타온다.. 예쁜데 거부감든다…",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "sj",
+          "rating": 3.8,
+          "summary": "학폭 가해자라는 치명적인 누명을 쓰고\n아이돌을 꿈꾸는 김상현. 어느 날 찾아온\n대형 기획사 실장의 제안으로 '전생의\n모습으로 바꿔주는 약'을 사용하게 되는데,\n변신한 거울 속 전생의 모습은 엄청난\n미인.. 그런데 여자? 과연 남자라는 정체를\n들키지 않고 연습생들 무리에서 살아남을\n수 있을까?",
+          "review": "신선하다.. 신선해.. 상한거 같기도 하고\n후반부로 갈수록 쳐지는 느낌",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "백투더찬비",
+      "title": "백투더찬비",
+      "author": "장사휘",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "이야기가",
+        "ys맘에",
+        "로맨스"
+      ],
+      "covers": [
+        "covers/백투더찬비-1.jpg",
+        "covers/백투더찬비-2.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "목",
+      "episodes": 69,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.9,
+          "summary": "저기 밑에 저 ys는 싫어하는 로맨스웹툰.\n아니 근데 가볍게 보기 딱 좋은 고딩\n연애물.\n그림체 커버 웹툰.",
+          "review": "여주가 남주 앞에서만 보이는 그 모습.\n이 웹툰의 가장 중요한 요소만 잘\n받아들인다면 가볍게 보기 좋은 웹툰.\n개연성만 잘 받아들이면 (살짝 없음)",
+          "note": "저어 밑에 유섭씨 조용하세요",
+          "date": "2026-08-20"
+        },
+        {
+          "writer": "ys",
+          "rating": 3.8,
+          "summary": "기억을 잃은 찬비가 견오를 다시 좋아할때\n까지.",
+          "review": "자, 대깨 백찬비 여러분 여러분도 알잖아요.\n굳이 이 웹툰을 고수할 필요성이 전혀\n없어요.\n이 미쳐버린 도파민 중독 세상에서 설렘을\n느끼는 방법을 고구마 → 사이다 밖에\n모르는 여러분이 안타까울 뿐입니다.\n물론, 이 웹툰 재밌긴해요. 그런데, 별점을\n보면 알잖아요. 고구마 전개의 남용, 납득이\n안되는 개연성, 완성도와 무게감이\n부족합니다.\n노래를 들을때 가사를 볼줄\n알아야하는법이죠.",
+          "note": "“깡(찬비 머리 깨지는 소리)” 효제 PICK 찬비 머리 깨지는 소리는 미친놈아",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": [
+        [
+          "유섭",
+          "아이고;;"
+        ],
+        [
+          "서진",
+          "백찬비 ← 좋은 작품은 아님. but. 도희누나 한정 4.9점"
+        ],
+        [
+          "김시우",
+          "남주도 기억을 잃어야해"
+        ]
+      ]
+    },
+    {
+      "id": "귀족-차남-성장기",
+      "title": "귀족 차남 성장기",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "일본웹툰",
+        "마법",
+        "중세"
+      ],
+      "covers": [
+        "covers/귀족-차남-성장기-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.8,
+          "summary": "",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "장인의-거리",
+      "title": "장인의 거리",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "해골전령",
+        "대장장이"
+      ],
+      "covers": [
+        "covers/장인의-거리-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.8,
+          "summary": "해골전령 이야기와 같은 세계관, 비슷한\n시간대를 다루고 있는 작품.\n마물을 재료로 쓰는 대장장이의 이야기",
+          "review": "",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "나태-공자-노력-천재-되다",
+      "title": "나태 공자, 노력 천재 되다.",
+      "author": "doip / 도도문 / 이등별",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "노력",
+        "정통판타지",
+        "검사"
+      ],
+      "covers": [
+        "covers/나태-공자-노력-천재-되다-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 138,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.8,
+          "summary": "이 웹툰 5화를 보고 1주일 동안 무엇이든지\n최선을 다해서 했던 기억이 있음.\n검사가 되는 길.",
+          "review": "노력천재가 되는 과정이 아니라. 시즌1때\n이미 노력천재가 되고 그래서 시즌2는 그냥\n정통판타지가 된 웹툰.\n나도 노력하고 싶어지는 작품",
+          "note": "수직베기.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "랭커를-위한-바른-생활-안내서",
+      "title": "랭커를 위한 바른 생활 안내서",
+      "author": "심상, 직믹, 테제",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "판타지"
+      ],
+      "tags": [
+        "탑"
+      ],
+      "covers": [
+        "covers/랭커를-위한-바른-생활-안내서-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "월",
+      "episodes": 65,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.8,
+          "summary": "처음에는 조금 루즈 하지만, 가볍게 계속\n보기 좋은 판타지 탑 등반물.",
+          "review": "상당히 클리셰적인 작품이라고 말할 수 도\n있지만, 생각보다 나쁘지 않은 작품\n탑 등반물 세계관의 최강의 인생을 보는\n듯한 느낌.",
+          "note": "죠.",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "오로지-너를-이기고-싶어",
+      "title": "오로지 너를 이기고 싶어",
+      "author": "아마도지, 사삭",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "오로지",
+        "이기고",
+        "오리지"
+      ],
+      "covers": [
+        "covers/오로지-너를-이기고-싶어-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 236,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "ys",
+          "rating": 3.8,
+          "summary": "태어나서 한번도 패배한적 없는 남자\n‘이기고’를 지게만든 첫 여자. ‘오로지’ 그\n둘의 간질간질 로맨스",
+          "review": "오리지 씨봉방봉…\n아아아… 진짜 재미있고 진짜 간질간질\n한데, 오리지가 나오면서 다 망가졌어요…\n후반부를 박아버린…",
+          "note": "오로지 진짜 미쳐 오리지 진짜 미쳐 -서진 : 그래도 난 좋았어..",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "가짜-동맹",
+      "title": "가짜 동맹",
+      "author": "케냠",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "로맨스"
+      ],
+      "tags": [
+        "소꿉친구",
+        "계약"
+      ],
+      "covers": [
+        "covers/가짜-동맹-1.jpg"
+      ],
+      "status": "완결",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "sj",
+          "rating": 3.8,
+          "summary": "소꿉친구와 하루아침에 커플이 되었다?!\n통제가 강한 부모님들을 안심 시키고\n자유롭게 생활하기 위해 동맹을 맺은 두\n모범생 ‘윤세이’와 ‘김재하’. 동맹을 들킬\n위기를 모면하기 위한 두 사람의 가짜 커플\n행세가 시작된다!",
+          "review": "그림체가 일단 정말 좋음. 결말또한 정말\n깔끔",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    },
+    {
+      "id": "데드포인트",
+      "title": "데드포인트",
+      "author": "",
+      "platform": "네이버",
+      "url": "",
+      "genres": [
+        "등등"
+      ],
+      "tags": [
+        "클라이밍",
+        "잠재력",
+        "한계"
+      ],
+      "covers": [
+        "covers/데드포인트-1.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "seasons": 1,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 3.7,
+          "summary": "청소년 시기의 고민을 클라이밍으로\n풀어내는 작품. 클라이밍마다 재밌는\n이야기가 있고 풀어내는 능력이 좋음",
+          "review": "솔직히 클라이밍을 잘 몰라서 원래 저런지\n잘 모르겠어요..\n암튼 잠재의 한계에 대해서 설명해줌.",
+          "note": "",
+          "date": "2026-08-20"
+        }
+      ],
+      "comments": []
+    }
+  ]
+}
