@@ -269,7 +269,7 @@ h1.t{font-size:27px;font-weight:600;line-height:1.28;word-break:keep-all}
     <div class="vline"></div>
     <div class="rangebox">
       <span class="glabel">별점</span>
-      <input type="range" id="minr" min="3" max="5" step="0.1" value="3">
+      <input type="range" id="minr" min="0" max="5" step="0.1" value="3">
       <b id="mv">3.0</b><span class="glabel">이상</span>
     </div>
   </div>
@@ -339,22 +339,41 @@ let sel={genre:new Set(),platform:new Set(),writer:new Set()}, cond=new Set(), s
 let favs = new Set(JSON.parse(localStorage.getItem("favs") || "[]"));
 async function loadFavs(){
   if (!sb || !me) return;
+  const local = favs; // 로그인 전 이 기기에 모아둔 즐겨찾기
   const { data } = await sb.from("favorites").select("webtoon_id").eq("user_id", me.id);
-  if (data) favs = new Set(data.map(r => r.webtoon_id));
+  const server = new Set((data||[]).map(r => r.webtoon_id));
+  const toUpload = [...local].filter(id => !server.has(id));
+  if (toUpload.length){
+    try {
+      const { error } = await sb.from("favorites")
+        .upsert(toUpload.map(id => ({ user_id: me.id, webtoon_id: id })), { onConflict: "user_id,webtoon_id" });
+      if (!error) toUpload.forEach(id => server.add(id));
+    } catch(e) {}
+  }
+  favs = server;
 }
 async function toggleFav(id){
-  const on = favs.has(id);
-  on ? favs.delete(id) : favs.add(id);
+  const was = favs.has(id);
+  was ? favs.delete(id) : favs.add(id);
   if (sb && me) {
-    on ? await sb.from("favorites").delete().match({ user_id: me.id, webtoon_id: id })
-       : await sb.from("favorites").insert({ user_id: me.id, webtoon_id: id });
+    try {
+      const { error } = was
+        ? await sb.from("favorites").delete().match({ user_id: me.id, webtoon_id: id })
+        : await sb.from("favorites").insert({ user_id: me.id, webtoon_id: id });
+      if (error) throw error;
+    } catch(e) {
+      was ? favs.add(id) : favs.delete(id); // 실패하면 되돌린다
+    }
   } else localStorage.setItem("favs", JSON.stringify([...favs]));
 }
 
 const isNew = w => w.start && (TODAY - new Date(w.start)) / 86400000 <= C.newDays;
 const isEnd = w => (w.status||"").includes("완결");
-const avg = w => w.reviews.length ? w.reviews.reduce((a,r)=>a+r.rating,0)/w.reviews.length : 0;
-const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+/* 글쓴이 필터가 켜져 있으면 그 사람 리뷰만으로 평균·개수를 계산한다 */
+const reviewsFor = w => sel.writer.size ? w.reviews.filter(r=>sel.writer.has(r.writer)) : w.reviews;
+const avg = w => { const rv = reviewsFor(w); return rv.length ? rv.reduce((a,r)=>a+r.rating,0)/rv.length : 0; };
+const avgRounded = w => Math.round(avg(w)*10)/10;
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const names = w => (w.authors && w.authors.length) ? w.authors.join(" · ") : (w.author || "");
 
 function slide(id,i){
@@ -387,19 +406,19 @@ function cover(w,i=0,badge=true){
 function stars(v,n,sm){
   return `<div class="score${sm?" sm":""}"><div class="v num">${v.toFixed(1)}</div><div class="of">/ 5.0</div>
     ${n>1?`<div class="cnt">${n}명 평균</div>`:""}</div>
-  <div class="scale"><div class="track"><i style="left:${Math.max(0,Math.min(100,(v-3)/2*100)).toFixed(1)}%"></i></div>
-  <div class="ticks"><span>3.0</span><span>4.0</span><span>5.0</span></div></div>`;
+  <div class="scale"><div class="track"><i style="left:${Math.max(0,Math.min(100,v/5*100)).toFixed(1)}%"></i></div>
+  <div class="ticks"><span>0.0</span><span>2.5</span><span>5.0</span></div></div>`;
 }
 const spo = t => esc(t).replace(/\|\|([^|]+?)\|\|/g,
   (m,x)=>`<span class="spo" onclick="this.classList.add('on')" title="스포일러 — 눌러서 보기">${x}</span>`);
 
 function pass(w){
   if ((w.genres||[]).includes(ADULT) !== adult) return false;
-  if (avg(w) < minScore - 1e-9) return false;
+  if (avgRounded(w) < minScore - 1e-9) return false;
   if (stat==="연재중" && isEnd(w)) return false;
   if (stat==="완결" && !isEnd(w)) return false;
   if (cond.has("신작") && !isNew(w)) return false;
-  if (cond.has("50화 이하") && w.episodes > 50) return false;
+  if (cond.has("50화 이하") && (!w.episodes || w.episodes > 50)) return false;
   if (cond.has("즐겨찾기") && !favs.has(w.id)) return false;
   if (sel.genre.size && !(w.genres||[]).some(g=>sel.genre.has(g))) return false;
   if (sel.platform.size && !sel.platform.has(w.platform)) return false;
@@ -412,14 +431,15 @@ function pass(w){
 }
 
 function card(w){
-  const r0 = w.reviews[0] || {};
+  const rv = reviewsFor(w);
+  const r0 = rv[0] || {};
   return `<article class="post">
     <div class="postin">
       <div data-open="${w.id}">${cover(w)}</div>
       <div class="pmeta">
         <h3>${esc(w.title)}</h3>
         <div class="by">${esc(names(w)) || "작가 미기재"}</div>
-        ${stars(avg(w), w.reviews.length)}
+        ${stars(avg(w), rv.length)}
         <div class="tags">
           <span class="tag" style="color:${PCOLOR[w.platform]||""}">${esc(w.platform)}</span>
           ${(w.genres||[]).map(g=>`<span class="tag">${esc(g)}</span>`).join("")}
@@ -438,23 +458,38 @@ function card(w){
     </div></article>`;
 }
 
+function rowHtml(title, items){
+  items = [...items].sort((a,b)=>avg(b)-avg(a));
+  return `<section class="row">
+    <div class="rowhead"><h2>${esc(title)}</h2><i>${items.length}편</i></div>
+    <div class="rail">${items.map(w=>`<button class="tile" data-open="${w.id}">
+      ${cover(w)}<h3>${esc(w.title)}</h3><div class="sc num">${avg(w).toFixed(1)}</div></button>`).join("")}</div>
+  </section>`;
+}
+
 function render(){
   const m = document.getElementById("main"), list = DATA.filter(pass);
   if (!list.length){
-    m.innerHTML = `<p class="empty">${adult ? "성인 웹툰으로 등록된 작품이 없다.<br>관리자 화면에서 장르를 19로 두면 여기에 모인다."
-      : "조건에 맞는 웹툰이 없다.<br>별점을 낮추거나 조건을 하나 꺼보자."}</p>`;
+    let msg = adult ? "성인 웹툰으로 등록된 작품이 없다.<br>관리자 화면에서 장르를 19로 두면 여기에 모인다."
+      : "조건에 맞는 웹툰이 없다.<br>별점을 낮추거나 조건을 하나 꺼보자.";
+    if (!adult && cond.has("신작") && !DATA.some(w=>w.start))
+      msg = "신작으로 표시된 작품이 없다.<br>연재 시작일이 입력된 작품이 아직 없어서 그렇다 — 관리자 화면에서 시작일을 채워보자.";
+    m.innerHTML = `<p class="empty">${msg}</p>`;
     return;
   }
   if (view==="home"){
     const groups = adult ? [ADULT] : GENRES;
-    m.innerHTML = groups.map(g=>{
-      const r = list.filter(w=>(w.genres||[]).includes(g)); if(!r.length) return "";
-      r.sort((a,b)=>avg(b)-avg(a));
-      return `<section class="row">
-        <div class="rowhead"><h2>${esc(g==ADULT?"성인 웹툰":g)}</h2><i>${r.length}편</i></div>
-        <div class="rail">${r.map(w=>`<button class="tile" data-open="${w.id}">
-          ${cover(w)}<h3>${esc(w.title)}</h3><div class="sc num">${avg(w).toFixed(1)}</div></button>`).join("")}</div>
-      </section>`;}).join("") || `<p class="empty">조건에 맞는 웹툰이 없다.</p>`;
+    const seen = new Set();
+    let html = groups.map(g=>{
+      const r = list.filter(w=>(w.genres||[]).includes(g));
+      r.forEach(w=>seen.add(w.id));
+      return r.length ? rowHtml(g===ADULT?"성인 웹툰":g, r) : "";
+    }).join("");
+    if (!adult){
+      const leftover = list.filter(w=>!seen.has(w.id));
+      if (leftover.length) html += rowHtml("기타", leftover);
+    }
+    m.innerHTML = html || `<p class="empty">조건에 맞는 웹툰이 없다.</p>`;
   } else if (view==="feed"){
     list.sort((a,b)=>avg(b)-avg(a));
     m.innerHTML = `<div class="feed">${list.map(card).join("")}</div>`;
@@ -481,7 +516,7 @@ async function open_(id){
       <div>
         <h1 class="t">${esc(w.title)}</h1>
         <div class="sub">${esc(names(w)) || "작가 미기재"}</div>
-        ${stars(avg(w), w.reviews.length, true)}
+        ${stars(avg(w), reviewsFor(w).length, true)}
         <dl class="facts">
           <dt>플랫폼</dt><dd style="color:${PCOLOR[w.platform]||""}">${esc(w.platform)}</dd>
           <dt>연재</dt><dd>${isEnd(w) ? `${esc(w.status)}${w.episodes?` · 총 ${w.episodes}화`:""}`

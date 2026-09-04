@@ -692,14 +692,6 @@
       "comments": [],
       "reviews": [
         {
-          "writer": "HJ",
-          "rating": 4,
-          "summary": "",
-          "review": "",
-          "note": "",
-          "date": "2026-09-03"
-        },
-        {
           "writer": "ys",
           "rating": 4.4,
           "summary": "엄청난 빚을 떠안기고, 아이를 잃게 한\n것으로 모자라,\n한참 어린 여자와 내 눈앞에서 몸을 섞었다.\n상처 입은 삶은 볼품 없이 시들어 버려질\n예정이었다.\n그런데-",
@@ -737,14 +729,6 @@
       "needsCheck": false,
       "comments": [],
       "reviews": [
-        {
-          "writer": "HJ",
-          "rating": 4,
-          "summary": "",
-          "review": "",
-          "note": "",
-          "date": "2026-09-04"
-        },
         {
           "writer": "ys",
           "rating": 4.4,
@@ -1317,14 +1301,6 @@
       "comments": [],
       "reviews": [
         {
-          "writer": "HJ",
-          "rating": 4,
-          "summary": "",
-          "review": "",
-          "note": "",
-          "date": "2026-09-03"
-        },
-        {
           "writer": "ys",
           "rating": 4.3,
           "summary": "",
@@ -1856,14 +1832,6 @@
       "needsCheck": false,
       "comments": [],
       "reviews": [
-        {
-          "writer": "HJ",
-          "rating": 4,
-          "summary": "",
-          "review": "",
-          "note": "",
-          "date": "2026-09-03"
-        },
         {
           "writer": "ys",
           "rating": 4.2,
@@ -2542,16 +2510,7 @@
       "lastChecked": null,
       "needsCheck": false,
       "comments": [],
-      "reviews": [
-        {
-          "writer": "HJ",
-          "rating": 4,
-          "summary": "",
-          "review": "",
-          "note": "",
-          "date": "2026-09-04"
-        }
-      ]
+      "reviews": []
     },
     {
       "id": "순정말고-순종",

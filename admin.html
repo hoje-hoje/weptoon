@@ -336,10 +336,10 @@ const WCOLOR = Object.fromEntries(C.admins.map(a=>[a.id,a.color]));
 let TOKEN = localStorage.getItem("gh_token") || "";
 let ME = localStorage.getItem("gh_me") || "";
 let store = { updated:"", items:[] }, sha = "", cur = null, mode = 0;
-let fWriter = "", covers = [], tags = [], authors = [], genres = [];
+let fWriter = "", covers = [], tags = [], authors = [], genres = [], removedWriters = [], ratingTouched = false;
 
 const $ = id => document.getElementById(id);
-const esc = s => String(s ?? "").replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const slug = t => (t||"webtoon").trim().toLowerCase()
   .replace(/[^\w가-힣]+/g,"-").replace(/^-|-$/g,"").slice(0,40) || "webtoon-"+Date.now();
 const isEnd = w => (w.status||"").includes("완결");
@@ -487,6 +487,8 @@ function load(w){
   $("a").value = r.summary || "";
   $("b").value = r.review || "";
   rate(r.rating ?? 4.0);
+  ratingTouched = r.rating !== undefined;
+  removedWriters = [];
   tags = [...(w?.tags || [])];
   authors = w ? (w.authors ? [...w.authors] : (w.author ? [w.author] : [])) : [];
   genres = [...(w?.genres || [])];
@@ -501,7 +503,7 @@ function load(w){
 
 /* 다른 관리자가 쓴 품평 — 합쳐서 보여준다 */
 function drawOthers(){
-  const rest = (cur?.reviews || []).filter(r => r.writer !== ME);
+  const rest = (cur?.reviews || []).filter(r => r.writer !== ME && !removedWriters.includes(r.writer));
   $("others").innerHTML = rest.length
     ? `<p class="hint">이 작품에 다른 사람도 썼다. 내가 저장해도 아래 것은 그대로 남는다.</p>` +
       rest.map(r=>`<div class="other">
@@ -512,7 +514,7 @@ function drawOthers(){
     : "";
   $("others").querySelectorAll("[data-drop]").forEach(b => b.onclick = () => {
     if (!confirm(`${b.dataset.drop} 가 쓴 품평을 지운다. 계속할까?`)) return;
-    cur.reviews = cur.reviews.filter(r => r.writer !== b.dataset.drop);
+    removedWriters.push(b.dataset.drop);
     drawOthers(); say("저장을 눌러야 실제로 지워진다");
   });
 }
@@ -589,8 +591,8 @@ function rate(v){
   $("rv").textContent = v.toFixed(1);
   $("i-rating").value = v; $("i-rating2").value = v.toFixed(1);
 }
-$("i-rating").oninput = e => rate(e.target.value);
-$("i-rating2").oninput = e => rate(e.target.value);
+$("i-rating").oninput = e => { ratingTouched = true; rate(e.target.value); };
+$("i-rating2").oninput = e => { ratingTouched = true; rate(e.target.value); };
 
 /* ══ 스포일러 ══ */
 function selInfo(id){
@@ -745,12 +747,8 @@ $("saveBtn").onclick = async () => {
     const latest = fresh.data;
     const old = latest.items.find(w => w.id === id);
 
-    /* 다른 사람 품평은 최신본 것을 쓰고, 내가 지운 사람만 뺀다 */
-    const dropped = (cur?.reviews || []).length
-      ? (cur.reviews.map(r=>r.writer))
-      : null;
-    let reviews = (old?.reviews || []).filter(r => r.writer !== ME);
-    if (cur && dropped) reviews = reviews.filter(r => dropped.includes(r.writer));
+    /* 다른 사람 품평은 최신본 것을 쓰고, 내가 "지우기"로 명시적으로 지운 사람만 뺀다 */
+    let reviews = (old?.reviews || []).filter(r => r.writer !== ME && !removedWriters.includes(r.writer));
 
     const mine = {
       writer: ME,
@@ -760,7 +758,7 @@ $("saveBtn").onclick = async () => {
       note: $("i-note").value.trim(),
       date: new Date().toISOString().slice(0,10),
     };
-    if (mine.summary.trim() || mine.review.trim() || mine.rating) reviews.push(mine);
+    if (mine.summary.trim() || mine.review.trim() || ratingTouched) reviews.push(mine);
     reviews.sort((x,y)=> C.admins.findIndex(a=>a.id===x.writer) - C.admins.findIndex(a=>a.id===y.writer));
 
     const rec = {
@@ -775,6 +773,7 @@ $("saveBtn").onclick = async () => {
       episodes: +$("i-episodes").value || 0,
       start: $("i-start").value || "",
       autoUpdate: $("i-auto").checked,
+      seasons: old?.seasons ?? cur?.seasons,
       lastChecked: old?.lastChecked ?? null,
       needsCheck: old?.needsCheck ?? false,
       comments: old?.comments ?? cur?.comments ?? [],
@@ -790,6 +789,8 @@ $("saveBtn").onclick = async () => {
     sha = res.content.sha;
     store = latest; cur = rec;
     covers = paths.map(v=>({kind:"path",v}));
+    removedWriters = [];
+    ratingTouched = reviews.some(r=>r.writer===ME);
     drawCovers(); drawWriters(); drawList(); drawOthers();
     say("저장했다 · 1분쯤 뒤에 사이트에 반영된다", "ok");
   } catch(e){ say(e.message, "bad"); }

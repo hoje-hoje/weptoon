@@ -88,7 +88,7 @@ let changed = 0, failed = 0, skipped = 0;
 for (const w of store.items) {
   if (!w.autoUpdate || !w.url) { skipped++; continue; }
 
-  if (w.status === "완결" || w.status === "휴재") {
+  if ((w.status||"").includes("완결") || w.status === "휴재") {
     console.log(`  ${w.title}: ${w.status}이라 건너뜀`);
     skipped++;
     continue;
