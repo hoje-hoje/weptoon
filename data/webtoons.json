@@ -3674,6 +3674,39 @@
           "date": "2026-09-04"
         }
       ]
+    },
+    {
+      "id": "좋아하면-멍청해진다",
+      "title": "좋아하면 멍청해진다",
+      "authors": [],
+      "platform": "네이버",
+      "url": "https://sbxh9.com/webtoon/850214",
+      "genres": [
+        "로맨스",
+        "일상"
+      ],
+      "tags": [],
+      "covers": [
+        "covers/좋아하면-멍청해진다-1790833497702-0.jpg"
+      ],
+      "status": "연재중",
+      "weekday": "",
+      "episodes": 0,
+      "start": "",
+      "autoUpdate": false,
+      "lastChecked": null,
+      "needsCheck": false,
+      "comments": [],
+      "reviews": [
+        {
+          "writer": "HJ",
+          "rating": 4,
+          "summary": "대학 일상물. 주인공이 연애할때 멍청해지는,,, 설렘 포인트가 미친..",
+          "review": "",
+          "note": "",
+          "date": "2026-10-01"
+        }
+      ]
     }
   ]
 }
