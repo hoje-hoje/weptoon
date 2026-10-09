@@ -243,7 +243,7 @@ kbd{background:#2a2f35;border:1px solid #3a4048;border-bottom-width:2px;border-r
   </div>
   <canvas id="wave"></canvas>
   <div class="selinfo"><span id="selInfo" class="hint"></span><span id="edMsg"></span></div>
-  <div class="hint">맨 위 눈금줄: 클릭=이동, 드래그=구간 잡기 · 클립: 클릭=선택(음원 위치는 고정), 양 끝 끌기=길이 조절 · 아래 줄: 가사 마커 끌기 · 빈 곳 끌기·Shift+휠=좌우, 휠=확대/축소 · <kbd>Alt+←</kbd><kbd>Alt+→</kbd> 파트 순서 바꾸기 · <kbd>Ctrl+Z</kbd> 되돌리기</div>
+  <div class="hint">맨 위 눈금줄: 클릭=이동, 드래그=구간 잡기 · 클립: 클릭=선택, <b>Inst</b> 끌기=위치 이동(가장자리에 자석처럼 붙음, <kbd>←</kbd><kbd>→</kbd> 0.01초·<kbd>Shift</kbd> 0.1초), 원곡은 위치 고정, 양 끝 끌기=길이 조절 · 아래 줄: 가사 마커 끌기 · 빈 곳 끌기·Shift+휠=좌우, 휠=확대/축소 · <kbd>Alt+←</kbd><kbd>Alt+→</kbd> 파트 순서 바꾸기 · <kbd>Ctrl+Z</kbd> 되돌리기</div>
   <div class="tablewrap"><table>
     <thead><tr><th>#</th><th>시작</th><th>미세조정</th><th>담당자</th><th></th><th>가사</th></tr></thead>
     <tbody id="tbody"></tbody>
@@ -1263,6 +1263,16 @@ function applyMode(mode){
 }
 // 클립 묶음 이동 (가사 따라감)
 function moveGroup(g, lines, d){ for (const x of g) x.at = Math.round((x.at + d) * 10000) / 10000; shiftLines(lines, d); }
+// Inst 클립만 위치를 옮길 수 있다 (원곡은 고정)
+const MOVABLE = c => c && c.track === 'inst';
+function moveInst(c, d){
+  d = Math.max(d, -c.at);
+  if (!MOVABLE(c) || Math.abs(d) < 1e-6) return;
+  pushUndo();
+  shiftLines(linesIn(c.at, clipEnd(c)), d);
+  c.at = Math.round((c.at + d) * 10000) / 10000;
+  afterEdit();
+}
 // 파트 = 선택 클립(또는 눈금줄로 잡은 구간)의 시간 범위. 바꾸기·복제는 항상 원곡과 Inst를 함께 옮긴다.
 function selPart(){
   const c = selClip();
@@ -1317,7 +1327,8 @@ function updateSelInfo(){
   const c = selClip(), el = $('selInfo');
   if (c){
     const g = groupOf(c);
-    el.innerHTML = `선택: <b style="color:${TRACK_COLOR[c.track]}">${TRACK_NAME[c.track]}</b>${g.length > 1 ? ' + ' + TRACK_NAME[otherTrack(c.track)] : ''} · ${fmtTime(c.at)} ~ ${fmtTime(clipEnd(c))} (${clipLen(c).toFixed(2)}초) <button id="selRipple" title="Shift+Del">빈칸 없이 지우기</button>`;
+    el.innerHTML = `선택: <b style="color:${TRACK_COLOR[c.track]}">${TRACK_NAME[c.track]}</b>${g.length > 1 ? ' + ' + TRACK_NAME[otherTrack(c.track)] : ''} · ${fmtTime(c.at)} ~ ${fmtTime(clipEnd(c))} (${clipLen(c).toFixed(2)}초)${MOVABLE(c) ? ` · 시작 위치 <input type="text" id="selAt" value="${fmtTime(c.at)}">` : ' · <span class="hint">위치 고정</span>'} <button id="selRipple" title="Shift+Del">빈칸 없이 지우기</button>`;
+    if (MOVABLE(c)) $('selAt').onchange = () => { const t = parseTime($('selAt').value); const cur = selClip(); if (cur && isFinite(t) && t >= 0) moveInst(cur, t - cur.at); else updateSelInfo(); };
     $('selRipple').onclick = () => deleteSel(true);
   } else if (ed.range){
     el.innerHTML = `구간: <b>${fmtTime(ed.range[0])} ~ ${fmtTime(ed.range[1])}</b> · <kbd>1</kbd> 원곡만 <kbd>2</kbd> Inst만 <kbd>3</kbd> 둘 다 · <kbd>Esc</kbd> 해제`;
@@ -1428,9 +1439,14 @@ wv.addEventListener('mousedown', e => {
   if (!c){ ed.sel = null; ed.range = null; updateSelInfo(); wave.drag = { ...base, mode:'pan', s0:wave.start }; return; }
   ed.sel = c.id; ed.range = null; updateSelInfo();
   const edge = 6 * dpr;
-  // 음원 클립은 위치를 옮기지 않는다: 끌면 화면만 좌우로 이동, 양 끝만 길이 조절
+  // 원곡은 위치 고정(끌면 화면만 좌우로 이동). Inst만 끌어서 옮긴다. 양 끝 끌기 = 길이 조절.
   if (Math.abs(px - waveX(c.at)) <= edge){ pushUndo(); wave.drag = { ...base, mode:'trimL', c, at0:c.at, s0:c.src0 }; }
   else if (Math.abs(px - waveX(clipEnd(c))) <= edge){ pushUndo(); wave.drag = { ...base, mode:'trimR', c, s1:c.src1 }; }
+  else if (MOVABLE(c)){
+    pushUndo();
+    const lines = linesIn(c.at, clipEnd(c));
+    wave.drag = { ...base, mode:'move', c, at0:c.at, lines, times:lines.map(i => state.lines[i].time) };
+  }
   else wave.drag = { ...base, mode:'select', s0:wave.start };
 });
 window.addEventListener('mousemove', e => {
@@ -1444,6 +1460,13 @@ window.addEventListener('mousemove', e => {
   else if (D.mode === 'marker'){
     state.lines[D.i].time = Math.round((clamp(waveT(px), 0, viewMax()) - state.offsetMs / 1000) * 1000) / 1000;
     updateRow(D.i);
+  } else if (D.mode === 'move'){
+    const c = D.c;
+    let d = snapDelta([D.at0, D.at0 + clipLen(c)], dt, snapCandidates([c]));
+    d = Math.max(d, -D.at0);
+    c.at = Math.round((D.at0 + d) * 10000) / 10000;
+    D.lines.forEach((i, k) => state.lines[i].time = Math.round((D.times[k] + (c.at - D.at0)) * 1000) / 1000);
+    updateSelInfo();
   } else if (D.mode === 'trimL'){
     const c = D.c, [r0] = srcRange(c.track);
     let d = snapDelta([D.at0], dt, snapCandidates([c]));
@@ -1459,14 +1482,14 @@ window.addEventListener('mouseup', e => {
   const D = wave.drag; if (!D) return;
   wave.drag = null;
   if (!D.moved){
-    if (['marker', 'trimL', 'trimR'].includes(D.mode)) hist.undo.pop();     // 클릭만 했으면 기록 취소
+    if (['move', 'marker', 'trimL', 'trimR'].includes(D.mode)) hist.undo.pop();     // 클릭만 했으면 기록 취소
     if (D.mode === 'pan' || D.mode === 'range' || D.mode === 'marker'){
       if (D.mode === 'range'){ ed.range = null; updateSelInfo(); }
       audio.currentTime = clamp(waveT(D.x0), 0, duration());
     }
     return;
   }
-  if (D.mode === 'trimL' || D.mode === 'trimR') afterEdit();
+  if (D.mode === 'move' || D.mode === 'trimL' || D.mode === 'trimR') afterEdit();
   if (D.mode === 'marker') save();
 });
 wv.addEventListener('mousemove', e => {
@@ -1476,7 +1499,7 @@ wv.addEventListener('mousemove', e => {
   if (lane === 'lyr') cur = markerAt(px) >= 0 ? 'ew-resize' : 'crosshair';
   else if (lane === 'orig' || lane === 'inst'){
     const c = clipAt(lane, px);
-    if (c) cur = Math.abs(px - waveX(c.at)) <= 6 * dprNow() || Math.abs(px - waveX(clipEnd(c))) <= 6 * dprNow() ? 'col-resize' : 'pointer';
+    if (c) cur = Math.abs(px - waveX(c.at)) <= 6 * dprNow() || Math.abs(px - waveX(clipEnd(c))) <= 6 * dprNow() ? 'col-resize' : MOVABLE(c) ? 'grab' : 'pointer';
   } else cur = 'text';
   wv.style.cursor = cur;
 });
@@ -1516,13 +1539,17 @@ window.addEventListener('keydown', e => {
   if (ctrl && k === 'KeyZ') go(() => e.shiftKey ? redo() : undo());
   else if (ctrl && k === 'KeyY') go(redo);
   else if (ctrl && k === 'KeyD') go(duplicateSel);
-  else if (ctrl || e.repeat) return;
+  else if (ctrl || (e.repeat && k !== 'ArrowLeft' && k !== 'ArrowRight')) return;
   else if (k === 'KeyS') go(() => cut(e.shiftKey ? [selClip() ? selClip().track : ed.track] : TRACKS));
   else if (k === 'Digit1' || k === 'Numpad1') go(() => applyMode('orig'));
   else if (k === 'Digit2' || k === 'Numpad2') go(() => applyMode('inst'));
   else if (k === 'Digit3' || k === 'Numpad3') go(() => applyMode('both'));
   else if (k === 'Delete' || (k === 'Backspace' && !tap.on)) go(() => deleteSel(e.shiftKey));
   else if ((k === 'ArrowLeft' || k === 'ArrowRight') && e.altKey && (selClip() || ed.range)) go(() => swapSel(k === 'ArrowLeft' ? -1 : 1));
+  else if ((k === 'ArrowLeft' || k === 'ArrowRight') && selClip()){
+    const c = selClip();
+    go(() => MOVABLE(c) ? moveInst(c, (k === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 0.1 : 0.01)) : flash('원곡은 위치가 고정돼 있습니다. Inst 클립을 선택하세요'));
+  }
   else if (k === 'Escape'){ ed.sel = null; ed.range = null; updateSelInfo(); }
 });
 
