@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>리믹스 가사 영상 제작기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.2.2/build/mp4-muxer.js"></script>
+<style>
+:root{
+  --bg:#111315; --panel:#1a1d21; --raise:#24282d; --line:#2f343a;
+  --fg:#eceff2; --dim:#8d96a0; --accent:#2fbf5a; --warn:#f5b93a; --bad:#ef5350;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--fg);font-family:Pretendard,'Malgun Gothic',sans-serif;font-size:14px}
+button,select,input,textarea{font:inherit;color:inherit}
+button{background:var(--raise);border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+button:hover{border-color:#4a525b}
+button.primary{background:var(--accent);border-color:var(--accent);color:#06210f;font-weight:700}
+button.danger{border-color:var(--bad);color:var(--bad)}
+button.on{background:var(--warn);border-color:var(--warn);color:#2a1d00;font-weight:700}
+input[type=text],input[type=number],input[type=date],select,textarea{background:#0d0f11;border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+textarea{width:100%;resize:vertical;line-height:1.5}
+label{color:var(--dim)}
+.app{display:grid;grid-template-columns:380px 1fr;height:100vh}
+.side{overflow:auto;border-right:1px solid var(--line);padding:14px;background:var(--panel)}
+.main{overflow:auto;padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.main>*{flex-shrink:0}
+button:disabled{opacity:.4;cursor:default}
+h1{font-size:18px;margin:0 0 12px}
+h2{font-size:14px;margin:0 0 8px;color:var(--accent)}
+section.box{border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:12px;background:#15181b}
+.row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:5px 0}
+.row>label{min-width:64px}
+.grow{flex:1;min-width:0}
+.hint{color:var(--dim);font-size:12px;line-height:1.5}
+.members .m{display:flex;gap:6px;align-items:center;margin:4px 0}
+.members input[type=color]{width:34px;height:28px;padding:0;border:none;background:none}
+.preview-wrap{background:#000;border-radius:8px;overflow:hidden;position:relative}
+#preview{width:100%;display:block;aspect-ratio:16/9}
+.transport{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#seek{flex:1;min-width:200px}
+.time{font-variant-numeric:tabular-nums;min-width:120px}
+#wave{width:100%;height:120px;display:block;background:#0b0d0f;border:1px solid var(--line);border-radius:6px;cursor:crosshair}
+.tablewrap{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:3px 6px;text-align:left;white-space:nowrap}
+th{position:sticky;top:0;background:var(--raise);z-index:1}
+td.txt{white-space:normal;width:100%}
+tr.cur{background:rgba(47,191,90,.18)}
+tr.next td:first-child{box-shadow:inset 4px 0 0 var(--warn)}
+tr.gap td.txt{color:var(--dim)}
+td input.t{width:84px;font-variant-numeric:tabular-nums}
+td input.t.empty{color:var(--dim)}
+td button{padding:1px 6px;font-size:12px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
+#tapStatus{font-weight:700}
+.progress{height:10px;background:#0d0f11;border-radius:5px;overflow:hidden;border:1px solid var(--line)}
+.progress>div{height:100%;width:0;background:var(--accent)}
+.warnbox{background:#3a1717;border:1px solid var(--bad);color:#ffd2d2;padding:8px;border-radius:6px;margin-bottom:10px}
+kbd{background:var(--raise);border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:12px}
+@media (max-width:900px){.app{grid-template-columns:1fr;height:auto}.side{border-right:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<!-- ================= 왼쪽: 입력 ================= -->
+<aside class="side">
+  <h1>🎤 리믹스 가사 영상 제작기</h1>
+  <div id="noCodecs" class="warnbox" hidden>이 브라우저는 MP4 내보내기(WebCodecs)를 지원하지 않습니다. <b>Chrome 또는 Edge 최신 버전을 사용하세요.</b></div>
+
+  <section class="box">
+    <h2>1. 음원</h2>
+    <input type="file" id="audioFile" accept="audio/*,.mp3,.wav,.m4a">
+    <div class="hint" id="audioInfo">mp3 / wav / m4a</div>
+  </section>
+
+  <section class="box">
+    <h2>곡 정보</h2>
+    <div class="row"><label>커버</label><input type="file" id="coverFile" accept="image/*" class="grow"></div>
+    <div class="row"><label>제목</label><input type="text" id="fTitle" class="grow"></div>
+    <div class="row"><label>아티스트</label><input type="text" id="fArtist" class="grow"></div>
+    <div class="row"><label>앨범명</label><input type="text" id="fAlbum" class="grow"></div>
+    <div class="row"><label>발매일</label><input type="date" id="fDate" class="grow"></div>
+    <div class="row"><label>태그</label><input type="text" id="fTag" class="grow" placeholder="비워도 됨"></div>
+  </section>
+
+  <section class="box">
+    <h2>가사</h2>
+    <div class="hint">한 줄 = 화면 한 줄. 빈 줄은 간주(♪). <b>@이름</b> 줄 아래부터 그 멤버 파트, <b>@민준, 서연</b>은 함께 부르는 파트, <b>@</b>만 쓰면 담당자 없음.</div>
+    <textarea id="lyrics" rows="14" placeholder="@민준&#10;첫 번째 줄 가사&#10;두 번째 줄 가사&#10;@서연&#10;세 번째 줄 가사"></textarea>
+    <div class="row">
+      <button id="lrcImportBtn">LRC 불러오기</button><input type="file" id="lrcFile" accept=".lrc,.txt" hidden>
+      <button id="lrcExportBtn">LRC 내보내기</button>
+    </div>
+  </section>
+
+  <section class="box members">
+    <h2>멤버</h2>
+    <div id="memberList"></div>
+    <div class="row"><input type="text" id="newMember" placeholder="이름" class="grow"><button id="addMember">추가</button></div>
+    <div class="hint">가사의 @이름은 자동으로 추가됩니다. 이름을 고치면 가사에도 반영됩니다.</div>
+  </section>
+
+  <section class="box">
+    <h2>화면 설정</h2>
+    <div class="row"><label>프리셋</label>
+      <select id="sPreset" class="grow"><option value="classic">1. 클래식 (카드 커버 · 초록 바)</option><option value="circle">2. 원형 커버 · 청록 바</option></select></div>
+    <div class="row"><label>래퍼 이름</label>
+      <select id="sNamePos" class="grow"><option value="bar">하이라이트 바 위</option><option value="panel">왼쪽 패널 하단</option><option value="off">표시 안 함</option></select></div>
+    <div class="row"><label><input type="checkbox" id="sBarColor"> 하이라이트 바를 현재 래퍼 색으로</label></div>
+    <div class="row"><label><input type="checkbox" id="sDots" checked> 앞뒤 줄에 담당자 색 점(●)</label></div>
+    <div class="row"><label><input type="checkbox" id="sSpectrum" checked> 하단 스펙트럼 막대</label></div>
+  </section>
+
+  <section class="box">
+    <h2>프로젝트</h2>
+    <div class="row">
+      <button id="saveProj">저장(JSON)</button>
+      <button id="loadProjBtn">불러오기</button><input type="file" id="projFile" accept=".json" hidden>
+      <button id="resetProj" class="danger">새로 시작</button>
+    </div>
+    <div class="hint">브라우저에 자동 저장됩니다(음원 제외). 음원은 다시 열어 주세요.</div>
+  </section>
+
+  <section class="box">
+    <h2>MP4 내보내기</h2>
+    <div class="row"><label>해상도</label><select id="eRes"><option value="1080">1920×1080</option><option value="720">1280×720</option></select>
+      <label>fps</label><select id="eFps"><option>30</option><option>60</option></select></div>
+    <div class="row"><label><input type="checkbox" id="eRange"> 구간만</label>
+      <input type="text" id="eStart" value="0:00.00" style="width:80px"> ~ <input type="text" id="eEnd" value="0:10.00" style="width:80px">
+      <button id="eRangeCur" title="현재 위치부터 10초">현재+10초</button></div>
+    <div class="row"><label>페이드</label>시작 <input type="number" id="eFadeIn" value="0.5" min="0" step="0.1" style="width:60px">초
+      끝 <input type="number" id="eFadeOut" value="1" min="0" step="0.1" style="width:60px">초</div>
+    <div class="row"><button id="exportBtn" class="primary">MP4 내보내기</button><button id="cancelBtn" hidden class="danger">취소</button></div>
+    <div class="progress"><div id="progBar"></div></div>
+    <div class="hint" id="exportMsg"></div>
+  </section>
+</aside>
+
+<!-- ================= 오른쪽: 미리보기 / 싱크 ================= -->
+<main class="main">
+  <div class="preview-wrap"><canvas id="preview" width="1280" height="720"></canvas></div>
+  <audio id="audio" preload="auto"></audio>
+  <div class="transport">
+    <button id="playBtn">▶ 재생</button>
+    <input type="range" id="seek" min="0" max="0" step="0.01" value="0">
+    <span class="time" id="timeLbl">0:00.00 / 0:00.00</span>
+    <label>속도 <select id="rate"><option value="0.5">0.5x</option><option value="0.75">0.75x</option><option value="1" selected>1x</option></select></label>
+  </div>
+  <div class="transport">
+    <button id="tapBtn">⏺ 탭 모드</button>
+    <span id="tapStatus" class="hint"></span>
+    <span class="grow"></span>
+    <label>전체 오프셋 <input type="range" id="offset" min="-500" max="500" step="10" value="-150"> <b id="offsetLbl">-150ms</b></label>
+  </div>
+  <div class="hint">탭 모드: <kbd>Space</kbd> 다음 줄 시작 기록(멈춰 있으면 재생) · <kbd>Backspace</kbd> 마지막 기록 취소 · 탭 모드가 아닐 때 <kbd>Space</kbd>는 재생/정지. 표의 # 를 누르면 그 줄부터 탭합니다.</div>
+  <canvas id="wave" height="120"></canvas>
+  <div class="hint">파형: 클릭=이동, 마커 드래그=시간 수정, 휠=확대/축소, Shift+휠 또는 빈 곳 드래그=좌우 이동</div>
+  <div class="tablewrap"><table>
+    <thead><tr><th>#</th><th>시작</th><th>미세조정</th><th>담당자</th><th></th><th>가사</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+</main>
+</div>
+
+<script>
+'use strict';
+/* =====================================================================
+   공통 유틸
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const PALETTE = ['#22c55e','#3b82f6','#f59e0b','#ef4444','#a855f7','#ec4899','#14b8a6','#eab308','#f97316','#6366f1'];
+const STORE_KEY = 'remix-lyric-video-v1';
+
+function fmtTime(s){
+  if (s == null || !isFinite(s)) return '';
+  const neg = s < 0; s = Math.abs(s);
+  const cs = Math.round(s * 100);
+  const m = Math.floor(cs / 6000), sec = Math.floor(cs / 100) % 60, c = cs % 100;
+  return (neg ? '-' : '') + m + ':' + String(sec).padStart(2, '0') + '.' + String(c).padStart(2, '0');
+}
+function parseTime(str){
+  str = String(str).trim();
+  if (!str) return null;
+  const m = str.match(/^(-?)(?:(\d+):)?(\d+(?:\.\d+)?)$/);
+  if (!m) return NaN;
+  const v = (m[2] ? +m[2] * 60 : 0) + +m[3];
+  return m[1] ? -v : v;
+}
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const easeOut = x => 1 - Math.pow(1 - clamp(x, 0, 1), 3);
+const rapKey = r => (r || []).join(',');
+function textColorFor(hex){
+  const n = parseInt(hex.slice(1), 16);
+  const l = (0.299 * (n >> 16) + 0.587 * (n >> 8 & 255) + 0.114 * (n & 255)) / 255;
+  return l > 0.62 ? '#111' : '#fff';
+}
+
+/* =====================================================================
+   상태
+   ===================================================================== */
+const state = {
+  song: { title:'', artist:'', album:'', date:'', tag:'', cover:'' },
+  lines: [],            // {text, gap, rappers:[], time: raw초|null}
+  members: [],          // {name, color}
+  offsetMs: -150,
+  settings: { preset:'classic', namePos:'bar', barColor:false, dots:true, spectrum:true },
+  audioName: ''
+};
+let coverImg = null;          // HTMLImageElement
+let audioBuf = null;          // AudioBuffer (디코딩된 PCM)
+let mono = null;              // Float32Array 모노 믹스 (스펙트럼/파형용)
+let peaks = null;             // {bucket, min:Float32Array, max:Float32Array}
+
+const eff = i => state.lines[i].time == null ? null : state.lines[i].time + state.offsetMs / 1000;
+const memberColor = name => (state.members.find(m => m.name === name) || {}).color || '#888';
+function ensureMembers(names){
+  for (const n of names) if (n && !state.members.some(m => m.name === n))
+    state.members.push({ name:n, color: PALETTE[state.members.length % PALETTE.length] });
+}
+
+/* =====================================================================
+   가사 파싱 / 직렬화
+   ===================================================================== */
+function parseLyrics(text){
+  const out = [];
+  let cur = [];
+  let pendingGap = null;     // 빈 줄을 만난 시점의 담당자 (간주 줄에 붙인다)
+  for (let raw of text.replace(/\r/g, '').split('\n')){
+    const s = raw.trim();
+    if (s.startsWith('@')){
+      cur = s.slice(1).split(',').map(x => x.trim()).filter(Boolean);
+      continue;
+    }
+    if (!s){ if (out.length && !pendingGap) pendingGap = cur.slice(); continue; }
+    if (pendingGap){ out.push({ text:'♪', gap:true, rappers:pendingGap, time:null }); pendingGap = null; }
+    out.push({ text:s, gap:false, rappers:cur.slice(), time:null });
+  }
+  return out;
+}
+function serializeLyrics(lines){
+  const out = [];
+  let cur = '';
+  for (const l of lines){
+    const k = rapKey(l.rappers);
+    if (k !== cur){ out.push('@' + l.rappers.join(', ')); cur = k; }
+    out.push(l.gap ? '' : l.text);
+  }
+  return out.join('\n');
+}
+// 가사를 고쳐도 기존 싱크 시간이 최대한 유지되도록 텍스트 기준으로 맞춘다
+function mergeTimes(newLines, oldLines){
+  let p = 0;
+  for (const nl of newLines){
+    for (let j = p; j < Math.min(oldLines.length, p + 12); j++){
+      if (oldLines[j].text === nl.text){ nl.time = oldLines[j].time; p = j + 1; break; }
+    }
+  }
+  return newLines;
+}
+function applyLyricsText(){
+  state.lines = mergeTimes(parseLyrics($('lyrics').value), state.lines);
+  ensureMembers(state.lines.flatMap(l => l.rappers));
+  tap.history = [];
+  tap.next = firstUntimed();
+  renderMembers(); renderTable(); save();
+}
+function syncTextareaFromLines(){
+  $('lyrics').value = serializeLyrics(state.lines);
+}
+
+/* ---------- LRC ---------- */
+function importLRC(text){
+  const lines = [];
+  let cur = [];
+  const meta = {};
+  for (const raw of text.replace(/\r/g, '').split('\n')){
+    const s = raw.trim();
+    if (!s) continue;
+    const mt = s.match(/^\[(ti|ar|al):(.*)\]$/i);
+    if (mt){ meta[mt[1].toLowerCase()] = mt[2].trim(); continue; }
+    if (s.startsWith('@')){ cur = s.slice(1).split(',').map(x => x.trim()).filter(Boolean); continue; }
+    const re = /\[(\d+):(\d{1,2}(?:[.:]\d{1,3})?)\]/g;
+    const times = []; let m, last = 0;
+    while ((m = re.exec(s)) && m.index === last){ times.push(+m[1] * 60 + parseFloat(m[2].replace(':', '.'))); last = re.lastIndex; }
+    if (/^\[[a-z]+:.*\]$/i.test(s) && !times.length) continue;   // 그 밖의 메타 태그
+    const body = s.slice(last).trim();
+    const gap = !body || body === '♪';
+    if (!times.length){ lines.push({ text: gap ? '♪' : body, gap, rappers:cur.slice(), time:null }); continue; }
+    for (const t of times) lines.push({ text: gap ? '♪' : body, gap, rappers:cur.slice(), time: t - state.offsetMs / 1000 });
+  }
+  lines.sort((a, b) => (a.time ?? 1e9) - (b.time ?? 1e9));
+  if (meta.ti && !state.song.title) state.song.title = meta.ti;
+  if (meta.ar && !state.song.artist) state.song.artist = meta.ar;
+  if (meta.al && !state.song.album) state.song.album = meta.al;
+  state.lines = lines;
+  ensureMembers(lines.flatMap(l => l.rappers));
+  syncTextareaFromLines(); fillSongForm();
+  tap.history = []; tap.next = firstUntimed();
+  renderMembers(); renderTable(); save();
+}
+function exportLRC(){
+  const lrcTime = s => { const cs = Math.round(Math.max(0, s) * 100);
+    return '[' + String(Math.floor(cs / 6000)).padStart(2, '0') + ':' + String(Math.floor(cs / 100) % 60).padStart(2, '0') + '.' + String(cs % 100).padStart(2, '0') + ']'; };
+  const out = [];
+  if (state.song.title) out.push('[ti:' + state.song.title + ']');
+  if (state.song.artist) out.push('[ar:' + state.song.artist + ']');
+  if (state.song.album) out.push('[al:' + state.song.album + ']');
+  let cur = '';
+  state.lines.forEach((l, i) => {
+    const k = rapKey(l.rappers);
+    if (k !== cur){ out.push('@' + l.rappers.join(', ')); cur = k; }
+    const t = eff(i);
+    out.push((t == null ? '' : lrcTime(t)) + (l.gap ? '' : l.text));
+  });
+  download(new Blob([out.join('\n')], { type:'text/plain' }), (state.song.title || 'lyrics') + '.lrc');
+}
+
+/* =====================================================================
+   오디오
+   ===================================================================== */
+const audio = $('audio');
+let audioCtx = null;
+async function loadAudioFile(file){
+  $('audioInfo').textContent = '디코딩 중…';
+  state.audioName = file.name;
+  audio.src = URL.createObjectURL(file);
+  audio.playbackRate = +$('rate').value;
+  audio.preservesPitch = true;
+  try {
+    audioCtx = audioCtx || new AudioContext();
+    audioBuf = await audioCtx.decodeAudioData(await file.arrayBuffer());
+  } catch (e){
+    $('audioInfo').textContent = '디코딩 실패: ' + e.message; return;
+  }
+  const n = audioBuf.length, ch = audioBuf.numberOfChannels;
+  mono = new Float32Array(n);
+  for (let c = 0; c < ch; c++){ const d = audioBuf.getChannelData(c); for (let i = 0; i < n; i++) mono[i] += d[i] / ch; }
+  const B = 256, nb = Math.ceil(n / B);
+  const mn = new Float32Array(nb), mx = new Float32Array(nb);
+  for (let b = 0; b < nb; b++){
+    let lo = 1, hi = -1;
+    for (let i = b * B, e = Math.min(n, i + B); i < e; i++){ const v = mono[i]; if (v < lo) lo = v; if (v > hi) hi = v; }
+    mn[b] = lo; mx[b] = hi;
+  }
+  peaks = { bucket:B, min:mn, max:mx };
+  wave.start = 0; wave.span = audioBuf.duration;
+  $('audioInfo').textContent = `${file.name} · ${fmtTime(audioBuf.duration)} · ${audioBuf.sampleRate}Hz · ${ch}ch`;
+  $('seek').max = audioBuf.duration;
+  save();
+}
+const duration = () => audioBuf ? audioBuf.duration : (isFinite(audio.duration) ? audio.duration : 0);
+
+/* ---------- 스펙트럼: 디코딩된 PCM에서 시간 t 기준 FFT (실시간 분석기 사용 안 함) ---------- */
+const FFT_N = 2048, BARS = 64;
+const hann = new Float32Array(FFT_N).map((_, i) => 0.5 - 0.5 * Math.cos(2 * Math.PI * i / (FFT_N - 1)));
+const fftRe = new Float32Array(FFT_N), fftIm = new Float32Array(FFT_N);
+const bitrev = (() => { const r = new Uint32Array(FFT_N), bits = Math.log2(FFT_N);
+  for (let i = 0; i < FFT_N; i++){ let x = i, y = 0; for (let b = 0; b < bits; b++){ y = (y << 1) | (x & 1); x >>= 1; } r[i] = y; } return r; })();
+function fft(re, im){
+  const n = re.length;
+  for (let i = 0; i < n; i++){ const j = bitrev[i]; if (j > i){ let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; } }
+  for (let size = 2; size <= n; size <<= 1){
+    const half = size >> 1, step = -2 * Math.PI / size;
+    for (let i = 0; i < n; i += size) for (let k = 0; k < half; k++){
+      const a = step * k, wr = Math.cos(a), wi = Math.sin(a);
+      const j = i + k, l = j + half;
+      const tr = re[l] * wr - im[l] * wi, ti = re[l] * wi + im[l] * wr;
+      re[l] = re[j] - tr; im[l] = im[j] - ti; re[j] += tr; im[j] += ti;
+    }
+  }
+}
+let barEdges = null;
+function spectrumAt(t){
+  const out = new Float32Array(BARS);
+  if (!mono) return out;
+  const sr = audioBuf.sampleRate;
+  if (!barEdges){
+    barEdges = [];
+    for (let b = 0; b <= BARS; b++){ const f = 40 * Math.pow(12000 / 40, b / BARS); barEdges.push(Math.max(1, Math.round(f / sr * FFT_N))); }
+  }
+  // 세 지점 평균으로 막대가 덜 떨리게 (모두 t의 순수 함수)
+  for (const dt of [0, 0.02, 0.04]){
+    const c = Math.round((t - dt) * sr) - FFT_N / 2;
+    for (let i = 0; i < FFT_N; i++){ const k = c + i; fftRe[i] = (k >= 0 && k < mono.length ? mono[k] : 0) * hann[i]; fftIm[i] = 0; }
+    fft(fftRe, fftIm);
+    for (let b = 0; b < BARS; b++){
+      let s = 0, cnt = 0;
+      for (let k = barEdges[b]; k <= Math.max(barEdges[b], barEdges[b + 1] - 1); k++){ s += Math.hypot(fftRe[k], fftIm[k]); cnt++; }
+      const db = 20 * Math.log10(s / cnt / (FFT_N / 4) + 1e-9);
+      out[b] += clamp((db + 60) / 55, 0, 1) / 3;
+    }
+  }
+  return out;
+}
+
+/* =====================================================================
+   렌더링: drawFrame(ctx, t, W, H, opts) — 미리보기와 내보내기가 같이 사용
+   ===================================================================== */
+const FONT = 'Pretendard, "Malgun Gothic", sans-serif';
+const PRESETS = {
+  classic: {
+    barColor:'#25b84c', specColor:'#3ddc5f',
+    lyr:{ x:1000, w:840, cy:560, step:108, barH:96, size:44, curSize:56, panelBg:'rgba(0,0,0,.28)', top:0 },
+    namePanel:{ x:100, y:960 }
+  },
+  circle: {
+    barColor:'rgba(32,170,190,.78)', specColor:'#3fd3e0',
+    lyr:{ x:900, w:920, cy:580, step:104, barH:92, size:40, curSize:52, panelBg:'rgba(0,0,0,.18)', top:170 },
+    namePanel:{ x:380, y:900, center:true }
+  }
+};
+const bgCache = new Map();   // 해상도별 블러 배경 캐시
+function getBackground(W, H){
+  const key = W + 'x' + H + ':' + (coverImg ? coverImg.src.length + coverImg.src.slice(-32) : 'none');
+  if (bgCache.has(key)) return bgCache.get(key);
+  const c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d');
+  x.fillStyle = '#101214'; x.fillRect(0, 0, W, H);
+  if (coverImg){
+    const blur = 30 * W / 1920, pad = blur * 3;
+    const s = Math.max((W + pad * 2) / coverImg.width, (H + pad * 2) / coverImg.height);
+    const w = coverImg.width * s, h = coverImg.height * s;
+    x.filter = `blur(${blur}px) brightness(0.35)`;
+    x.drawImage(coverImg, (W - w) / 2, (H - h) / 2, w, h);
+    x.filter = 'none';
+  }
+  if (bgCache.size > 4) bgCache.clear();
+  bgCache.set(key, c);
+  return c;
+}
+function fitFont(ctx, text, weight, size, maxW){
+  ctx.font = `${weight} ${size}px ${FONT}`;
+  const w = ctx.measureText(text).width;
+  if (w > maxW){ size = size * maxW / w; ctx.font = `${weight} ${size}px ${FONT}`; }
+  return size;
+}
+function roundRect(ctx, x, y, w, h, r){ ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
+function drawCoverImage(ctx, x, y, w, h){
+  if (!coverImg){ ctx.fillStyle = '#333'; ctx.fillRect(x, y, w, h); return; }
+  const s = Math.max(w / coverImg.width, h / coverImg.height);
+  const sw = w / s, sh = h / s;
+  ctx.drawImage(coverImg, (coverImg.width - sw) / 2, (coverImg.height - sh) / 2, sw, sh, x, y, w, h);
+}
+// t 시점의 현재 줄, 직전 줄, 전환 진행도 계산 (순수 함수)
+function activeIndex(t){
+  let k = -1;
+  for (let i = 0; i < state.lines.length; i++){ const e = eff(i); if (e != null && e <= t) k = i; }
+  return k;
+}
+function timeline(t){
+  const k = activeIndex(t);
+  if (k < 0) return { k, prev:-1, p:1, pos:-1 };
+  const tk = eff(k);
+  const prev = activeIndex(tk - 1e-6);
+  const p = easeOut((t - tk) / 0.3);
+  return { k, prev, p, pos: prev + (k - prev) * p, tk };
+}
+function songTitleLine(){
+  const s = state.song;
+  return [s.artist, s.title].filter(Boolean).join(' - ') || '제목 없음';
+}
+function dateText(){ return state.song.date ? state.song.date.replace(/-/g, '.') : ''; }
+
+function drawRapperLabel(ctx, rappers, x, y, alpha, align){
+  if (!rappers || !rappers.length || alpha <= 0) return;
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.font = `700 30px ${FONT}`;
+  const pads = 18, gap = 10, h = 48;
+  const widths = rappers.map((n, i) => ctx.measureText((i === 0 ? '🎤 ' : '') + n).width + pads * 2);
+  const total = widths.reduce((a, b) => a + b, 0) + gap * (rappers.length - 1);
+  let cx = align === 'center' ? x - total / 2 : x;
+  rappers.forEach((n, i) => {
+    const col = memberColor(n);
+    ctx.fillStyle = col; roundRect(ctx, cx, y, widths[i], h, 10); ctx.fill();
+    ctx.fillStyle = textColorFor(col); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText((i === 0 ? '🎤 ' : '') + n, cx + pads, y + h / 2 + 1);
+    cx += widths[i] + gap;
+  });
+  ctx.restore();
+}
+function drawRapperTransition(ctx, tl, x, y, align){
+  const L = state.lines;
+  if (tl.k < 0) return;
+  const now = L[tl.k].rappers, before = tl.prev >= 0 ? L[tl.prev].rappers : [];
+  if (rapKey(now) === rapKey(before) || tl.p >= 1){ drawRapperLabel(ctx, now, x, y, 1, align); return; }
+  const p = tl.p;
+  ctx.save(); ctx.translate(0, -24 * p); drawRapperLabel(ctx, before, x, y, 1 - p, align); ctx.restore();
+  ctx.save(); ctx.translate(0, 24 * (1 - p)); drawRapperLabel(ctx, now, x, y, p, align); ctx.restore();
+}
+function barFill(ctx, tl, P, x, y, w, h){
+  const st = state.settings;
+  const r = tl.k >= 0 ? state.lines[tl.k].rappers : [];
+  if (!st.barColor || !r.length) return P.barColor;
+  if (r.length === 1) return memberColor(r[0]);
+  const g = ctx.createLinearGradient(x, 0, x + w, 0);
+  r.forEach((n, i) => g.addColorStop(i / (r.length - 1), memberColor(n)));
+  return g;
+}
+
+function drawFrame(ctx, t, W, H, opts = {}){
+  const st = state.settings, P = PRESETS[st.preset] || PRESETS.classic, S = W / 1920;
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.drawImage(getBackground(W, H), 0, 0);
+  ctx.setTransform(S, 0, 0, S, 0, 0);
+  ctx.textBaseline = 'middle';
+  const tl = timeline(t);
+
+  /* ----- 왼쪽 / 상단 정보 ----- */
+  if (st.preset === 'circle'){
+    ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
+    fitFont(ctx, songTitleLine(), 800, 60, 1700);
+    ctx.shadowColor = 'rgba(0,0,0,.5)'; ctx.shadowBlur = 12;
+    ctx.fillText(songTitleLine(), 960, 100);
+    ctx.shadowBlur = 0;
+    const cx = 380, cy = 560, r = 260;
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.clip();
+    drawCoverImage(ctx, cx - r, cy - r, r * 2, r * 2); ctx.restore();
+    ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+    if (st.namePos === 'panel') drawRapperTransition(ctx, tl, P.namePanel.x, P.namePanel.y - 24, 'center');
+  } else {
+    const x0 = 100, cw = 640;
+    ctx.textAlign = 'left'; ctx.fillStyle = 'rgba(255,255,255,.85)';
+    if (state.song.album){ fitFont(ctx, '[' + state.song.album + ']', 500, 30, cw); ctx.fillText('[' + state.song.album + ']', x0, 92); }
+    ctx.fillStyle = '#fff';
+    fitFont(ctx, songTitleLine(), 800, 48, cw);
+    ctx.fillText(songTitleLine(), x0, 142);
+    // 흰 테두리 카드
+    const cy0 = 185, pad = 8, cs = cw - pad * 2, foot = 70;
+    ctx.fillStyle = '#fff'; ctx.fillRect(x0, cy0, cw, pad * 2 + cs + foot);
+    drawCoverImage(ctx, x0 + pad, cy0 + pad, cs, cs);
+    if (state.song.tag){
+      const sz = fitFont(ctx, state.song.tag, 700, 34, cs - 40);
+      const tw = ctx.measureText(state.song.tag).width;
+      ctx.fillStyle = '#25b84c'; ctx.fillRect(x0 + pad + 16, cy0 + pad + cs - sz - 26, tw + 24, sz + 16);
+      ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
+      ctx.fillText(state.song.tag, x0 + pad + 28, cy0 + pad + cs - sz / 2 - 18);
+    }
+    if (dateText()){
+      ctx.fillStyle = '#222'; ctx.font = `600 30px ${FONT}`; ctx.textAlign = 'left';
+      ctx.fillText('발매일 | ' + dateText(), x0 + pad + 16, cy0 + pad + cs + foot / 2);
+    }
+    if (st.namePos === 'panel') drawRapperTransition(ctx, tl, P.namePanel.x, P.namePanel.y - 24, 'left');
+  }
+
+  /* ----- 가사 영역 ----- */
+  const Ly = P.lyr, L = state.lines;
+  ctx.fillStyle = Ly.panelBg; ctx.fillRect(Ly.x, 0, Ly.w, 1080);
+  const barY = Ly.cy - Ly.barH / 2;
+  ctx.fillStyle = barFill(ctx, tl, P, Ly.x, barY, Ly.w, Ly.barH);
+  ctx.fillRect(Ly.x, barY, Ly.w, Ly.barH);
+  ctx.save();
+  ctx.beginPath(); ctx.rect(Ly.x, Ly.top, Ly.w, 1080 - Ly.top); ctx.clip();
+  // 바 위에 래퍼 이름표를 붙일 때는 윗줄들을 조금 더 올려 이름표 자리를 비운다
+  const lift = st.namePos === 'bar' ? 44 : 0;
+  const cxText = Ly.x + Ly.w / 2, maxW = Ly.w - 120;
+  const from = Math.max(0, Math.floor(tl.pos) - 6), to = Math.min(L.length - 1, Math.ceil(tl.pos) + 6);
+  for (let i = from; i <= to; i++){
+    const d = i - tl.pos, ad = Math.abs(d);
+    const y = Ly.cy + d * Ly.step - (d < 0 ? Math.min(1, -d) * lift : 0);
+    if (y < -60 || y > 1140) continue;
+    const em = clamp(1 - ad, 0, 1);        // 1 = 바 안의 현재 줄
+    const size = Ly.size + (Ly.curSize - Ly.size) * em;
+    fitFont(ctx, L[i].text, em > 0.5 ? 800 : 500, size, maxW);
+    const alpha = em > 0 ? 0.5 + 0.5 * em : Math.max(0, 0.5 - 0.11 * (ad - 1));
+    const g = Math.round(170 + 85 * em);
+    ctx.fillStyle = `rgba(${g},${g},${g},${alpha})`;
+    ctx.textAlign = 'center';
+    ctx.fillText(L[i].text, cxText, y);
+    if (st.dots && em < 0.5 && L[i].rappers.length){
+      const tw = ctx.measureText(L[i].text).width;
+      L[i].rappers.forEach((n, j) => {
+        ctx.fillStyle = memberColor(n); ctx.globalAlpha = Math.max(alpha, 0.25) + 0.2;
+        ctx.beginPath(); ctx.arc(cxText - tw / 2 - 22 - j * 18, y, 7, 0, Math.PI * 2); ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+    }
+  }
+  ctx.restore();
+  if (st.namePos === 'bar') drawRapperTransition(ctx, tl, Ly.x + 24, barY - 58, 'left');
+
+  /* ----- 스펙트럼 ----- */
+  if (st.spectrum && mono){
+    const spec = spectrumAt(t), bw = 1920 / BARS, maxH = 120;
+    ctx.fillStyle = P.specColor; ctx.globalAlpha = 0.85;
+    for (let b = 0; b < BARS; b++){
+      const h = Math.max(3, spec[b] * maxH);
+      ctx.fillRect(b * bw + 3, 1080 - h, bw - 6, h);
+    }
+    ctx.globalAlpha = 1;
+  }
+  if (opts.fade > 0){ ctx.fillStyle = `rgba(0,0,0,${clamp(opts.fade, 0, 1)})`; ctx.fillRect(0, 0, 1920, 1080); }
+  ctx.restore();
+}
+
+/* =====================================================================
+   미리보기 루프
+   ===================================================================== */
+const pv = $('preview'), pctx = pv.getContext('2d');
+function frameLoop(){
+  if (exportJob){ requestAnimationFrame(frameLoop); return; }   // 내보내는 동안 미리보기 멈춤
+  const t = audio.currentTime || 0;
+  drawFrame(pctx, t, pv.width, pv.height);
+  drawWave(t);
+  if (!seeking) $('seek').value = t;
+  $('timeLbl').textContent = fmtTime(t) + ' / ' + fmtTime(duration());
+  const k = activeIndex(t);
+  if (k !== lastRowK){ highlightRow(k); lastRowK = k; }
+  requestAnimationFrame(frameLoop);
+}
+let lastRowK = -2, seeking = false;
+function togglePlay(){ if (!audio.src) return; audio.paused ? audio.play() : audio.pause(); }
+audio.addEventListener('play', () => $('playBtn').textContent = '⏸ 정지');
+audio.addEventListener('pause', () => $('playBtn').textContent = '▶ 재생');
+$('playBtn').onclick = togglePlay;
+$('seek').addEventListener('input', () => { seeking = true; audio.currentTime = +$('seek').value; });
+$('seek').addEventListener('change', () => { seeking = false; });
+$('rate').onchange = () => { audio.playbackRate = +$('rate').value; };
+
+/* =====================================================================
+   탭 싱크
+   ===================================================================== */
+const tap = { on:false, next:0, history:[] };
+function firstUntimed(){ const i = state.lines.findIndex(l => l.time == null); return i < 0 ? state.lines.length : i; }
+function updateTapStatus(){
+  $('tapBtn').classList.toggle('on', tap.on);
+  $('tapBtn').textContent = tap.on ? '⏹ 탭 모드 끄기' : '⏺ 탭 모드';
+  const L = state.lines;
+  $('tapStatus').textContent = tap.on
+    ? (tap.next < L.length ? `다음: #${tap.next + 1} “${L[tap.next].text}”` : '모든 줄 기록 완료')
+    : '';
+}
+$('tapBtn').onclick = () => {
+  tap.on = !tap.on;
+  if (tap.on && tap.next >= state.lines.length) tap.next = firstUntimed();
+  document.activeElement && document.activeElement.blur();
+  updateTapStatus(); renderTable();
+};
+function doTap(){
+  if (!audio.src){ alert('먼저 음원을 불러오세요.'); return; }
+  if (audio.paused){ audio.play(); return; }
+  if (tap.next >= state.lines.length) return;
+  const i = tap.next, l = state.lines[i];
+  tap.history.push({ i, prev:l.time });
+  l.time = audio.currentTime;            // 원시 시간 저장, 표시/출력 때 오프셋 적용
+  tap.next = i + 1;
+  updateRow(i); markNextRow(); updateTapStatus(); save();
+}
+function undoTap(){
+  const h = tap.history.pop();
+  if (!h) return;
+  state.lines[h.i].time = h.prev;
+  tap.next = h.i;
+  updateRow(h.i); markNextRow(); updateTapStatus(); save();
+}
+const isTyping = el => el && (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && /^(text|number|date|search)$/.test(el.type)) || el.isContentEditable);
+// 캡처 단계에서 가로채 스크롤·포커스된 버튼 클릭(keyup 시 발생)을 모두 막는다
+window.addEventListener('keydown', e => {
+  if (isTyping(e.target)) return;
+  if (e.code === 'Space'){
+    e.preventDefault(); e.stopPropagation();
+    if (e.repeat) return;
+    tap.on ? doTap() : togglePlay();
+  } else if (e.code === 'Backspace' && tap.on){
+    e.preventDefault(); undoTap();
+  }
+}, true);
+window.addEventListener('keyup', e => {
+  if (e.code === 'Space' && !isTyping(e.target)){ e.preventDefault(); e.stopPropagation(); }
+}, true);
+
+$('offset').oninput = () => {
+  state.offsetMs = +$('offset').value;
+  $('offsetLbl').textContent = (state.offsetMs > 0 ? '+' : '') + state.offsetMs + 'ms';
+  refreshTimes(); save();
+};
+
+/* =====================================================================
+   타임스탬프 표
+   ===================================================================== */
+const tbody = $('tbody');
+function rapperOptions(cur){
+  const combos = new Set(state.lines.filter(l => l.rappers.length > 1).map(l => rapKey(l.rappers)));
+  const opts = [['', '(없음)'], ...state.members.map(m => [m.name, m.name]), ...[...combos].map(c => [c, c.replace(/,/g, ' + ')]), ['__multi', '여러 명…']];
+  const k = rapKey(cur);
+  if (k && !opts.some(o => o[0] === k)) opts.splice(1, 0, [k, k]);
+  return opts.map(([v, label]) => `<option value="${esc(v)}"${v === k ? ' selected' : ''}>${esc(label)}</option>`).join('');
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+function dotsHTML(r){ return r.map(n => `<span class="dot" style="background:${memberColor(n)}"></span>`).join(''); }
+function renderTable(){
+  tbody.innerHTML = state.lines.map((l, i) => `
+    <tr data-i="${i}" class="${l.gap ? 'gap' : ''}">
+      <td><button data-act="settap" title="이 줄부터 탭">${i + 1}</button></td>
+      <td><input type="text" class="t" data-act="time" value="${fmtTime(eff(i))}" placeholder="--:--.--"></td>
+      <td><button data-act="nudge" data-d="-0.1">−.1</button><button data-act="nudge" data-d="-0.01">−.01</button><button data-act="nudge" data-d="0.01">+.01</button><button data-act="nudge" data-d="0.1">+.1</button><button data-act="clear" title="시간 지우기">×</button></td>
+      <td>${dotsHTML(l.rappers)}<select data-act="rapper">${rapperOptions(l.rappers)}</select></td>
+      <td><button data-act="play" title="이 줄부터 재생">▶</button></td>
+      <td class="txt">${esc(l.text)}</td>
+    </tr>`).join('');
+  markNextRow(); lastRowK = -2; updateTapStatus();
+}
+function updateRow(i){
+  const tr = tbody.children[i]; if (!tr) return;
+  tr.querySelector('input.t').value = fmtTime(eff(i));
+}
+function refreshTimes(){ state.lines.forEach((_, i) => updateRow(i)); }
+// 표 안에서만 스크롤 (scrollIntoView는 미리보기 영역까지 같이 밀어 올린다)
+function scrollRowIntoTable(tr){
+  const box = tr.closest('.tablewrap'), head = box.querySelector('thead').offsetHeight;
+  const top = tr.offsetTop, bottom = top + tr.offsetHeight;
+  if (top - head < box.scrollTop) box.scrollTop = top - head;
+  else if (bottom > box.scrollTop + box.clientHeight) box.scrollTop = bottom - box.clientHeight;
+}
+function markNextRow(){
+  [...tbody.querySelectorAll('tr.next')].forEach(r => r.classList.remove('next'));
+  if (tap.on && tbody.children[tap.next]){
+    tbody.children[tap.next].classList.add('next');
+    scrollRowIntoTable(tbody.children[tap.next]);
+  }
+}
+function highlightRow(k){
+  [...tbody.querySelectorAll('tr.cur')].forEach(r => r.classList.remove('cur'));
+  const tr = tbody.children[k];
+  if (tr){ tr.classList.add('cur'); if (!tap.on && !audio.paused) scrollRowIntoTable(tr); }
+}
+tbody.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const i = +b.closest('tr').dataset.i, l = state.lines[i];
+  const act = b.dataset.act;
+  if (act === 'settap'){ tap.next = i; tap.history = []; if (!tap.on) $('tapBtn').click(); else { markNextRow(); updateTapStatus(); } b.blur(); }
+  else if (act === 'nudge'){
+    if (l.time == null) l.time = (i > 0 && state.lines[i - 1].time != null) ? state.lines[i - 1].time : audio.currentTime;
+    l.time = Math.round((l.time + +b.dataset.d) * 1000) / 1000;
+    updateRow(i); save();
+  }
+  else if (act === 'clear'){ l.time = null; updateRow(i); save(); }
+  else if (act === 'play'){ if (eff(i) != null){ audio.currentTime = Math.max(0, eff(i) - 1); audio.play(); } b.blur(); }
+});
+tbody.addEventListener('change', e => {
+  const el = e.target, i = +el.closest('tr').dataset.i, l = state.lines[i];
+  if (el.dataset.act === 'time'){
+    const v = parseTime(el.value);
+    if (v === null) l.time = null;
+    else if (!isNaN(v)) l.time = v - state.offsetMs / 1000;
+    updateRow(i); save();
+  } else if (el.dataset.act === 'rapper'){
+    let v = el.value;
+    if (v === '__multi'){
+      v = prompt('함께 부르는 멤버 이름을 쉼표로 입력하세요 (예: 민준, 서연)', rapKey(l.rappers)) ;
+      if (v == null){ renderTable(); return; }
+    }
+    l.rappers = v.split(',').map(s => s.trim()).filter(Boolean);
+    ensureMembers(l.rappers);
+    syncTextareaFromLines(); renderMembers(); renderTable(); save();
+  }
+});
+
+/* =====================================================================
+   파형 + 마커
+   ===================================================================== */
+const wv = $('wave'), wctx = wv.getContext('2d');
+const wave = { start:0, span:1, drag:null };
+function waveX(t){ return (t - wave.start) / wave.span * wv.width; }
+function waveT(x){ return wave.start + x / wv.width * wave.span; }
+function drawWave(t){
+  const dpr = devicePixelRatio || 1, cw = Math.round(wv.clientWidth * dpr);
+  if (wv.width !== cw){ wv.width = cw; wv.height = Math.round(120 * dpr); }
+  const W = wv.width, H = wv.height;
+  wctx.fillStyle = '#0b0d0f'; wctx.fillRect(0, 0, W, H);
+  if (!peaks){ wctx.fillStyle = '#556'; wctx.font = `${13 * dpr}px ${FONT}`; wctx.fillText('음원을 불러오면 파형이 표시됩니다', 10 * dpr, 24 * dpr); return; }
+  const sr = audioBuf.sampleRate, mid = H / 2;
+  wctx.fillStyle = '#3a6e4a';
+  for (let x = 0; x < W; x++){
+    const s0 = waveT(x) * sr, s1 = waveT(x + 1) * sr;
+    let lo = 0, hi = 0;
+    if (s1 - s0 >= peaks.bucket){
+      for (let b = Math.max(0, Math.floor(s0 / peaks.bucket)), e = Math.min(peaks.min.length, Math.ceil(s1 / peaks.bucket)); b < e; b++){ if (peaks.min[b] < lo) lo = peaks.min[b]; if (peaks.max[b] > hi) hi = peaks.max[b]; }
+    } else {
+      for (let i = Math.max(0, Math.floor(s0)), e = Math.min(mono.length, Math.ceil(s1) + 1); i < e; i++){ if (mono[i] < lo) lo = mono[i]; if (mono[i] > hi) hi = mono[i]; }
+    }
+    wctx.fillRect(x, mid - hi * mid * 0.95, 1, Math.max(1, (hi - lo) * mid * 0.95));
+  }
+  // 시간 눈금
+  wctx.fillStyle = '#667'; wctx.font = `${10 * dpr}px ${FONT}`; wctx.textAlign = 'left';
+  const stepT = [0.1, 0.5, 1, 2, 5, 10, 15, 30, 60].find(s => s / wave.span * W > 70 * dpr) || 60;
+  for (let s = Math.ceil(wave.start / stepT) * stepT; s < wave.start + wave.span; s += stepT){
+    const x = waveX(s); wctx.fillRect(x, H - 6 * dpr, 1, 6 * dpr); wctx.fillText(fmtTime(s), x + 2, H - 8 * dpr);
+  }
+  // 줄 마커
+  wctx.font = `bold ${10 * dpr}px ${FONT}`;
+  state.lines.forEach((l, i) => {
+    const e = eff(i); if (e == null) return;
+    const x = waveX(e); if (x < -2 || x > W + 2) return;
+    const cols = l.rappers.length ? l.rappers.map(memberColor) : ['#bbb'];
+    const seg = H / cols.length;
+    cols.forEach((c, j) => { wctx.fillStyle = c; wctx.fillRect(x - (wave.drag && wave.drag.i === i ? 1.5 : 1) * dpr, j * seg, 2 * dpr, seg); });
+    wctx.fillStyle = cols[0]; wctx.fillRect(x, 0, 18 * dpr, 13 * dpr);
+    wctx.fillStyle = textColorFor(cols[0]); wctx.fillText(String(i + 1), x + 2 * dpr, 10 * dpr);
+  });
+  // 재생 위치
+  wctx.fillStyle = '#fff'; wctx.fillRect(waveX(t), 0, 1.5 * dpr, H);
+}
+function markerAt(px){
+  const dpr = devicePixelRatio || 1;
+  let best = -1, bd = 6 * dpr;
+  state.lines.forEach((l, i) => { const e = eff(i); if (e == null) return; const d = Math.abs(waveX(e) - px); if (d <= bd){ bd = d; best = i; } });
+  return best;
+}
+wv.addEventListener('mousedown', e => {
+  if (!peaks) return;
+  const dpr = devicePixelRatio || 1, px = e.offsetX * dpr;
+  const i = markerAt(px);
+  wave.drag = i >= 0 ? { i, mode:'marker' } : { mode:'pan', x0:px, s0:wave.start, moved:false };
+});
+window.addEventListener('mousemove', e => {
+  if (!wave.drag) return;
+  const r = wv.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+  const px = (e.clientX - r.left) * dpr;
+  if (wave.drag.mode === 'marker'){
+    const t = clamp(waveT(px), 0, duration());
+    state.lines[wave.drag.i].time = Math.round((t - state.offsetMs / 1000) * 1000) / 1000;
+    updateRow(wave.drag.i);
+  } else {
+    if (Math.abs(px - wave.drag.x0) > 3) wave.drag.moved = true;
+    wave.start = clamp(wave.drag.s0 - (px - wave.drag.x0) / wv.width * wave.span, 0, Math.max(0, duration() - wave.span));
+  }
+  wv.style.cursor = wave.drag.mode === 'marker' ? 'ew-resize' : 'grabbing';
+});
+window.addEventListener('mouseup', e => {
+  if (!wave.drag) return;
+  if (wave.drag.mode === 'pan' && !wave.drag.moved){
+    const r = wv.getBoundingClientRect();
+    audio.currentTime = clamp(waveT((e.clientX - r.left) * (devicePixelRatio || 1)), 0, duration());
+  }
+  if (wave.drag.mode === 'marker') save();
+  wave.drag = null; wv.style.cursor = 'crosshair';
+});
+wv.addEventListener('mousemove', e => { if (!wave.drag) wv.style.cursor = markerAt(e.offsetX * (devicePixelRatio || 1)) >= 0 ? 'ew-resize' : 'crosshair'; });
+wv.addEventListener('wheel', e => {
+  if (!peaks) return;
+  e.preventDefault();
+  const D = duration(), px = e.offsetX * (devicePixelRatio || 1);
+  if (e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)){
+    wave.start = clamp(wave.start + (e.deltaX || e.deltaY) / wv.width * wave.span, 0, Math.max(0, D - wave.span));
+  } else {
+    const at = waveT(px);
+    wave.span = clamp(wave.span * Math.pow(1.0015, e.deltaY), 1, D);
+    wave.start = clamp(at - px / wv.width * wave.span, 0, Math.max(0, D - wave.span));
+  }
+}, { passive:false });
+
+/* =====================================================================
+   멤버
+   ===================================================================== */
+function renderMembers(){
+  const used = new Set(state.lines.flatMap(l => l.rappers));
+  $('memberList').innerHTML = state.members.map((m, i) => `
+    <div class="m" data-i="${i}">
+      <input type="color" value="${m.color}" data-act="color">
+      <input type="text" value="${esc(m.name)}" data-act="name" class="grow">
+      <span class="hint">${state.lines.filter(l => l.rappers.includes(m.name)).length}줄</span>
+      <button data-act="del" ${used.has(m.name) ? 'disabled title="가사에서 쓰는 중"' : ''}>삭제</button>
+    </div>`).join('') || '<div class="hint">아직 멤버가 없습니다.</div>';
+}
+$('memberList').addEventListener('input', e => {
+  if (e.target.dataset.act !== 'color') return;
+  state.members[+e.target.closest('.m').dataset.i].color = e.target.value;
+  save();
+});
+$('memberList').addEventListener('change', e => {
+  const i = +e.target.closest('.m').dataset.i, m = state.members[i];
+  if (e.target.dataset.act === 'color'){ renderTable(); return; }
+  if (e.target.dataset.act === 'name'){
+    const nn = e.target.value.replace(/[,@]/g, '').trim();
+    if (!nn || state.members.some((x, j) => j !== i && x.name === nn)){ e.target.value = m.name; return; }
+    for (const l of state.lines) l.rappers = l.rappers.map(r => r === m.name ? nn : r);
+    m.name = nn;
+    syncTextareaFromLines(); renderMembers(); renderTable(); save();
+  }
+});
+$('memberList').addEventListener('click', e => {
+  if (e.target.dataset.act !== 'del') return;
+  state.members.splice(+e.target.closest('.m').dataset.i, 1);
+  renderMembers(); renderTable(); save();
+});
+$('addMember').onclick = () => {
+  const n = $('newMember').value.replace(/[,@]/g, '').trim();
+  if (!n) return;
+  ensureMembers([n]); $('newMember').value = '';
+  renderMembers(); renderTable(); save();
+};
+
+/* =====================================================================
+   곡 정보 / 커버 / 설정
+   ===================================================================== */
+const songFields = { fTitle:'title', fArtist:'artist', fAlbum:'album', fDate:'date', fTag:'tag' };
+function fillSongForm(){ for (const [id, k] of Object.entries(songFields)) $(id).value = state.song[k] || ''; }
+for (const [id, k] of Object.entries(songFields)) $(id).addEventListener('input', () => { state.song[k] = $(id).value; save(); });
+async function setCover(dataUrl){
+  state.song.cover = dataUrl || '';
+  if (!dataUrl){ coverImg = null; return; }
+  const img = new Image(); img.src = dataUrl;
+  await img.decode();
+  coverImg = img;
+}
+$('coverFile').onchange = async () => {
+  const f = $('coverFile').files[0]; if (!f) return;
+  const img = new Image(); img.src = URL.createObjectURL(f); await img.decode();
+  // 자동 저장 용량을 위해 최대 1400px JPEG로 줄여서 base64 보관
+  const s = Math.min(1, 1400 / Math.max(img.width, img.height));
+  const c = document.createElement('canvas'); c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  await setCover(c.toDataURL('image/jpeg', 0.92));
+  save();
+};
+const settingFields = { sPreset:['preset', 'value'], sNamePos:['namePos', 'value'], sBarColor:['barColor', 'checked'], sDots:['dots', 'checked'], sSpectrum:['spectrum', 'checked'] };
+function fillSettings(){ for (const [id, [k, p]] of Object.entries(settingFields)) $(id)[p] = state.settings[k]; }
+for (const [id, [k, p]] of Object.entries(settingFields)) $(id).addEventListener('change', () => { state.settings[k] = $(id)[p]; save(); });
+
+$('audioFile').onchange = () => { const f = $('audioFile').files[0]; if (f) loadAudioFile(f); };
+let lyrTimer = 0;
+$('lyrics').addEventListener('input', () => { clearTimeout(lyrTimer); lyrTimer = setTimeout(applyLyricsText, 400); });
+$('lrcImportBtn').onclick = () => $('lrcFile').click();
+$('lrcFile').onchange = async () => { const f = $('lrcFile').files[0]; if (f) importLRC(await f.text()); $('lrcFile').value = ''; };
+$('lrcExportBtn').onclick = exportLRC;
+
+/* =====================================================================
+   저장 / 불러오기
+   ===================================================================== */
+function projectJSON(){ return JSON.stringify({ app:'remix-lyric-video', version:1, ...state }); }
+let saveTimer = 0;
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { try { localStorage.setItem(STORE_KEY, projectJSON()); } catch (e){ console.warn('자동 저장 실패', e); } }, 300);
+}
+async function loadProject(obj){
+  if (!obj || !Array.isArray(obj.lines)) throw new Error('프로젝트 형식이 아닙니다');
+  state.song = Object.assign({ title:'', artist:'', album:'', date:'', tag:'', cover:'' }, obj.song);
+  state.lines = obj.lines.map(l => ({ text:String(l.text), gap:!!l.gap, rappers:(l.rappers || []).map(String), time: typeof l.time === 'number' ? l.time : null }));
+  state.members = (obj.members || []).map(m => ({ name:String(m.name), color:m.color || '#888' }));
+  state.offsetMs = typeof obj.offsetMs === 'number' ? obj.offsetMs : -150;
+  state.settings = Object.assign({}, state.settings, obj.settings);
+  state.audioName = obj.audioName || '';
+  ensureMembers(state.lines.flatMap(l => l.rappers));
+  await setCover(state.song.cover).catch(() => setCover(''));
+  fillSongForm(); fillSettings(); syncTextareaFromLines();
+  $('offset').value = state.offsetMs; $('offsetLbl').textContent = (state.offsetMs > 0 ? '+' : '') + state.offsetMs + 'ms';
+  tap.history = []; tap.next = firstUntimed();
+  renderMembers(); renderTable();
+  if (state.audioName && !audioBuf) $('audioInfo').textContent = `음원(${state.audioName})을 다시 열어 주세요.`;
+}
+$('saveProj').onclick = () => download(new Blob([projectJSON()], { type:'application/json' }), (state.song.title || 'project') + '.lyricvideo.json');
+$('loadProjBtn').onclick = () => $('projFile').click();
+$('projFile').onchange = async () => {
+  const f = $('projFile').files[0]; if (!f) return;
+  try { await loadProject(JSON.parse(await f.text())); save(); } catch (e){ alert('불러오기 실패: ' + e.message); }
+  $('projFile').value = '';
+};
+$('resetProj').onclick = async () => {
+  if (!confirm('가사·싱크·곡 정보를 모두 지우고 새로 시작할까요? (먼저 저장해 두세요)')) return;
+  await loadProject({ lines:[], members:[], song:{} }); save();
+};
+function download(blob, name){
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name.replace(/[\\/:*?"<>|]/g, '_');
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+}
+
+/* =====================================================================
+   MP4 내보내기 (WebCodecs + mp4-muxer, 오프라인 렌더링)
+   ===================================================================== */
+const hasCodecs = 'VideoEncoder' in window && 'AudioEncoder' in window && 'VideoFrame' in window;
+if (!hasCodecs) $('noCodecs').hidden = false;
+let exportJob = null;
+$('eRangeCur').onclick = () => { $('eRange').checked = true; const t = audio.currentTime || 0; $('eStart').value = fmtTime(t); $('eEnd').value = fmtTime(Math.min(duration(), t + 10)); };
+$('cancelBtn').onclick = () => { if (exportJob) exportJob.cancelled = true; };
+$('exportBtn').onclick = () => exportMp4().catch(err => { console.error(err); setExportMsg('오류: ' + err.message); finishExportUI(); });
+function setExportMsg(s){ $('exportMsg').textContent = s; }
+function finishExportUI(){ $('exportBtn').disabled = false; $('cancelBtn').hidden = true; exportJob = null; }
+
+async function pickVideoCodec(W, H, fps){
+  // High → Main → Baseline, 레벨 5.1/4.2/4.0 순으로 지원되는 첫 설정
+  for (const codec of ['avc1.640033', 'avc1.64002A', 'avc1.640028', 'avc1.4D4033', 'avc1.4D402A', 'avc1.42E033', 'avc1.42E02A', 'avc1.42E01F']){
+    const cfg = { codec, width:W, height:H, bitrate: W >= 1920 ? 10e6 : 6e6, framerate:fps, avc:{ format:'avc' } };
+    try { if ((await VideoEncoder.isConfigSupported(cfg)).supported) return cfg; } catch (e){}
+  }
+  return null;
+}
+async function pickAudioCodec(ch){
+  const aac = { codec:'mp4a.40.2', sampleRate:48000, numberOfChannels:ch, bitrate:192000 };
+  try { if ((await AudioEncoder.isConfigSupported(aac)).supported) return { cfg:aac, mux:'aac' }; } catch (e){}
+  const opus = { codec:'opus', sampleRate:48000, numberOfChannels:ch, bitrate:192000 };
+  try { if ((await AudioEncoder.isConfigSupported(opus)).supported) return { cfg:opus, mux:'opus' }; } catch (e){}
+  return null;
+}
+async function renderAudioSegment(start, end, fadeIn, fadeOut, ch){
+  // 디코딩된 PCM을 48kHz로 맞추고 페이드를 적용 (영상과 같은 타임라인: 0초 = 곡의 start초)
+  const len = Math.round((end - start) * 48000);
+  const oc = new OfflineAudioContext(ch, len, 48000);
+  const src = oc.createBufferSource(); src.buffer = audioBuf;
+  const g = oc.createGain(); src.connect(g); g.connect(oc.destination);
+  const D = end - start;
+  if (fadeIn > 0){ g.gain.setValueAtTime(0, 0); g.gain.linearRampToValueAtTime(1, Math.min(fadeIn, D)); }
+  if (fadeOut > 0){ g.gain.setValueAtTime(1, Math.max(0, D - fadeOut)); g.gain.linearRampToValueAtTime(0, D); }
+  src.start(0, start, D);
+  return oc.startRendering();
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function exportMp4(){
+  if (!hasCodecs){ alert('Chrome 또는 Edge 최신 버전을 사용하세요. (WebCodecs 미지원)'); return; }
+  if (typeof Mp4Muxer === 'undefined'){ alert('mp4-muxer 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인하세요.'); return; }
+  if (!audioBuf){ alert('먼저 음원을 불러오세요.'); return; }
+  const D = audioBuf.duration;
+  let start = 0, end = D;
+  if ($('eRange').checked){
+    start = parseTime($('eStart').value); end = parseTime($('eEnd').value);
+    if (!isFinite(start) || !isFinite(end) || end <= start){ alert('구간 시간을 확인하세요 (예: 1:05.00 ~ 1:15.00)'); return; }
+    start = clamp(start, 0, D); end = clamp(end, 0, D);
+  }
+  const fps = +$('eFps').value, H = +$('eRes').value, W = H === 1080 ? 1920 : 1280;
+  const fadeIn = Math.max(0, +$('eFadeIn').value || 0), fadeOut = Math.max(0, +$('eFadeOut').value || 0);
+
+  $('exportBtn').disabled = true; $('cancelBtn').hidden = false; $('progBar').style.width = '0%';
+  const job = exportJob = { cancelled:false };
+  audio.pause();
+
+  // 폰트·이미지 준비 (폰트 깨짐 방지)
+  setExportMsg('폰트와 이미지 준비 중…');
+  await Promise.all(['500', '600', '700', '800'].map(w => document.fonts.load(`${w} 40px Pretendard`, '가나다ABC♪🎤')).concat(document.fonts.ready));
+  if (coverImg) await coverImg.decode().catch(() => {});
+
+  const vcfg = await pickVideoCodec(W, H, fps);
+  if (!vcfg) throw new Error('H.264 인코딩을 지원하지 않는 환경입니다. Chrome 또는 Edge 최신 버전을 사용하세요.');
+  const ch = Math.min(2, audioBuf.numberOfChannels);
+  const acodec = await pickAudioCodec(ch);
+  if (!acodec) throw new Error('오디오 인코더(AAC/Opus)를 사용할 수 없습니다.');
+
+  const target = new Mp4Muxer.ArrayBufferTarget();
+  const muxer = new Mp4Muxer.Muxer({
+    target,
+    video:{ codec:'avc', width:W, height:H, frameRate:fps },
+    audio:{ codec:acodec.mux, numberOfChannels:ch, sampleRate:48000 },
+    fastStart:'in-memory',
+    firstTimestampBehavior:'offset'
+  });
+  let encErr = null;
+  const venc = new VideoEncoder({ output:(c, m) => muxer.addVideoChunk(c, m), error:e => encErr = e });
+  venc.configure(vcfg);
+  const aenc = new AudioEncoder({ output:(c, m) => muxer.addAudioChunk(c, m), error:e => encErr = e });
+  aenc.configure(acodec.cfg);
+
+  try {
+    // ---- 오디오: 디코딩된 PCM을 그대로 인코딩 ----
+    setExportMsg('오디오 인코딩 중…');
+    const seg = await renderAudioSegment(start, end, fadeIn, fadeOut, ch);
+    const chData = [...Array(ch)].map((_, c) => seg.getChannelData(c));
+    const CH = 4800;   // 0.1초 단위
+    for (let off = 0; off < seg.length; off += CH){
+      const n = Math.min(CH, seg.length - off);
+      const buf = new Float32Array(n * ch);
+      for (let c = 0; c < ch; c++) buf.set(chData[c].subarray(off, off + n), c * n);
+      const ad = new AudioData({ format:'f32-planar', sampleRate:48000, numberOfFrames:n, numberOfChannels:ch, timestamp:Math.round(off / 48000 * 1e6), data:buf });
+      aenc.encode(ad); ad.close();
+      if (encErr) throw encErr;
+    }
+    await aenc.flush();
+
+    // ---- 영상: 프레임 i → t = start + i/fps 로 drawFrame ----
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const ctx = cv.getContext('2d', { alpha:false });
+    const N = Math.max(1, Math.round((end - start) * fps));
+    const t0 = performance.now();
+    for (let i = 0; i < N; i++){
+      if (job.cancelled) throw new Error('취소됨');
+      if (encErr) throw encErr;
+      const rel = i / fps, t = start + rel;
+      let fade = 0;
+      if (fadeIn > 0) fade = Math.max(fade, 1 - rel / fadeIn);
+      if (fadeOut > 0) fade = Math.max(fade, 1 - (end - start - rel) / fadeOut);
+      drawFrame(ctx, t, W, H, { fade });
+      const frame = new VideoFrame(cv, { timestamp:Math.round(i * 1e6 / fps), duration:Math.round(1e6 / fps) });
+      venc.encode(frame, { keyFrame: i % (fps * 2) === 0 });
+      frame.close();
+      while (venc.encodeQueueSize > 8) await sleep(1);
+      if (i % 10 === 0){
+        const pct = (i + 1) / N, el = (performance.now() - t0) / 1000;
+        $('progBar').style.width = (pct * 100).toFixed(1) + '%';
+        setExportMsg(`영상 렌더링 ${i + 1}/${N} 프레임 (${(pct * 100).toFixed(1)}%) · 남은 시간 약 ${Math.ceil(el / pct - el)}초`);
+        await sleep(0);
+      }
+    }
+    setExportMsg('마무리 중…');
+    await venc.flush();
+    if (encErr) throw encErr;
+    muxer.finalize();
+    $('progBar').style.width = '100%';
+    const name = `${songTitleLine()}${$('eRange').checked ? `_${fmtTime(start)}-${fmtTime(end)}` : ''}_${H}p${fps}.mp4`.replace(/:/g, '');
+    download(new Blob([target.buffer], { type:'video/mp4' }), name);
+    setExportMsg(`완료: ${name} (${(target.buffer.byteLength / 1048576).toFixed(1)}MB, 영상 ${vcfg.codec}, 오디오 ${acodec.mux.toUpperCase()}${acodec.mux === 'opus' ? ' — 이 브라우저는 AAC 인코딩을 지원하지 않아 Opus로 저장했습니다' : ''})`);
+    window.__lastExport = { name, bytes:target.buffer.byteLength, vcodec:vcfg.codec, acodec:acodec.mux, buffer:target.buffer };
+  } catch (e){
+    setExportMsg(e.message === '취소됨' ? '내보내기를 취소했습니다.' : '오류: ' + e.message);
+    if (e.message !== '취소됨') console.error(e);
+  } finally {
+    try { venc.state !== 'closed' && venc.close(); } catch (e){}
+    try { aenc.state !== 'closed' && aenc.close(); } catch (e){}
+    finishExportUI();
+  }
+}
+
+/* =====================================================================
+   시작
+   ===================================================================== */
+(async () => {
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch (e){}
+  if (saved) await loadProject(saved).catch(e => console.warn(e));
+  else { fillSongForm(); fillSettings(); renderMembers(); renderTable(); }
+  requestAnimationFrame(frameLoop);
+})();
+</script>
+</body>
+</html>
