@@ -9,7 +9,7 @@
 <style>
 :root{
   --bg:#111315; --panel:#1a1d21; --raise:#24282d; --line:#2f343a;
-  --fg:#eceff2; --dim:#8d96a0; --accent:#2fbf5a; --warn:#f5b93a; --bad:#ef5350;
+  --fg:#eceff2; --dim:#8d96a0; --accent:#2fbf5a; --orig:#e0457b; --inst:#3b82f6; --warn:#f5b93a; --bad:#ef5350;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
@@ -42,7 +42,15 @@ section.box{border:1px solid var(--line);border-radius:8px;padding:10px;margin-b
 .transport{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 #seek{flex:1;min-width:200px}
 .time{font-variant-numeric:tabular-nums;min-width:120px}
-#wave{width:100%;height:120px;display:block;background:#0b0d0f;border:1px solid var(--line);border-radius:6px;cursor:crosshair}
+.editbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.editbar .sep{width:1px;height:22px;background:var(--line);margin:0 2px}
+.editbar kbd{margin-left:2px}
+.m-orig{border-color:var(--orig)}.m-inst{border-color:var(--inst)}
+.selinfo{display:flex;gap:12px;align-items:center;flex-wrap:wrap;min-height:30px}
+.selinfo input{width:90px}
+#edMsg{color:var(--warn);font-weight:700}
+.pct{min-width:44px;text-align:right}
+#wave{width:100%;height:196px;display:block;background:#0b0d0f;border:1px solid var(--line);border-radius:6px;cursor:crosshair}
 .tablewrap{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:6px}
 table{border-collapse:collapse;width:100%}
 th,td{border-bottom:1px solid var(--line);padding:3px 6px;text-align:left;white-space:nowrap}
@@ -72,8 +80,13 @@ kbd{background:var(--raise);border:1px solid var(--line);border-radius:4px;paddi
 
   <section class="box">
     <h2>1. 음원</h2>
-    <input type="file" id="audioFile" accept="audio/*,.mp3,.wav,.m4a">
-    <div class="hint" id="audioInfo">mp3 / wav / m4a</div>
+    <div class="row"><label style="color:var(--orig)">● 원곡</label><input type="file" id="origFile" accept="audio/*,.mp3,.wav,.m4a" class="grow"></div>
+    <div class="row"><label>볼륨</label><input type="range" id="gainOrig" min="0" max="150" value="100" class="grow"><b id="gainOrigLbl" class="pct">100%</b></div>
+    <div class="row"><label style="color:var(--inst)">● Inst</label><input type="file" id="instFile" accept="audio/*,.mp3,.wav,.m4a" class="grow"></div>
+    <div class="row"><label>볼륨</label><input type="range" id="gainInst" min="0" max="150" value="100" class="grow"><b id="gainInstLbl" class="pct">100%</b></div>
+    <div class="row"><label>박자 맞춤</label><span id="alignLbl" class="grow hint">Inst를 열면 원곡에 자동으로 맞춥니다</span>
+      <button id="alignAuto" title="원곡과 Inst 박자를 다시 자동으로 맞추기">자동</button><button data-shift="-0.01" title="Inst를 0.01초 앞으로">−.01</button><button data-shift="0.01" title="Inst를 0.01초 뒤로">+.01</button></div>
+    <div class="hint" id="audioInfo">mp3 / wav / m4a · Inst 없이 원곡만 써도 됩니다</div>
   </section>
 
   <section class="box">
@@ -159,8 +172,26 @@ kbd{background:var(--raise);border:1px solid var(--line);border-radius:4px;paddi
     <label>전체 오프셋 <input type="range" id="offset" min="-500" max="500" step="10" value="-150"> <b id="offsetLbl">-150ms</b></label>
   </div>
   <div class="hint">탭 모드: <kbd>Space</kbd> 다음 줄 시작 기록(멈춰 있으면 재생) · <kbd>Backspace</kbd> 마지막 기록 취소 · 탭 모드가 아닐 때 <kbd>Space</kbd>는 재생/정지. 표의 # 를 누르면 그 줄부터 탭합니다.</div>
-  <canvas id="wave" height="120"></canvas>
-  <div class="hint">파형: 클릭=이동, 마커 드래그=시간 수정, 휠=확대/축소, Shift+휠 또는 빈 곳 드래그=좌우 이동</div>
+  <div class="editbar">
+    <button id="edCut" title="재생 위치에서 원곡과 Inst를 같은 지점에서 자르기">✂ 같이 자르기 <kbd>S</kbd></button>
+    <button id="edCutOne" title="선택한 트랙만 자르기">✂ 선택 트랙만 <kbd>Shift+S</kbd></button>
+    <button id="edDel" title="선택한 클립 지우기 (그 자리는 무음). Shift+Del은 빈칸 없이 당기기">지우기 <kbd>Del</kbd></button>
+    <span class="sep"></span>
+    <button id="edOrig" class="m-orig" title="재생 위치부터 다음 자른 곳까지 원곡만 (구간을 잡았으면 그 구간)">여기부터 원곡만 <kbd>1</kbd></button>
+    <button id="edInst" class="m-inst" title="재생 위치부터 다음 자른 곳까지 Inst만">Inst만 <kbd>2</kbd></button>
+    <button id="edBoth" title="재생 위치부터 다음 자른 곳까지 둘 다">둘 다 <kbd>3</kbd></button>
+    <span class="sep"></span>
+    <button id="edSwapL" title="선택한 파트를 앞 파트와 자리 바꾸기">◀ 앞 파트와 바꾸기 <kbd>Alt+←</kbd></button>
+    <button id="edSwapR" title="선택한 파트를 뒤 파트와 자리 바꾸기">뒤 파트와 바꾸기 ▶ <kbd>Alt+→</kbd></button>
+    <button id="edDup" title="선택한 파트를 바로 뒤에 한 번 더 넣기 (뒤는 밀림)">복제 <kbd>Ctrl+D</kbd></button>
+    <span class="sep"></span>
+    <button id="edUndo" title="되돌리기 (Ctrl+Z)">↶ 되돌리기</button><button id="edRedo" title="다시 하기 (Ctrl+Y)">↷</button>
+    <label><input type="checkbox" id="edLink" checked> 두 트랙 같이 이동</label>
+    <label><input type="checkbox" id="edFollow" checked> 가사도 같이 이동</label>
+  </div>
+  <canvas id="wave"></canvas>
+  <div class="selinfo"><span id="selInfo" class="hint"></span><span id="edMsg"></span></div>
+  <div class="hint">맨 위 눈금줄: 클릭=이동, 드래그=구간 잡기 · 클립: 클릭=선택, 끌기=위치 이동(가장자리에 자석처럼 붙음), 양 끝 끌기=길이 조절 · 아래 줄: 가사 마커 끌기 · 휠=확대/축소, Shift+휠=좌우 · <kbd>←</kbd><kbd>→</kbd> 선택 클립 0.01초 이동(<kbd>Shift</kbd> 0.1초) · <kbd>Ctrl+Z</kbd> 되돌리기</div>
   <div class="tablewrap"><table>
     <thead><tr><th>#</th><th>시작</th><th>미세조정</th><th>담당자</th><th></th><th>가사</th></tr></thead>
     <tbody id="tbody"></tbody>
@@ -210,7 +241,7 @@ const state = {
   members: [],          // {name, color}
   offsetMs: -150,
   settings: { preset:'classic', namePos:'bar', barColor:false, dots:true, spectrum:true, accentAuto:true, accent:'#25b84c' },
-  audioName: ''
+  mix: defaultMix()
 };
 let coverImg = null;          // HTMLImageElement
 let audioBuf = null;          // AudioBuffer (디코딩된 PCM)
@@ -351,35 +382,210 @@ function exportLRC(){
    ===================================================================== */
 const audio = $('audio');
 let audioCtx = null;
-async function loadAudioFile(file){
-  $('audioInfo').textContent = '디코딩 중…';
-  state.audioName = file.name;
-  audio.src = URL.createObjectURL(file);
-  audio.playbackRate = +$('rate').value;
-  audio.preservesPitch = true;
-  try {
-    audioCtx = audioCtx || new AudioContext();
-    audioBuf = await audioCtx.decodeAudioData(await file.arrayBuffer());
-  } catch (e){
-    $('audioInfo').textContent = '디코딩 실패: ' + e.message; return;
-  }
-  const n = audioBuf.length, ch = audioBuf.numberOfChannels;
-  mono = new Float32Array(n);
-  for (let c = 0; c < ch; c++){ const d = audioBuf.getChannelData(c); for (let i = 0; i < n; i++) mono[i] += d[i] / ch; }
-  const B = 256, nb = Math.ceil(n / B);
-  const mn = new Float32Array(nb), mx = new Float32Array(nb);
+/* ---------- 두 트랙(원곡 / Inst) 클립 편집 ----------
+   클립 = 소스의 [src0, src1] 구간을 타임라인 at초에 놓은 것. 원본 파일은 건드리지 않는다.
+   src 좌표는 "박자 맞춤된" 소스 시간: 실제 재생 위치 = src + shift[트랙].
+   편집 결과는 믹스 하나(audioBuf)로 렌더링되어 미리보기·탭·스펙트럼·내보내기가 모두 같은 소리를 쓴다. */
+const TRACKS = ['orig', 'inst'];
+const TRACK_NAME = { orig:'원곡', inst:'Inst' };
+const TRACK_COLOR = { orig:'#e0457b', inst:'#3b82f6' };
+const EPS = 1e-4;
+const sources = { orig:null, inst:null };      // 디코딩된 AudioBuffer
+const srcMono = { orig:null, inst:null };
+const srcPeaks = { orig:null, inst:null };
+function defaultMix(){ return { clips:[], shift:{ orig:0, inst:0 }, gain:{ orig:1, inst:1 }, names:{ orig:'', inst:'' }, link:true, follow:true }; }
+let clipSeq = 1;
+const newClip = (track, at, src0, src1) => ({ id:clipSeq++, track, at, src0, src1 });
+const clipLen = c => c.src1 - c.src0;
+const clipEnd = c => c.at + c.src1 - c.src0;
+const otherTrack = t => t === 'orig' ? 'inst' : 'orig';
+// 소스가 덮는 src 좌표 범위
+const srcRange = tr => sources[tr] ? [-state.mix.shift[tr], sources[tr].duration - state.mix.shift[tr]] : [-1e9, 1e9];
+
+function monoOf(buf){
+  const n = buf.length, ch = buf.numberOfChannels, m = new Float32Array(n);
+  for (let c = 0; c < ch; c++){ const d = buf.getChannelData(c); for (let i = 0; i < n; i++) m[i] += d[i] / ch; }
+  return m;
+}
+function peaksOf(m){
+  const B = 256, nb = Math.ceil(m.length / B), mn = new Float32Array(nb), mx = new Float32Array(nb);
   for (let b = 0; b < nb; b++){
     let lo = 1, hi = -1;
-    for (let i = b * B, e = Math.min(n, i + B); i < e; i++){ const v = mono[i]; if (v < lo) lo = v; if (v > hi) hi = v; }
+    for (let i = b * B, e = Math.min(m.length, i + B); i < e; i++){ const v = m[i]; if (v < lo) lo = v; if (v > hi) hi = v; }
     mn[b] = lo; mx[b] = hi;
   }
-  peaks = { bucket:B, min:mn, max:mx };
-  wave.start = 0; wave.span = audioBuf.duration;
-  $('audioInfo').textContent = `${file.name} · ${fmtTime(audioBuf.duration)} · ${audioBuf.sampleRate}Hz · ${ch}ch`;
-  $('seek').max = audioBuf.duration;
-  save();
+  return { bucket:B, min:mn, max:mx, data:m };
 }
-const duration = () => audioBuf ? audioBuf.duration : (isFinite(audio.duration) ? audio.duration : 0);
+
+async function loadTrackFile(track, file){
+  $('audioInfo').textContent = `${TRACK_NAME[track]} 디코딩 중…`;
+  let buf;
+  try {
+    audioCtx = audioCtx || new AudioContext();
+    buf = await audioCtx.decodeAudioData(await file.arrayBuffer());
+  } catch (e){ $('audioInfo').textContent = '디코딩 실패: ' + e.message; return; }
+  sources[track] = buf; srcMono[track] = monoOf(buf); srcPeaks[track] = peaksOf(srcMono[track]);
+  const M = state.mix;
+  // 같은 파일을 다시 연 경우(프로젝트 복원)는 편집을 그대로 둔다
+  const fresh = M.names[track] !== file.name || !M.clips.some(c => c.track === track);
+  M.names[track] = file.name;
+  if (fresh){
+    if (sources.orig && sources.inst) autoAlign(false);
+    M.clips = M.clips.filter(c => c.track !== track);
+    const [r0, r1] = srcRange(track), s0 = Math.max(0, r0);
+    M.clips.push(newClip(track, s0, s0, r1));
+    hist.undo = []; hist.redo = [];
+  }
+  updateAudioInfo(); scheduleMix(); save();
+}
+function updateAudioInfo(){
+  const M = state.mix, parts = [];
+  for (const t of TRACKS) if (sources[t]) parts.push(`${TRACK_NAME[t]}: ${M.names[t]} (${fmtTime(sources[t].duration)})`);
+  else if (M.names[t]) parts.push(`${TRACK_NAME[t]}(${M.names[t]})를 다시 열어 주세요`);
+  $('audioInfo').textContent = parts.join(' · ') || 'mp3 / wav / m4a · Inst 없이 원곡만 써도 됩니다';
+  const sh = M.shift.inst;
+  $('alignLbl').textContent = sources.inst && sources.orig ? `Inst ${sh >= 0 ? '+' : ''}${sh.toFixed(3)}초 보정` : 'Inst를 열면 원곡에 자동으로 맞춥니다';
+  for (const t of TRACKS){ const id = t === 'orig' ? 'Orig' : 'Inst'; $('gain' + id).value = Math.round(M.gain[t] * 100); $('gain' + id + 'Lbl').textContent = Math.round(M.gain[t] * 100) + '%'; }
+}
+
+/* ---------- 원곡·Inst 박자 자동 맞춤: 반주가 같으므로 상호상관으로 어긋남을 찾는다 ---------- */
+function fftAny(re, im, inv){
+  const n = re.length;
+  for (let i = 1, j = 0; i < n; i++){
+    let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit;
+    if (i < j){ let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; }
+  }
+  for (let len = 2; len <= n; len <<= 1){
+    const ang = (inv ? 2 : -2) * Math.PI / len, wr = Math.cos(ang), wi = Math.sin(ang), h = len >> 1;
+    for (let i = 0; i < n; i += len){
+      let cr = 1, ci = 0;
+      for (let k = 0; k < h; k++){
+        const a = i + k, b = a + h;
+        const tr = re[b] * cr - im[b] * ci, ti = re[b] * ci + im[b] * cr;
+        re[b] = re[a] - tr; im[b] = im[a] - ti; re[a] += tr; im[a] += ti;
+        const ncr = cr * wr - ci * wi; ci = cr * wi + ci * wr; cr = ncr;
+      }
+    }
+  }
+}
+// b(t + d) ≈ a(t) 인 d(초)
+function estimateOffset(a, b, sr){
+  const rate = 4000, f = sr / rate;
+  const ds = (m, t0, len) => {
+    const out = new Float64Array(len), s0 = Math.round(t0 * sr); let prev = 0;
+    for (let i = 0; i < len; i++){
+      const s = s0 + Math.floor(i * f), e = s0 + Math.floor((i + 1) * f); let acc = 0, n = 0;
+      for (let k = Math.max(0, s); k < Math.min(m.length, e); k++){ acc += m[k]; n++; }
+      const v = n ? acc / n : 0; out[i] = v - prev; prev = v;   // 차분 = 어택(박자) 강조
+    }
+    return out;
+  };
+  const durA = a.length / sr, durB = b.length / sr, M = 6;
+  const W = Math.min(30, durA * 0.5), T0 = clamp(durA * 0.3, 0, Math.max(0, durA - W));
+  const x = ds(a, T0, Math.round(W * rate));
+  const y0 = Math.max(0, T0 - M), yLen = Math.round((Math.min(durB, T0 + W + M) - y0) * rate);
+  if (yLen <= x.length) return { d:0, ok:false };
+  const y = ds(b, y0, yLen);
+  let N = 1; while (N < x.length + y.length) N <<= 1;
+  const xr = new Float64Array(N), xi = new Float64Array(N), yr = new Float64Array(N), yi = new Float64Array(N);
+  xr.set(x); yr.set(y);
+  fftAny(xr, xi, false); fftAny(yr, yi, false);
+  for (let k = 0; k < N; k++){   // conj(X)·Y
+    const r = xr[k] * yr[k] + xi[k] * yi[k], i = xr[k] * yi[k] - xi[k] * yr[k];
+    xr[k] = r; xi[k] = i;
+  }
+  fftAny(xr, xi, true);
+  let best = 0, bv = -Infinity, sum = 0;
+  for (let L = 0; L <= yLen - x.length; L++){ const v = xr[L]; sum += Math.abs(v); if (v > bv){ bv = v; best = L; } }
+  const mean = sum / (yLen - x.length + 1);
+  return { d: y0 + best / rate - T0, ok: bv > mean * 4 };
+}
+function autoAlign(userAction){
+  if (!sources.orig || !sources.inst) return;
+  const r = estimateOffset(srcMono.orig, srcMono.inst, sources.orig.sampleRate);
+  state.mix.shift.inst = Math.round(r.d * 1000) / 1000;
+  updateAudioInfo();
+  if (userAction) flash(r.ok ? `박자 맞춤: Inst ${r.d >= 0 ? '+' : ''}${r.d.toFixed(3)}초` : '자동 맞춤이 불확실합니다. ±.01 버튼으로 직접 맞춰 주세요');
+  else if (!r.ok) flash('원곡과 Inst 박자 자동 맞춤이 불확실합니다. 들어보고 ±.01로 맞춰 주세요');
+}
+
+/* ---------- 믹스 렌더링 ---------- */
+// 이어지는 클립(자르기만 한 곳)은 하나로 합쳐 자른 자리에서 소리가 끊기지 않게 한다
+function mergedSegments(){
+  const out = [];
+  for (const tr of TRACKS){
+    const cs = state.mix.clips.filter(c => c.track === tr).sort((a, b) => a.at - b.at);
+    let cur = null;
+    for (const c of cs){
+      if (cur && Math.abs(cur.at + cur.src1 - cur.src0 - c.at) < EPS && Math.abs(cur.src1 - c.src0) < EPS) cur.src1 = c.src1;
+      else { cur = { track:tr, at:c.at, src0:c.src0, src1:c.src1 }; out.push(cur); }
+    }
+  }
+  return out;
+}
+let mixKey = '', mixPending = false, mixRunning = false, mixTimer = 0, mixQueued = false;
+function scheduleMix(delay = 0){
+  clearTimeout(mixTimer); mixQueued = true;
+  mixTimer = setTimeout(() => { mixQueued = false; mixPending = true; if (!mixRunning) runMix(); }, delay);
+}
+const mixBusy = () => mixQueued || mixPending || mixRunning;
+async function runMix(){
+  mixRunning = true;
+  try { while (mixPending){ mixPending = false; await rebuildMix(); } }
+  catch (e){ console.error(e); flash('믹스 오류: ' + e.message); }
+  mixRunning = false;
+}
+async function rebuildMix(){
+  const M = state.mix;
+  const segs = mergedSegments().filter(s => sources[s.track]);
+  const key = JSON.stringify([segs, M.gain, M.shift]);
+  if (key === mixKey) return;
+  if (!segs.length){ mixKey = key; audioBuf = mono = peaks = null; barEdges = null; audio.removeAttribute('src'); return; }
+  const SR = 48000, total = Math.max(...segs.map(s => s.at + s.src1 - s.src0));
+  const oc = new OfflineAudioContext(2, Math.max(1, Math.ceil(total * SR)), SR);
+  for (const s of segs){
+    const buf = sources[s.track], g = M.gain[s.track];
+    let off = s.src0 + M.shift[s.track], at = s.at, len = s.src1 - s.src0;
+    if (off < 0){ at -= off; len += off; off = 0; }
+    len = Math.min(len, buf.duration - off);
+    if (len <= 0.001) continue;
+    const src = oc.createBufferSource(); src.buffer = buf;
+    const gn = oc.createGain(); src.connect(gn); gn.connect(oc.destination);
+    // 자른 경계에 15ms 페이드 (틱 소리 방지). 소스의 진짜 처음/끝은 그대로.
+    const F = Math.min(0.015, len / 4), fin = off > 0.001, fout = off + len < buf.duration - 0.001;
+    gn.gain.setValueAtTime(fin ? 0 : g, at);
+    if (fin) gn.gain.linearRampToValueAtTime(g, at + F);
+    if (fout){ gn.gain.setValueAtTime(g, at + len - F); gn.gain.linearRampToValueAtTime(0, at + len); }
+    src.start(at, off, len);
+  }
+  const out = await oc.startRendering();
+  if (mixPending) return;                     // 그 사이 또 바뀌었으면 다음 렌더 결과만 쓴다
+  mixKey = key;
+  audioBuf = out; mono = monoOf(out); peaks = peaksOf(mono); barEdges = null;
+  const t = audio.currentTime || 0, playing = !audio.paused, old = audio.src;
+  audio.src = URL.createObjectURL(wavBlob(out));
+  await new Promise(r => { audio.addEventListener('loadedmetadata', r, { once:true }); audio.addEventListener('error', r, { once:true }); });
+  audio.defaultPlaybackRate = audio.playbackRate = +$('rate').value;
+  audio.preservesPitch = true;
+  audio.currentTime = Math.min(t, out.duration);
+  if (playing) audio.play();
+  if (old && old.startsWith('blob:')) URL.revokeObjectURL(old);
+  $('seek').max = out.duration;
+  if (!wave.inited || wave.start + wave.span > out.duration + 0.01){ wave.start = 0; wave.span = out.duration; wave.inited = true; }
+}
+function wavBlob(buf){
+  const ch = buf.numberOfChannels, n = buf.length, sr = buf.sampleRate, bytes = n * ch * 2;
+  const ab = new ArrayBuffer(44 + bytes), v = new DataView(ab);
+  const w = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  w(0, 'RIFF'); v.setUint32(4, 36 + bytes, true); w(8, 'WAVE'); w(12, 'fmt ');
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, ch, true); v.setUint32(24, sr, true);
+  v.setUint32(28, sr * ch * 2, true); v.setUint16(32, ch * 2, true); v.setUint16(34, 16, true);
+  w(36, 'data'); v.setUint32(40, bytes, true);
+  const out = new Int16Array(ab, 44, n * ch), data = [...Array(ch)].map((_, c) => buf.getChannelData(c));
+  for (let i = 0; i < n; i++) for (let c = 0; c < ch; c++){ const x = data[c][i]; out[i * ch + c] = (x < -1 ? -1 : x > 1 ? 1 : x) * 32767; }
+  return new Blob([ab], { type:'audio/wav' });
+}
+const duration = () => audioBuf ? audioBuf.duration : 0;
 
 /* ---------- 스펙트럼: 디코딩된 PCM에서 시간 t 기준 FFT (실시간 분석기 사용 안 함) ---------- */
 const FFT_N = 2048, BARS = 64;
@@ -649,7 +855,7 @@ audio.addEventListener('pause', () => $('playBtn').textContent = '▶ 재생');
 $('playBtn').onclick = togglePlay;
 $('seek').addEventListener('input', () => { seeking = true; audio.currentTime = +$('seek').value; });
 $('seek').addEventListener('change', () => { seeking = false; });
-$('rate').onchange = () => { audio.playbackRate = +$('rate').value; };
+$('rate').onchange = () => { audio.defaultPlaybackRate = audio.playbackRate = +$('rate').value; };
 
 /* =====================================================================
    탭 싱크
@@ -791,98 +997,420 @@ tbody.addEventListener('change', e => {
 });
 
 /* =====================================================================
-   파형 + 마커
+   타임라인 편집기 (원곡 / Inst / 가사 마커)
    ===================================================================== */
 const wv = $('wave'), wctx = wv.getContext('2d');
-const wave = { start:0, span:1, drag:null };
+const wave = { start:0, span:1, drag:null, inited:false };
+const LAYOUT = { ruler:[0, 22], orig:[22, 78], inst:[82, 138], lyr:[142, 196], H:196 };
+const ed = { sel:null, track:'orig', range:null };       // sel = 선택한 클립 id
+const hist = { undo:[], redo:[] };
+const dprNow = () => devicePixelRatio || 1;
 function waveX(t){ return (t - wave.start) / wave.span * wv.width; }
 function waveT(x){ return wave.start + x / wv.width * wave.span; }
-function drawWave(t){
-  const dpr = devicePixelRatio || 1, cw = Math.round(wv.clientWidth * dpr);
-  if (wv.width !== cw){ wv.width = cw; wv.height = Math.round(120 * dpr); }
-  const W = wv.width, H = wv.height;
-  wctx.fillStyle = '#0b0d0f'; wctx.fillRect(0, 0, W, H);
-  if (!peaks){ wctx.fillStyle = '#556'; wctx.font = `${13 * dpr}px ${FONT}`; wctx.fillText('음원을 불러오면 파형이 표시됩니다', 10 * dpr, 24 * dpr); return; }
-  const sr = audioBuf.sampleRate, mid = H / 2;
-  wctx.fillStyle = '#3a6e4a';
-  for (let x = 0; x < W; x++){
-    const s0 = waveT(x) * sr, s1 = waveT(x + 1) * sr;
-    let lo = 0, hi = 0;
-    if (s1 - s0 >= peaks.bucket){
-      for (let b = Math.max(0, Math.floor(s0 / peaks.bucket)), e = Math.min(peaks.min.length, Math.ceil(s1 / peaks.bucket)); b < e; b++){ if (peaks.min[b] < lo) lo = peaks.min[b]; if (peaks.max[b] > hi) hi = peaks.max[b]; }
-    } else {
-      for (let i = Math.max(0, Math.floor(s0)), e = Math.min(mono.length, Math.ceil(s1) + 1); i < e; i++){ if (mono[i] < lo) lo = mono[i]; if (mono[i] > hi) hi = mono[i]; }
-    }
-    wctx.fillRect(x, mid - hi * mid * 0.95, 1, Math.max(1, (hi - lo) * mid * 0.95));
+const timelineEnd = () => Math.max(0, ...state.mix.clips.map(clipEnd));
+const viewMax = () => Math.max(duration(), timelineEnd(), 1);
+const selClip = () => state.mix.clips.find(c => c.id === ed.sel) || null;
+let msgTimer = 0;
+function flash(s){ $('edMsg').textContent = s; clearTimeout(msgTimer); msgTimer = setTimeout(() => $('edMsg').textContent = '', 3500); }
+
+/* ---------- 편집 기록 (되돌리기) ---------- */
+const snapshot = () => JSON.stringify({ clips:state.mix.clips, times:state.lines.map(l => l.time) });
+function pushUndo(){ hist.undo.push(snapshot()); if (hist.undo.length > 200) hist.undo.shift(); hist.redo = []; }
+function restoreSnap(sn){
+  const o = JSON.parse(sn);
+  state.mix.clips = o.clips;
+  if (o.times.length === state.lines.length) o.times.forEach((t, i) => state.lines[i].time = t);
+  if (!selClip()) ed.sel = null;
+  afterEdit();
+}
+function undo(){ if (!hist.undo.length) return flash('되돌릴 것이 없습니다'); hist.redo.push(snapshot()); restoreSnap(hist.undo.pop()); flash('되돌렸습니다'); }
+function redo(){ if (!hist.redo.length) return; hist.undo.push(snapshot()); restoreSnap(hist.redo.pop()); flash('다시 했습니다'); }
+function afterEdit(){ scheduleMix(); refreshTimes(); updateSelInfo(); save(); }
+
+/* ---------- 편집 동작 ---------- */
+function splitAt(t, tracks){
+  let n = 0;
+  for (const c of [...state.mix.clips]){
+    if (!tracks.includes(c.track) || t <= c.at + 0.005 || t >= clipEnd(c) - 0.005) continue;
+    const mid = c.src0 + (t - c.at);
+    state.mix.clips.push(newClip(c.track, t, mid, c.src1));
+    c.src1 = mid; n++;
   }
-  // 시간 눈금
-  wctx.fillStyle = '#667'; wctx.font = `${10 * dpr}px ${FONT}`; wctx.textAlign = 'left';
+  return n;
+}
+function cut(tracks){
+  if (!state.mix.clips.length) return flash('먼저 음원을 여세요');
+  const t = audio.currentTime || 0;
+  pushUndo();
+  if (!splitAt(t, tracks)){ hist.undo.pop(); return flash('여기는 자를 클립이 없습니다'); }
+  flash(`${fmtTime(t)}에서 ${tracks.length > 1 ? '두 트랙을 같이' : TRACK_NAME[tracks[0]] + '만'} 잘랐습니다`);
+  afterEdit();
+}
+// 선택 클립 + (같이 이동이면) 그 구간 안에 들어 있는 다른 트랙 클립
+function groupOf(c){
+  if (!c) return [];
+  const a = c.at, e = clipEnd(c);
+  return state.mix.clips.filter(x => x === c || (state.mix.link && x.track !== c.track && x.at >= a - 0.005 && clipEnd(x) <= e + 0.005));
+}
+function linesIn(a, e){
+  if (!state.mix.follow) return [];
+  const out = [];
+  state.lines.forEach((l, i) => { const t = eff(i); if (t != null && t >= a - 0.005 && t < e - 0.005) out.push(i); });
+  return out;
+}
+function shiftLines(idx, d){ for (const i of idx) state.lines[i].time = Math.round((state.lines[i].time + d) * 1000) / 1000; }
+function deleteSel(ripple){
+  const c = selClip(); if (!c) return flash('지울 클립을 먼저 클릭하세요');
+  const g = groupOf(c), a = c.at, e = clipEnd(c);
+  pushUndo();
+  state.mix.clips = state.mix.clips.filter(x => !g.includes(x));
+  if (ripple){
+    const len = e - a;
+    for (const x of state.mix.clips) if (x.at >= e - 0.005) x.at -= len;
+    shiftLines(linesIn(e, 1e9), -len);
+  }
+  ed.sel = null;
+  flash(ripple ? '지우고 뒤를 당겼습니다' : '지웠습니다 (그 자리는 무음)');
+  afterEdit();
+}
+function nextCut(t){
+  let n = Infinity;
+  for (const c of state.mix.clips) for (const x of [c.at, clipEnd(c)]) if (x > t + 0.01 && x < n) n = x;
+  return n === Infinity ? null : n;
+}
+// [a, b) 구간을 원곡만 / Inst만 / 둘 다 로. 없어진 트랙은 다른 트랙과 같은 소스 위치로 되살린다.
+function setRegionMode(a, b, mode){
+  const M = state.mix;
+  splitAt(a, TRACKS); splitAt(b, TRACKS);
+  const want = { orig: mode !== 'inst', inst: mode !== 'orig' };
+  const inside = x => x.at >= a - 0.005 && clipEnd(x) <= b + 0.005;
+  const add = [];
+  for (const tr of TRACKS){
+    if (!want[tr]) continue;
+    let gaps = [[a, b]];
+    for (const x of M.clips.filter(x => x.track === tr)){
+      const nx = [];
+      for (const [g0, g1] of gaps){
+        const x0 = x.at, x1 = clipEnd(x);
+        if (x1 <= g0 || x0 >= g1){ nx.push([g0, g1]); continue; }
+        if (x0 > g0) nx.push([g0, x0]);
+        if (x1 < g1) nx.push([x1, g1]);
+      }
+      gaps = nx;
+    }
+    const [r0, r1] = srcRange(tr);
+    for (const [g0, g1] of gaps) for (const o of M.clips.filter(x => x.track === otherTrack(tr))){
+      const x0 = Math.max(g0, o.at), x1 = Math.min(g1, clipEnd(o));
+      if (x1 - x0 < 0.005) continue;
+      let s0 = o.src0 + (x0 - o.at), s1 = o.src0 + (x1 - o.at), at = x0;
+      if (s0 < r0){ at += r0 - s0; s0 = r0; }
+      s1 = Math.min(s1, r1);
+      if (s1 - s0 > 0.005) add.push(newClip(tr, at, s0, s1));
+    }
+  }
+  // 되살릴 위치를 다 구한 뒤에 지운다 (지운 트랙이 되살릴 기준일 수 있으므로)
+  for (const tr of TRACKS) if (!want[tr]) M.clips = M.clips.filter(x => !(x.track === tr && inside(x)));
+  M.clips.push(...add);
+}
+function applyMode(mode){
+  if (!state.mix.clips.length) return flash('먼저 음원을 여세요');
+  let a, b;
+  if (ed.range){ [a, b] = ed.range; }
+  else { a = audio.currentTime || 0; b = nextCut(a); if (b == null) return flash('재생 위치 뒤에 음원이 없습니다'); }
+  pushUndo();
+  setRegionMode(a, b, mode);
+  ed.sel = null; ed.range = null;
+  flash(`${fmtTime(a)} ~ ${fmtTime(b)} → ${{ orig:'원곡만', inst:'Inst만', both:'둘 다' }[mode]}`);
+  afterEdit();
+}
+// 클립 묶음 이동 (가사 따라감)
+function moveGroup(g, lines, d){ for (const x of g) x.at = Math.round((x.at + d) * 10000) / 10000; shiftLines(lines, d); }
+function nudgeSel(d){
+  const c = selClip(); if (!c) return;
+  const g = groupOf(c);
+  d = Math.max(d, -Math.min(...g.map(x => x.at)));
+  if (!d) return;
+  pushUndo(); moveGroup(g, linesIn(c.at, clipEnd(c)), d); afterEdit();
+}
+function moveSelTo(t){
+  const c = selClip(); if (!c || !isFinite(t)) return;
+  const g = groupOf(c), d = Math.max(t - c.at, -Math.min(...g.map(x => x.at)));
+  pushUndo(); moveGroup(g, linesIn(c.at, clipEnd(c)), d); afterEdit();
+}
+function swapSel(dir){
+  const c = selClip(); if (!c) return flash('바꿀 파트를 먼저 클릭하세요');
+  const same = state.mix.clips.filter(x => x.track === c.track && x !== c);
+  const nb = dir < 0
+    ? same.filter(x => clipEnd(x) <= c.at + 0.005).sort((p, q) => clipEnd(q) - clipEnd(p))[0]
+    : same.filter(x => x.at >= clipEnd(c) - 0.005).sort((p, q) => p.at - q.at)[0];
+  if (!nb) return flash(dir < 0 ? '앞에 파트가 없습니다' : '뒤에 파트가 없습니다');
+  const A = { c, g:groupOf(c) }, B = { c:nb, g:groupOf(nb) };
+  if (A.g.some(x => B.g.includes(x))) return flash('두 트랙 경계가 달라 바꿀 수 없습니다. 같이 자르기로 경계를 맞추세요');
+  const [first, second] = dir < 0 ? [B, A] : [A, B];
+  const fs = first.c.at, fe = clipEnd(first.c), ss = second.c.at, se = clipEnd(second.c);
+  const fl = linesIn(fs, fe), sl = linesIn(ss, se);
+  pushUndo();
+  moveGroup(second.g, sl, fs - ss);
+  moveGroup(first.g, fl, (fs + (se - ss) + (ss - fe)) - fs);
+  flash('파트 순서를 바꿨습니다');
+  afterEdit();
+}
+function duplicateSel(){
+  const c = selClip(); if (!c) return flash('복제할 파트를 먼저 클릭하세요');
+  const g = groupOf(c), a = c.at, e = clipEnd(c), len = e - a;
+  pushUndo();
+  for (const x of state.mix.clips) if (!g.includes(x) && x.at >= e - 0.005) x.at += len;
+  shiftLines(linesIn(e, 1e9), len);
+  let first = null;
+  for (const x of g){ const n = newClip(x.track, x.at + len, x.src0, x.src1); state.mix.clips.push(n); if (x === c) first = n; }
+  ed.sel = first.id;
+  flash(`${fmtTime(a)}~${fmtTime(e)} 파트를 바로 뒤에 한 번 더 넣었습니다`);
+  afterEdit();
+}
+
+/* ---------- 선택 정보 ---------- */
+function updateSelInfo(){
+  const c = selClip(), el = $('selInfo');
+  if (c){
+    const g = groupOf(c);
+    el.innerHTML = `선택: <b style="color:${TRACK_COLOR[c.track]}">${TRACK_NAME[c.track]}</b>${g.length > 1 ? ' + ' + TRACK_NAME[otherTrack(c.track)] : ''} · ${fmtTime(c.at)} ~ ${fmtTime(clipEnd(c))} (${clipLen(c).toFixed(2)}초) · 시작 위치 <input type="text" id="selAt" value="${fmtTime(c.at)}"> <button id="selRipple" title="Shift+Del">빈칸 없이 지우기</button>`;
+    $('selAt').onchange = () => { const t = parseTime($('selAt').value); if (isFinite(t) && t >= 0) moveSelTo(t); else updateSelInfo(); };
+    $('selRipple').onclick = () => deleteSel(true);
+  } else if (ed.range){
+    el.innerHTML = `구간: <b>${fmtTime(ed.range[0])} ~ ${fmtTime(ed.range[1])}</b> · <kbd>1</kbd> 원곡만 <kbd>2</kbd> Inst만 <kbd>3</kbd> 둘 다 · <kbd>Esc</kbd> 해제`;
+  } else el.textContent = state.mix.clips.length ? '듣다가 S = 같이 자르기 · 1/2/3 = 여기부터 원곡만/Inst만/둘 다 · 클립을 클릭하면 선택' : '';
+}
+
+/* ---------- 그리기 ---------- */
+function drawWave(t){
+  const dpr = dprNow(), cw = Math.round(wv.clientWidth * dpr), chh = Math.round(LAYOUT.H * dpr);
+  if (wv.width !== cw || wv.height !== chh){ wv.width = cw; wv.height = chh; }
+  const W = wv.width, H = wv.height, Y = v => v * dpr;
+  wctx.fillStyle = '#0b0d0f'; wctx.fillRect(0, 0, W, H);
+  if (!state.mix.clips.length){ wctx.fillStyle = '#556'; wctx.font = `${13 * dpr}px ${FONT}`; wctx.textAlign = 'left'; wctx.fillText('원곡(과 Inst)을 열면 편집 타임라인이 표시됩니다', 10 * dpr, 50 * dpr); return; }
+  // 레인 배경
+  wctx.fillStyle = '#14171a';
+  for (const k of ['orig', 'inst', 'lyr']) wctx.fillRect(0, Y(LAYOUT[k][0]), W, Y(LAYOUT[k][1] - LAYOUT[k][0]));
+  // 구간 선택
+  if (ed.range){ wctx.fillStyle = 'rgba(245,185,58,.18)'; const x0 = waveX(ed.range[0]), x1 = waveX(ed.range[1]); wctx.fillRect(x0, 0, x1 - x0, H); }
+  // 눈금
+  wctx.fillStyle = '#778'; wctx.font = `${10 * dpr}px ${FONT}`; wctx.textAlign = 'left'; wctx.textBaseline = 'alphabetic';
   const stepT = [0.1, 0.5, 1, 2, 5, 10, 15, 30, 60].find(s => s / wave.span * W > 70 * dpr) || 60;
   for (let s = Math.ceil(wave.start / stepT) * stepT; s < wave.start + wave.span; s += stepT){
-    const x = waveX(s); wctx.fillRect(x, H - 6 * dpr, 1, 6 * dpr); wctx.fillText(fmtTime(s), x + 2, H - 8 * dpr);
+    const x = waveX(s); wctx.fillRect(x, Y(14), 1, Y(8)); wctx.fillText(fmtTime(s), x + 3, Y(12));
   }
-  // 줄 마커
+  // 클립
+  for (const tr of TRACKS){
+    const [y0, y1] = LAYOUT[tr].map(Y), mid = (y0 + y1) / 2, amp = (y1 - y0) / 2 * 0.9;
+    const cs = state.mix.clips.filter(c => c.track === tr);
+    const pk = srcPeaks[tr], sr = sources[tr] ? sources[tr].sampleRate : 1, sh = state.mix.shift[tr];
+    for (const c of cs){
+      const x0 = Math.max(0, waveX(c.at)), x1 = Math.min(W, waveX(clipEnd(c)));
+      if (x1 <= 0 || x0 >= W) continue;
+      wctx.fillStyle = TRACK_COLOR[tr] + '33'; wctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+      if (pk){
+        wctx.fillStyle = TRACK_COLOR[tr] + 'cc';
+        for (let x = Math.floor(x0); x < x1; x++){
+          const s0 = (c.src0 + (waveT(x) - c.at) + sh) * sr, s1 = (c.src0 + (waveT(x + 1) - c.at) + sh) * sr;
+          let lo = 0, hi = 0;
+          if (s1 - s0 >= pk.bucket){
+            for (let b = Math.max(0, Math.floor(s0 / pk.bucket)), e = Math.min(pk.min.length, Math.ceil(s1 / pk.bucket)); b < e; b++){ if (pk.min[b] < lo) lo = pk.min[b]; if (pk.max[b] > hi) hi = pk.max[b]; }
+          } else {
+            for (let i = Math.max(0, Math.floor(s0)), e = Math.min(pk.data.length, Math.ceil(s1) + 1); i < e; i++){ const v = pk.data[i]; if (v < lo) lo = v; if (v > hi) hi = v; }
+          }
+          wctx.fillRect(x, mid - hi * amp, 1, Math.max(1, (hi - lo) * amp));
+        }
+      }
+      // 같은 트랙끼리 겹친 곳은 빨갛게
+      for (const o of cs) if (o !== c && o.id > c.id){
+        const a = Math.max(c.at, o.at), b = Math.min(clipEnd(c), clipEnd(o));
+        if (b > a){ wctx.fillStyle = 'rgba(239,83,80,.45)'; wctx.fillRect(waveX(a), y0, waveX(b) - waveX(a), y1 - y0); }
+      }
+      const isSel = c.id === ed.sel, inGroup = !isSel && groupOf(selClip()).includes(c);
+      wctx.strokeStyle = isSel ? '#fff' : inGroup ? '#ffffffaa' : TRACK_COLOR[tr];
+      wctx.lineWidth = (isSel || inGroup ? 2 : 1) * dpr;
+      wctx.strokeRect(waveX(c.at) + wctx.lineWidth / 2, y0 + wctx.lineWidth / 2, waveX(clipEnd(c)) - waveX(c.at) - wctx.lineWidth, y1 - y0 - wctx.lineWidth);
+    }
+    wctx.fillStyle = TRACK_COLOR[tr]; wctx.font = `bold ${11 * dpr}px ${FONT}`; wctx.textAlign = 'left';
+    wctx.fillText(`${TRACK_NAME[tr]} ${Math.round(state.mix.gain[tr] * 100)}%${sources[tr] ? '' : ' (파일 없음)'}`, 4 * dpr, y0 + 13 * dpr);
+  }
+  // 가사 마커
+  const [ly0, ly1] = LAYOUT.lyr.map(Y);
   wctx.font = `bold ${10 * dpr}px ${FONT}`;
   state.lines.forEach((l, i) => {
     const e = eff(i); if (e == null) return;
     const x = waveX(e); if (x < -2 || x > W + 2) return;
     const cols = l.rappers.length ? l.rappers.map(memberColor) : ['#bbb'];
-    const seg = H / cols.length;
-    cols.forEach((c, j) => { wctx.fillStyle = c; wctx.fillRect(x - (wave.drag && wave.drag.i === i ? 1.5 : 1) * dpr, j * seg, 2 * dpr, seg); });
-    wctx.fillStyle = cols[0]; wctx.fillRect(x, 0, 18 * dpr, 13 * dpr);
-    wctx.fillStyle = textColorFor(cols[0]); wctx.fillText(String(i + 1), x + 2 * dpr, 10 * dpr);
+    const seg = (ly1 - ly0) / cols.length;
+    cols.forEach((c, j) => { wctx.fillStyle = c; wctx.fillRect(x - dpr, ly0 + j * seg, 2 * dpr, seg); });
+    wctx.fillStyle = cols[0]; wctx.fillRect(x, ly0, 18 * dpr, 13 * dpr);
+    wctx.fillStyle = textColorFor(cols[0]); wctx.fillText(String(i + 1), x + 2 * dpr, ly0 + 10 * dpr);
   });
+  wctx.fillStyle = '#667'; wctx.fillText('가사', 4 * dpr, ly1 - 4 * dpr);
   // 재생 위치
   wctx.fillStyle = '#fff'; wctx.fillRect(waveX(t), 0, 1.5 * dpr, H);
 }
+
+/* ---------- 마우스 ---------- */
+function laneAt(yCss){ for (const k of ['ruler', 'orig', 'inst', 'lyr']) if (yCss >= LAYOUT[k][0] && yCss < LAYOUT[k][1] + 4) return k; return 'lyr'; }
 function markerAt(px){
-  const dpr = devicePixelRatio || 1;
-  let best = -1, bd = 6 * dpr;
+  let best = -1, bd = 6 * dprNow();
   state.lines.forEach((l, i) => { const e = eff(i); if (e == null) return; const d = Math.abs(waveX(e) - px); if (d <= bd){ bd = d; best = i; } });
   return best;
 }
+function clipAt(track, px){ const t = waveT(px); return state.mix.clips.filter(c => c.track === track && c.at <= t && clipEnd(c) >= t).sort((a, b) => b.id - a.id)[0] || null; }
+function snapCandidates(exclude){
+  const out = [0, audio.currentTime || 0];
+  for (const c of state.mix.clips) if (!exclude.includes(c)) out.push(c.at, clipEnd(c));
+  return out;
+}
+// 이동량 d를 가장 가까운 경계에 붙인다 (8px 이내)
+function snapDelta(edges, d, cands){
+  let best = d, bd = 8 * dprNow() / wv.width * wave.span;
+  for (const e of edges) for (const c of cands){ const dd = c - e; if (Math.abs(dd - d) < bd){ bd = Math.abs(dd - d); best = dd; } }
+  return best;
+}
 wv.addEventListener('mousedown', e => {
-  if (!peaks) return;
-  const dpr = devicePixelRatio || 1, px = e.offsetX * dpr;
-  const i = markerAt(px);
-  wave.drag = i >= 0 ? { i, mode:'marker' } : { mode:'pan', x0:px, s0:wave.start, moved:false };
+  if (!state.mix.clips.length) return;
+  const dpr = dprNow(), px = e.offsetX * dpr, lane = laneAt(e.offsetY), t = waveT(px);
+  const base = { x0:px, moved:false };
+  if (lane === 'ruler'){ wave.drag = { ...base, mode:'range', a:t }; return; }
+  if (lane === 'lyr'){
+    const i = markerAt(px);
+    if (i >= 0){ pushUndo(); wave.drag = { ...base, mode:'marker', i }; return; }
+    wave.drag = { ...base, mode:'pan', s0:wave.start }; return;
+  }
+  ed.track = lane;
+  const c = clipAt(lane, px);
+  if (!c){ ed.sel = null; ed.range = null; updateSelInfo(); wave.drag = { ...base, mode:'pan', s0:wave.start }; return; }
+  ed.sel = c.id; ed.range = null; updateSelInfo();
+  const edge = 6 * dpr;
+  pushUndo();      // 클릭만 하고 놓으면 mouseup에서 취소
+  if (Math.abs(px - waveX(c.at)) <= edge) wave.drag = { ...base, mode:'trimL', c, at0:c.at, s0:c.src0 };
+  else if (Math.abs(px - waveX(clipEnd(c))) <= edge) wave.drag = { ...base, mode:'trimR', c, s1:c.src1 };
+  else {
+    const g = groupOf(c), lines = linesIn(c.at, clipEnd(c));
+    wave.drag = { ...base, mode:'move', c, g, ats:g.map(x => x.at), lines, times:lines.map(i => state.lines[i].time) };
+  }
 });
 window.addEventListener('mousemove', e => {
-  if (!wave.drag) return;
-  const r = wv.getBoundingClientRect(), dpr = devicePixelRatio || 1;
-  const px = (e.clientX - r.left) * dpr;
-  if (wave.drag.mode === 'marker'){
-    const t = clamp(waveT(px), 0, duration());
-    state.lines[wave.drag.i].time = Math.round((t - state.offsetMs / 1000) * 1000) / 1000;
-    updateRow(wave.drag.i);
-  } else {
-    if (Math.abs(px - wave.drag.x0) > 3) wave.drag.moved = true;
-    wave.start = clamp(wave.drag.s0 - (px - wave.drag.x0) / wv.width * wave.span, 0, Math.max(0, duration() - wave.span));
+  const D = wave.drag; if (!D) return;
+  const r = wv.getBoundingClientRect(), dpr = dprNow(), px = (e.clientX - r.left) * dpr;
+  if (Math.abs(px - D.x0) > 3) D.moved = true;
+  if (!D.moved) return;
+  const dt = (px - D.x0) / wv.width * wave.span;
+  if (D.mode === 'pan') wave.start = clamp(D.s0 - dt, 0, Math.max(0, viewMax() - wave.span));
+  else if (D.mode === 'range'){ const b = clamp(waveT(px), 0, viewMax()); ed.range = [Math.min(D.a, b), Math.max(D.a, b)]; ed.sel = null; updateSelInfo(); }
+  else if (D.mode === 'marker'){
+    state.lines[D.i].time = Math.round((clamp(waveT(px), 0, viewMax()) - state.offsetMs / 1000) * 1000) / 1000;
+    updateRow(D.i);
+  } else if (D.mode === 'move'){
+    const c = D.c, ci = D.g.indexOf(c), s = D.ats[ci], len = clipLen(c);
+    let d = snapDelta([s, s + len], dt, snapCandidates(D.g));
+    d = Math.max(d, -Math.min(...D.ats));
+    D.g.forEach((x, k) => x.at = Math.round((D.ats[k] + d) * 10000) / 10000);
+    D.lines.forEach((i, k) => state.lines[i].time = Math.round((D.times[k] + d) * 1000) / 1000);
+    updateSelInfo();
+  } else if (D.mode === 'trimL'){
+    const c = D.c, [r0] = srcRange(c.track);
+    let d = snapDelta([D.at0], dt, snapCandidates([c]));
+    d = clamp(d, Math.max(r0 - D.s0, -D.at0), (c.src1 - 0.05) - D.s0);
+    c.at = D.at0 + d; c.src0 = D.s0 + d; updateSelInfo();
+  } else if (D.mode === 'trimR'){
+    const c = D.c, [, r1] = srcRange(c.track);
+    let d = snapDelta([c.at + D.s1 - c.src0], dt, snapCandidates([c]));
+    c.src1 = clamp(D.s1 + d, c.src0 + 0.05, r1); updateSelInfo();
   }
-  wv.style.cursor = wave.drag.mode === 'marker' ? 'ew-resize' : 'grabbing';
 });
 window.addEventListener('mouseup', e => {
-  if (!wave.drag) return;
-  if (wave.drag.mode === 'pan' && !wave.drag.moved){
-    const r = wv.getBoundingClientRect();
-    audio.currentTime = clamp(waveT((e.clientX - r.left) * (devicePixelRatio || 1)), 0, duration());
+  const D = wave.drag; if (!D) return;
+  wave.drag = null;
+  if (!D.moved){
+    if (['move', 'marker', 'trimL', 'trimR'].includes(D.mode)) hist.undo.pop();     // 클릭만 했으면 기록 취소
+    if (D.mode === 'pan' || D.mode === 'range' || D.mode === 'marker'){
+      if (D.mode === 'range'){ ed.range = null; updateSelInfo(); }
+      audio.currentTime = clamp(waveT(D.x0), 0, duration());
+    }
+    return;
   }
-  if (wave.drag.mode === 'marker') save();
-  wave.drag = null; wv.style.cursor = 'crosshair';
+  if (D.mode === 'move' || D.mode === 'trimL' || D.mode === 'trimR') afterEdit();
+  if (D.mode === 'marker') save();
 });
-wv.addEventListener('mousemove', e => { if (!wave.drag) wv.style.cursor = markerAt(e.offsetX * (devicePixelRatio || 1)) >= 0 ? 'ew-resize' : 'crosshair'; });
+wv.addEventListener('mousemove', e => {
+  if (wave.drag || !state.mix.clips.length) return;
+  const px = e.offsetX * dprNow(), lane = laneAt(e.offsetY);
+  let cur = 'crosshair';
+  if (lane === 'lyr') cur = markerAt(px) >= 0 ? 'ew-resize' : 'crosshair';
+  else if (lane === 'orig' || lane === 'inst'){
+    const c = clipAt(lane, px);
+    if (c) cur = Math.abs(px - waveX(c.at)) <= 6 * dprNow() || Math.abs(px - waveX(clipEnd(c))) <= 6 * dprNow() ? 'col-resize' : 'grab';
+  } else cur = 'text';
+  wv.style.cursor = cur;
+});
 wv.addEventListener('wheel', e => {
-  if (!peaks) return;
+  if (!state.mix.clips.length) return;
   e.preventDefault();
-  const D = duration(), px = e.offsetX * (devicePixelRatio || 1);
+  const V = viewMax(), px = e.offsetX * dprNow();
   if (e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)){
-    wave.start = clamp(wave.start + (e.deltaX || e.deltaY) / wv.width * wave.span, 0, Math.max(0, D - wave.span));
+    wave.start = clamp(wave.start + (e.deltaX || e.deltaY) / wv.width * wave.span, 0, Math.max(0, V - wave.span));
   } else {
     const at = waveT(px);
-    wave.span = clamp(wave.span * Math.pow(1.0015, e.deltaY), 1, D);
-    wave.start = clamp(at - px / wv.width * wave.span, 0, Math.max(0, D - wave.span));
+    wave.span = clamp(wave.span * Math.pow(1.0015, e.deltaY), 1, V);
+    wave.start = clamp(at - px / wv.width * wave.span, 0, Math.max(0, V - wave.span));
   }
 }, { passive:false });
+
+/* ---------- 버튼 / 단축키 ---------- */
+const edBtn = (id, fn) => $(id).addEventListener('click', e => { fn(); e.currentTarget.blur(); });
+edBtn('edCut', () => cut(TRACKS));
+edBtn('edCutOne', () => cut([selClip() ? selClip().track : ed.track]));
+edBtn('edDel', () => deleteSel(false));
+edBtn('edOrig', () => applyMode('orig'));
+edBtn('edInst', () => applyMode('inst'));
+edBtn('edBoth', () => applyMode('both'));
+edBtn('edSwapL', () => swapSel(-1));
+edBtn('edSwapR', () => swapSel(1));
+edBtn('edDup', duplicateSel);
+edBtn('edUndo', undo);
+edBtn('edRedo', redo);
+$('edLink').onchange = () => { state.mix.link = $('edLink').checked; save(); };
+$('edFollow').onchange = () => { state.mix.follow = $('edFollow').checked; save(); };
+window.addEventListener('keydown', e => {
+  if (isTyping(e.target) || exportJob) return;
+  const k = e.code, ctrl = e.ctrlKey || e.metaKey;
+  if (k.startsWith('Arrow') && e.target.tagName === 'SELECT') return;
+  const go = fn => { e.preventDefault(); fn(); };
+  if (ctrl && k === 'KeyZ') go(() => e.shiftKey ? redo() : undo());
+  else if (ctrl && k === 'KeyY') go(redo);
+  else if (ctrl && k === 'KeyD') go(duplicateSel);
+  else if (ctrl || e.repeat && k !== 'ArrowLeft' && k !== 'ArrowRight') return;
+  else if (k === 'KeyS') go(() => cut(e.shiftKey ? [selClip() ? selClip().track : ed.track] : TRACKS));
+  else if (k === 'Digit1' || k === 'Numpad1') go(() => applyMode('orig'));
+  else if (k === 'Digit2' || k === 'Numpad2') go(() => applyMode('inst'));
+  else if (k === 'Digit3' || k === 'Numpad3') go(() => applyMode('both'));
+  else if (k === 'Delete' || (k === 'Backspace' && !tap.on)) go(() => deleteSel(e.shiftKey));
+  else if ((k === 'ArrowLeft' || k === 'ArrowRight') && selClip()){
+    const dir = k === 'ArrowLeft' ? -1 : 1;
+    go(() => e.altKey ? swapSel(dir) : nudgeSel(dir * (e.shiftKey ? 0.1 : 0.01)));
+  }
+  else if (k === 'Escape'){ ed.sel = null; ed.range = null; updateSelInfo(); }
+});
+
+/* ---------- 음원 입력 ---------- */
+$('origFile').onchange = () => { const f = $('origFile').files[0]; if (f) loadTrackFile('orig', f); };
+$('instFile').onchange = () => { const f = $('instFile').files[0]; if (f) loadTrackFile('inst', f); };
+for (const [id, tr] of [['gainOrig', 'orig'], ['gainInst', 'inst']]){
+  $(id).addEventListener('input', () => {
+    state.mix.gain[tr] = +$(id).value / 100;
+    $(id + 'Lbl').textContent = $(id).value + '%';
+    scheduleMix(250); save();
+  });
+}
+$('alignAuto').onclick = () => { if (!sources.orig || !sources.inst) return flash('원곡과 Inst를 둘 다 열어야 합니다'); autoAlign(true); scheduleMix(); save(); };
+document.querySelectorAll('[data-shift]').forEach(b => b.onclick = () => {
+  state.mix.shift.inst = Math.round((state.mix.shift.inst + +b.dataset.shift) * 1000) / 1000;
+  updateAudioInfo(); scheduleMix(150); save();
+});
 
 /* =====================================================================
    멤버
@@ -966,7 +1494,6 @@ const settingFields = { sPreset:['preset', 'value'], sNamePos:['namePos', 'value
 function fillSettings(){ for (const [id, [k, p]] of Object.entries(settingFields)) $(id)[p] = state.settings[k]; refreshAccentUI(); }
 for (const [id, [k, p]] of Object.entries(settingFields)) $(id).addEventListener('change', () => { state.settings[k] = $(id)[p]; refreshAccentUI(); save(); });
 
-$('audioFile').onchange = () => { const f = $('audioFile').files[0]; if (f) loadAudioFile(f); };
 let lyrTimer = 0;
 $('lyrics').addEventListener('input', () => { clearTimeout(lyrTimer); lyrTimer = setTimeout(applyLyricsText, 400); });
 $('lrcImportBtn').onclick = () => $('lrcFile').click();
@@ -989,14 +1516,21 @@ async function loadProject(obj){
   state.members = (obj.members || []).map(m => ({ name:String(m.name), color:m.color || '#888' }));
   state.offsetMs = typeof obj.offsetMs === 'number' ? obj.offsetMs : -150;
   state.settings = Object.assign({}, state.settings, obj.settings);
-  state.audioName = obj.audioName || '';
+  state.mix = Object.assign(defaultMix(), obj.mix);
+  state.mix.shift = Object.assign({ orig:0, inst:0 }, state.mix.shift);
+  state.mix.gain = Object.assign({ orig:1, inst:1 }, state.mix.gain);
+  state.mix.names = Object.assign({ orig: obj.audioName || '', inst:'' }, state.mix.names);
+  state.mix.clips = (state.mix.clips || []).filter(c => TRACKS.includes(c.track)).map(c => ({ id:+c.id, track:c.track, at:+c.at, src0:+c.src0, src1:+c.src1 }));
+  clipSeq = Math.max(0, ...state.mix.clips.map(c => c.id)) + 1;
+  $('edLink').checked = state.mix.link; $('edFollow').checked = state.mix.follow;
+  hist.undo = []; hist.redo = []; ed.sel = null; ed.range = null;
   ensureMembers(state.lines.flatMap(l => l.rappers));
   await setCover(state.song.cover).catch(() => setCover(''));
   fillSongForm(); fillSettings(); syncTextareaFromLines();
   $('offset').value = state.offsetMs; $('offsetLbl').textContent = (state.offsetMs > 0 ? '+' : '') + state.offsetMs + 'ms';
   tap.history = []; tap.next = firstUntimed();
   renderMembers(); renderTable();
-  if (state.audioName && !audioBuf) $('audioInfo').textContent = `음원(${state.audioName})을 다시 열어 주세요.`;
+  updateAudioInfo(); updateSelInfo(); mixKey = ''; scheduleMix();
 }
 $('saveProj').onclick = () => download(new Blob([projectJSON()], { type:'application/json' }), (state.song.title || 'project') + '.lyricvideo.json');
 $('loadProjBtn').onclick = () => $('projFile').click();
@@ -1059,6 +1593,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function exportMp4(){
   if (!hasCodecs){ alert('Chrome 또는 Edge 최신 버전을 사용하세요. (WebCodecs 미지원)'); return; }
   if (typeof Mp4Muxer === 'undefined'){ alert('mp4-muxer 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인하세요.'); return; }
+  while (mixBusy()) await sleep(50);     // 편집 결과 믹스가 끝날 때까지
   if (!audioBuf){ alert('먼저 음원을 불러오세요.'); return; }
   const D = audioBuf.duration;
   let start = 0, end = D;
