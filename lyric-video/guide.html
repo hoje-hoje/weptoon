@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>사용방법 · 리믹스 가사 영상 제작기</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --bg:#111315; --panel:#1a1d21; --card:#15181b; --raise:#22262b; --line:#2f343a;
+  --fg:#eceff2; --dim:#8d96a0; --soft:#c8ced5; --accent:#2fbf5a; --orig:#e0457b; --inst:#3b82f6; --warn:#f5b93a; --bad:#ef5350;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:Pretendard,'Malgun Gothic',sans-serif;font-size:15px;line-height:1.5}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 20px 80px}
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+header h1{font-size:24px;margin:0;display:flex;align-items:center;gap:10px}
+header h1 svg{width:26px;height:26px;color:var(--accent)}
+header .grow{flex:1}
+.btn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:10px;background:var(--accent);color:#06210f;
+  font-weight:700;text-decoration:none}
+.ic{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* 전체 흐름 */
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:28px}
+.flow a{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--panel);border:1px solid var(--line);border-radius:999px;
+  text-decoration:none;font-weight:600}
+.flow a:hover{border-color:var(--accent)}
+.flow .arrow{color:var(--dim)}
+.num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--accent);
+  color:#06210f;font-size:12px;font-weight:800;flex:none}
+
+/* 카드 */
+section{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:18px;scroll-margin-top:16px}
+section>h2{display:flex;align-items:center;gap:10px;font-size:19px;margin:0 0 16px}
+section>h2 .num{width:28px;height:28px;font-size:14px}
+h3{font-size:14px;color:var(--dim);margin:18px 0 8px;font-weight:600}
+.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+.tile b{display:block;margin-bottom:4px}
+.tile span{color:var(--soft);font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+th{color:var(--dim);font-weight:600;font-size:13px}
+tr:last-child td{border-bottom:none}
+.tbl{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+kbd{display:inline-block;background:#2a2f35;border:1px solid #3a4048;border-bottom-width:2px;border-radius:5px;padding:0 6px;font-size:12px;
+  font-family:inherit;color:#dfe3e8;line-height:20px;margin-right:2px;white-space:nowrap}
+.o{color:var(--orig);font-weight:700}.i{color:var(--inst);font-weight:700}
+.tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:700;background:#2a2f35}
+.tag.ok{background:rgba(47,191,90,.15);color:var(--accent)}
+.tag.no{background:rgba(239,83,80,.15);color:#ff8a87}
+.steps{display:grid;gap:8px;counter-reset:s;margin:0;padding:0;list-style:none}
+.steps li{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.steps li::before{counter-increment:s;content:counter(s);display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;
+  border-radius:50%;background:#2a2f35;color:var(--soft);font-size:12px;font-weight:800;flex:none}
+
+/* 박자 맞추기 모형 */
+.mock{background:#0d0f11;border:1px solid var(--line);border-radius:12px;padding:14px;max-width:420px}
+.who{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;background:#15181b;border:1px solid var(--line);border-radius:10px;padding:3px;margin-bottom:10px}
+.who div{text-align:center;padding:7px 0;border-radius:7px;color:var(--dim);font-size:13px;font-weight:600}
+.who .on{background:#2a2f35;color:var(--fg);box-shadow:inset 0 -3px 0 var(--inst)}
+.nudge{display:flex;gap:4px;align-items:stretch}
+.nudge div{display:flex;align-items:center;justify-content:center;padding:0 10px;border:1px solid #30363d;background:#22262b;border-radius:8px;font-weight:700}
+.nudge .read{flex:1;flex-direction:column;background:#0d0f11;padding:6px 0}
+.nudge .read small{font-size:12px;color:var(--inst)}
+.nudge .read b{font-size:30px;line-height:1.1}
+.nudge .read em{font-style:normal;font-size:12px;color:var(--dim)}
+.dir{display:flex;justify-content:space-between;margin-top:8px;font-size:13px;color:var(--soft)}
+.side-by-side{display:grid;grid-template-columns:minmax(0,420px) 1fr;gap:18px;align-items:start}
+@media (max-width:760px){.side-by-side{grid-template-columns:1fr}}
+
+/* 타임라인 모형 */
+.tl{background:#0b0d0f;border:1px solid var(--line);border-radius:12px;padding:10px;overflow-x:auto}
+.tl-inner{min-width:620px}
+.ruler{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);padding:0 2px 6px}
+.lane{position:relative;height:38px;background:#14171a;border-radius:6px;margin-bottom:5px}
+.lane .name{position:absolute;left:6px;top:3px;font-size:11px;font-weight:700;z-index:2}
+.clip{position:absolute;top:0;bottom:0;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.clip.o{background:rgba(224,69,123,.35);border:1px solid var(--orig);color:#ffd0e0}
+.clip.i{background:rgba(59,130,246,.35);border:1px solid var(--inst);color:#d3e3ff}
+.marks{position:relative;height:24px}
+.marks span{position:absolute;top:0;bottom:0;width:2px;background:var(--accent)}
+.press{position:relative;height:30px;margin-top:4px}
+.press kbd{position:absolute;transform:translateX(-50%);top:4px}
+
+/* 가사 예시 */
+.lyr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.lyr div{padding:7px 14px;border-bottom:1px solid var(--line);font-size:14px}
+.lyr div:nth-last-child(-n+2){border-bottom:none}
+.lyr .code{font-family:ui-monospace,Consolas,monospace;background:#0d0f11;color:#e8eaed}
+.lyr .code.at{color:var(--warn)}
+.lyr .code.blank{color:var(--dim)}
+.lyr .note{color:var(--soft)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></symbol>
+  <symbol id="i-open" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+</svg>
+<div class="wrap">
+
+<header>
+  <h1><svg class="ic"><use href="#i-mic"/></svg>사용방법</h1>
+  <span class="grow"></span>
+  <a class="btn" href="index.html"><svg class="ic"><use href="#i-open"/></svg>제작기 열기</a>
+</header>
+
+<nav class="flow">
+  <a href="#s1"><span class="num">1</span>음원 열기</a><span class="arrow">→</span>
+  <a href="#s2"><span class="num">2</span>박자 맞추기</a><span class="arrow">→</span>
+  <a href="#s3"><span class="num">3</span>공연 버전 편집</a><span class="arrow">→</span>
+  <a href="#s4"><span class="num">4</span>가사 입력</a><span class="arrow">→</span>
+  <a href="#s5"><span class="num">5</span>탭 싱크</a><span class="arrow">→</span>
+  <a href="#s6"><span class="num">6</span>화면 꾸미기</a><span class="arrow">→</span>
+  <a href="#s7"><span class="num">7</span>MP4 내보내기</a>
+</nav>
+
+<!-- 1 -->
+<section id="s1">
+  <h2><span class="num">1</span>음원 열기</h2>
+  <div class="grid">
+    <div class="tile"><b class="o">원곡</b><span>보컬이 들어간 원래 음원</span></div>
+    <div class="tile"><b class="i">Inst</b><span>반주(MR) · 없으면 원곡만 써도 됨</span></div>
+    <div class="tile"><b>볼륨</b><span>트랙마다 0 ~ 150%</span></div>
+    <div class="tile"><b>형식</b><span>mp3 · wav · m4a</span></div>
+  </div>
+  <h3>브라우저</h3>
+  <div class="grid">
+    <div class="tile"><b><span class="tag ok">권장</span> Chrome · Edge 최신</b><span>MP4 내보내기 가능</span></div>
+    <div class="tile"><b><span class="tag no">불가</span> Safari · Firefox</b><span>MP4 내보내기 안 됨</span></div>
+    <div class="tile"><b>인터넷</b><span>폰트 · MP4 라이브러리를 받아옴</span></div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="s2">
+  <h2><span class="num">2</span>원곡 · Inst 박자 맞추기</h2>
+  <div class="side-by-side">
+    <div class="mock">
+      <div class="who"><div>원곡 움직이기</div><div class="on">Inst 움직이기</div><div>같이 움직이기</div></div>
+      <div class="nudge"><div>‹ 10</div><div>‹ 1</div><div class="read"><small>Inst</small><b>−350</b><em>ms</em></div><div>1 ›</div><div>10 ›</div></div>
+      <div class="dir"><span>‹ 앞으로 당기기</span><span>뒤로 밀기 ›</span></div>
+    </div>
+    <div class="tbl"><table>
+      <tr><th>이렇게 들리면</th><th>고르기</th><th>누르기</th></tr>
+      <tr><td>Inst가 늦게 나옴</td><td><span class="i">Inst</span></td><td><kbd>‹</kbd> 당기기</td></tr>
+      <tr><td>Inst가 빨리 나옴</td><td><span class="i">Inst</span></td><td><kbd>›</kbd> 밀기</td></tr>
+      <tr><td>원곡이 늦게 나옴</td><td><span class="o">원곡</span></td><td><kbd>‹</kbd> 당기기</td></tr>
+      <tr><td>곡 시작 무음이 김</td><td>같이</td><td><kbd>‹</kbd> 당기기</td></tr>
+      <tr><td>시작이 너무 빠듯함</td><td>같이</td><td><kbd>›</kbd> 밀기</td></tr>
+    </table></div>
+  </div>
+  <h3>도구</h3>
+  <div class="grid">
+    <div class="tile"><b>자동 맞춤</b><span>Inst를 열면 자동 실행 · 시작 차이 + 속도 차이까지</span></div>
+    <div class="tile"><b>겹쳐 듣기</b><span><span class="o">원곡</span> 왼쪽 귀 · <span class="i">Inst</span> 오른쪽 귀 · 박자가 갈라지면 어긋남</span></div>
+    <div class="tile"><b>원곡 L · Inst R</b><span>편집 중에도 좌우로 · MP4에는 적용 안 됨</span></div>
+    <div class="tile"><b>0초보다 앞으로 당긴 부분</b><span>잘려서 사라짐</span></div>
+  </div>
+  <h3>순서</h3>
+  <ol class="steps">
+    <li>원곡 · Inst 열기 → 자동 맞춤 결과 확인</li>
+    <li>이어폰 양쪽 끼고 <b>겹쳐 듣기</b></li>
+    <li>박자가 갈라지면 <b>10</b>으로 크게 → <b>1</b>로 미세하게</li>
+    <li>딱 붙게 들리면 <b>겹쳐 듣기</b> 끄기</li>
+  </ol>
+</section>
+
+<!-- 3 -->
+<section id="s3">
+  <h2><span class="num">3</span>공연 버전 편집 — 듣다가 누르기</h2>
+  <div class="tl"><div class="tl-inner">
+    <div class="ruler"><span>0:00</span><span>0:30</span><span>1:00</span><span>1:30</span><span>2:00</span></div>
+    <div class="lane"><span class="name o">원곡</span><div class="clip o" style="left:30%;width:20%">훅</div><div class="clip o" style="left:80%;width:20%">훅</div></div>
+    <div class="lane"><span class="name i">Inst</span><div class="clip i" style="left:0;width:30%">벌스 1 (민준)</div><div class="clip i" style="left:50%;width:30%">벌스 2 (서연)</div></div>
+    <div class="press"><kbd style="left:1%">2</kbd><kbd style="left:30%">1</kbd><kbd style="left:50%">2</kbd><kbd style="left:80%">1</kbd></div>
+  </div></div>
+  <h3>위 그림 만드는 법</h3>
+  <ol class="steps">
+    <li>처음부터 재생 → <kbd>2</kbd> (여기부터 Inst만)</li>
+    <li>훅 시작에서 <kbd>1</kbd> (여기부터 원곡만)</li>
+    <li>훅 끝에서 <kbd>2</kbd></li>
+    <li>잘못 눌렀으면 <kbd>Ctrl</kbd><kbd>Z</kbd></li>
+  </ol>
+  <h3>편집 도구</h3>
+  <div class="tbl"><table>
+    <tr><th>하고 싶은 것</th><th>키</th><th>움직이는 것</th></tr>
+    <tr><td>여기부터 원곡만 / Inst만 / 둘 다</td><td><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></td><td>재생 위치 → 다음 자른 곳까지</td></tr>
+    <tr><td>특정 구간에만 적용</td><td>눈금줄 드래그 → <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd></td><td>잡은 구간</td></tr>
+    <tr><td>두 트랙 같이 자르기</td><td><kbd>S</kbd></td><td>재생 위치</td></tr>
+    <tr><td>선택한 트랙만 자르기</td><td><kbd>Shift</kbd><kbd>S</kbd></td><td>선택 트랙</td></tr>
+    <tr><td>지우기 (무음)</td><td><kbd>Del</kbd></td><td>선택 클립</td></tr>
+    <tr><td>지우고 뒤를 당기기</td><td><kbd>Shift</kbd><kbd>Del</kbd></td><td>선택 클립 + 뒤 전부</td></tr>
+    <tr><td>파트 순서 바꾸기</td><td><kbd>Alt</kbd><kbd>←</kbd><kbd>→</kbd></td><td><span class="o">원곡</span> + <span class="i">Inst</span> + 가사</td></tr>
+    <tr><td>파트 복제</td><td><kbd>Ctrl</kbd><kbd>D</kbd></td><td><span class="o">원곡</span> + <span class="i">Inst</span> · 뒤는 밀림</td></tr>
+    <tr><td>Inst 위치 옮기기</td><td>끌기 · <kbd>←</kbd><kbd>→</kbd></td><td><span class="i">Inst</span>만 (0.01초 · <kbd>Shift</kbd> 0.1초)</td></tr>
+    <tr><td>길이 조절</td><td>클립 양 끝 끌기</td><td>그 클립</td></tr>
+  </table></div>
+  <h3>규칙</h3>
+  <div class="grid">
+    <div class="tile"><b><span class="o">원곡</span> 클립</b><span>위치 고정 · 끌면 화면만 넘어감</span></div>
+    <div class="tile"><b><span class="i">Inst</span> 클립</b><span>끌어서 이동 · 가장자리에 자석처럼 붙음</span></div>
+    <div class="tile"><b>겹친 곳</b><span>둘 다 들림 · 같은 트랙끼리 겹치면 빨간색</span></div>
+    <div class="tile"><b>가사도 같이 이동</b><span>켜면 옮긴 구간의 가사 싱크도 따라감</span></div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section id="s4">
+  <h2><span class="num">4</span>가사 입력</h2>
+  <div class="lyr">
+    <div class="code at">@민준</div><div class="note">아래 줄부터 민준 파트 (화면엔 안 보임)</div>
+    <div class="code">첫 줄 가사</div><div class="note">한 줄 = 화면 한 줄</div>
+    <div class="code">두 번째 줄</div><div class="note">긴 줄은 글자가 자동으로 작아짐</div>
+    <div class="code blank">(빈 줄)</div><div class="note">간주 ♪</div>
+    <div class="code at">@민준, 서연</div><div class="note">함께 부르는 파트 (훅 · 떼창)</div>
+    <div class="code">같이 부르는 훅</div><div class="note">이름표가 나란히 표시</div>
+    <div class="code at">@</div><div class="note">담당자 없음</div>
+  </div>
+  <h3>그 밖에</h3>
+  <div class="grid">
+    <div class="tile"><b>멤버 색</b><span>@이름이 자동 추가 · 색 바꾸기 가능</span></div>
+    <div class="tile"><b>이름 고치기</b><span>멤버 칸에서 고치면 가사에도 반영</span></div>
+    <div class="tile"><b>담당자 바꾸기</b><span>표의 드롭다운</span></div>
+    <div class="tile"><b>LRC</b><span>불러오기 · 내보내기 (@이름 포함)</span></div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section id="s5">
+  <h2><span class="num">5</span>탭 싱크</h2>
+  <div class="grid">
+    <div class="tile"><b><kbd>Space</kbd></b><span>다음 줄 시작 기록 · 멈춰 있으면 재생</span></div>
+    <div class="tile"><b><kbd>Backspace</kbd></b><span>마지막 기록 취소</span></div>
+    <div class="tile"><b>표의 # 번호</b><span>그 줄부터 다시 탭</span></div>
+    <div class="tile"><b>싱크 전체 지우기</b><span>처음부터 다시 · <kbd>Ctrl</kbd><kbd>Z</kbd>로 복구</span></div>
+  </div>
+  <h3>다듬기</h3>
+  <div class="tbl"><table>
+    <tr><th>상황</th><th>도구</th></tr>
+    <tr><td>빠른 랩이라 못 따라감</td><td>속도 <b>0.75x</b> · <b>0.5x</b> (음정 그대로)</td></tr>
+    <tr><td>전체가 똑같이 늦음</td><td><b>전체 오프셋</b> (기본 −150ms = 반응 속도 보정)</td></tr>
+    <tr><td>몇 줄만 어긋남</td><td>표의 <kbd>−.1</kbd><kbd>−.01</kbd><kbd>+.01</kbd><kbd>+.1</kbd> 또는 시간 직접 입력</td></tr>
+    <tr><td>눈으로 보면서 맞추기</td><td>타임라인 맨 아래 줄 가사 마커 끌기</td></tr>
+    <tr><td>그 줄 확인</td><td>표의 <b>▶</b> (1초 전부터 재생)</td></tr>
+  </table></div>
+</section>
+
+<!-- 6 -->
+<section id="s6">
+  <h2><span class="num">6</span>화면 꾸미기</h2>
+  <div class="tbl"><table>
+    <tr><th>설정</th><th>선택지</th></tr>
+    <tr><td>프리셋</td><td>1. 카드 커버 · 2. 원형 커버</td></tr>
+    <tr><td>래퍼 이름표</td><td>하이라이트 바 위 · 왼쪽 패널 아래 · 숨김</td></tr>
+    <tr><td>바 색</td><td>커버에서 자동 · 직접 고르기</td></tr>
+    <tr><td>하이라이트 바를 래퍼 색으로</td><td>켜기 / 끄기</td></tr>
+    <tr><td>스펙트럼 막대</td><td>켜기 / 끄기</td></tr>
+  </table></div>
+  <h3>미리보기</h3>
+  <div class="grid">
+    <div class="tile"><b>영상 클릭</b><span>재생 / 정지</span></div>
+    <div class="tile"><b>보이는 그대로</b><span>MP4와 같은 그림 · 같은 소리</span></div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section id="s7">
+  <h2><span class="num">7</span>MP4 내보내기</h2>
+  <div class="tbl"><table>
+    <tr><th>옵션</th><th>값</th></tr>
+    <tr><td>해상도</td><td>1920×1080 · 1280×720</td></tr>
+    <tr><td>fps</td><td>30 · 60</td></tr>
+    <tr><td>구간만</td><td>시작 ~ 끝 · <b>현재+10초</b> 버튼</td></tr>
+    <tr><td>페이드</td><td>시작 · 끝 (초)</td></tr>
+    <tr><td>결과</td><td>H.264 영상 + AAC 오디오 (안 되면 Opus) · 자동 다운로드</td></tr>
+  </table></div>
+  <h3>싱크 최종 확인 (10초)</h3>
+  <ol class="steps">
+    <li>파트가 바뀌는 곳 직전에서 <b>현재+10초</b> → 720p로 내보내기</li>
+    <li>VLC로 열고 <kbd>E</kbd> (한 프레임씩)</li>
+    <li>가사 · 이름표가 바뀌는 순간 = 첫 음절인지 듣기</li>
+    <li>전부 같은 방향으로 어긋남 → 전체 오프셋 / 몇 줄만 → 그 줄만 수정</li>
+  </ol>
+</section>
+
+<!-- 단축키 -->
+<section id="keys">
+  <h2>단축키</h2>
+  <div class="tbl"><table>
+    <tr><th>키</th><th>동작</th></tr>
+    <tr><td><kbd>Space</kbd></td><td>재생 / 정지 · 탭 모드: 다음 줄 기록</td></tr>
+    <tr><td><kbd>Backspace</kbd></td><td>탭 모드: 마지막 기록 취소</td></tr>
+    <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></td><td>여기부터 원곡만 · Inst만 · 둘 다</td></tr>
+    <tr><td><kbd>S</kbd> · <kbd>Shift</kbd><kbd>S</kbd></td><td>두 트랙 같이 자르기 · 선택 트랙만</td></tr>
+    <tr><td><kbd>Del</kbd> · <kbd>Shift</kbd><kbd>Del</kbd></td><td>지우기 · 지우고 당기기</td></tr>
+    <tr><td><kbd>Alt</kbd><kbd>←</kbd> <kbd>Alt</kbd><kbd>→</kbd></td><td>파트 순서 바꾸기</td></tr>
+    <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Inst 클립 0.01초 이동 · <kbd>Shift</kbd> 0.1초</td></tr>
+    <tr><td><kbd>Ctrl</kbd><kbd>D</kbd></td><td>파트 복제</td></tr>
+    <tr><td><kbd>Ctrl</kbd><kbd>Z</kbd> · <kbd>Ctrl</kbd><kbd>Y</kbd></td><td>되돌리기 · 다시 하기</td></tr>
+    <tr><td><kbd>Esc</kbd></td><td>선택 · 구간 해제</td></tr>
+    <tr><td>휠 · <kbd>Shift</kbd>+휠</td><td>타임라인 확대 · 좌우 이동</td></tr>
+  </table></div>
+</section>
+
+<!-- 문제 해결 -->
+<section id="faq">
+  <h2>문제 해결</h2>
+  <div class="tbl"><table>
+    <tr><th>증상</th><th>해결</th></tr>
+    <tr><td>MP4 내보내기 버튼이 안 됨</td><td>Chrome · Edge 최신 버전 · 인터넷 연결 확인</td></tr>
+    <tr><td>새로 열었더니 음원이 없음</td><td>음원은 저장 안 됨 → 같은 파일 다시 열기 (편집은 그대로)</td></tr>
+    <tr><td>원곡 · Inst가 계속 어긋남</td><td>다른 편곡 버전일 수 있음 → 겹쳐 듣기로 확인</td></tr>
+    <tr><td>훅에서 소리가 찢어짐</td><td>두 트랙 겹친 곳 → 볼륨 낮추기</td></tr>
+    <tr><td>다른 컴퓨터로 옮기기</td><td>프로젝트 <b>저장(JSON)</b> → 불러오기 → 음원 다시 열기</td></tr>
+    <tr><td>재생 중 1/2/3 누르면 잠깐 끊김</td><td>정상 (믹스를 다시 만드는 중)</td></tr>
+  </table></div>
+</section>
+
+</div>
+</body>
+</html>
