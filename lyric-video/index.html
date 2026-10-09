@@ -15,11 +15,24 @@
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--fg);font-family:Pretendard,'Malgun Gothic',sans-serif;font-size:14px}
 button,select,input,textarea{font:inherit;color:inherit}
-button{background:var(--raise);border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
-button:hover{border-color:#4a525b}
-button.primary{background:var(--accent);border-color:var(--accent);color:#06210f;font-weight:700}
-button.danger{border-color:var(--bad);color:var(--bad)}
-button.on{background:var(--warn);border-color:var(--warn);color:#2a1d00;font-weight:700}
+button{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:32px;padding:0 12px;
+  background:#22262b;border:1px solid #30363d;border-radius:8px;cursor:pointer;font-weight:500;white-space:nowrap;
+  transition:background .12s,border-color .12s,color .12s}
+button:hover{background:#2a2f35;border-color:#454c55}
+button:active{transform:translateY(1px)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+button.primary{background:var(--accent);border-color:transparent;color:#06210f;font-weight:700}
+button.primary:hover{background:#3bd168}
+button.danger{border-color:#5a2a2a;color:#ff8a87}
+button.on{background:var(--warn);border-color:transparent;color:#2a1d00;font-weight:700}
+button.icon{width:32px;padding:0}
+.ic{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ic.solid{fill:currentColor;stroke:none}
+.seg{display:inline-flex}
+.seg>button{border-radius:0;margin-left:-1px}
+.seg>button:first-child{border-radius:8px 0 0 8px;margin-left:0}
+.seg>button:last-child{border-radius:0 8px 8px 0}
+.dotb::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--c)}
 input[type=text],input[type=number],input[type=date],select,textarea{background:#0d0f11;border:1px solid var(--line);border-radius:6px;padding:5px 8px}
 textarea{width:100%;resize:vertical;line-height:1.5}
 label{color:var(--dim)}
@@ -28,7 +41,8 @@ label{color:var(--dim)}
 .main{overflow:auto;padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
 .main>*{flex-shrink:0}
 button:disabled{opacity:.4;cursor:default}
-h1{font-size:18px;margin:0 0 12px}
+h1{font-size:17px;margin:0 0 14px;display:flex;align-items:center;gap:8px}
+h1 .ic{width:20px;height:20px;color:var(--accent)}
 h2{font-size:14px;margin:0 0 8px;color:var(--accent)}
 section.box{border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:12px;background:#15181b}
 .row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:5px 0}
@@ -37,15 +51,28 @@ section.box{border:1px solid var(--line);border-radius:8px;padding:10px;margin-b
 .hint{color:var(--dim);font-size:12px;line-height:1.5}
 .members .m{display:flex;gap:6px;align-items:center;margin:4px 0}
 .members input[type=color]{width:34px;height:28px;padding:0;border:none;background:none}
-.preview-wrap{background:#000;border-radius:8px;overflow:hidden;position:relative}
+.preview-wrap{background:#000;border-radius:10px;overflow:hidden;position:relative;cursor:pointer}
 #preview{width:100%;display:block;aspect-ratio:16/9}
+.pv-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;
+  background:rgba(0,0,0,.18);transition:opacity .18s}
+.pv-overlay span{width:76px;height:76px;border-radius:50%;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.25);
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.pv-overlay .ic{width:32px;height:32px;color:#fff;margin-left:4px}
+.preview-wrap.playing .pv-overlay{opacity:0}
+.preview-wrap.playing:hover .pv-overlay{opacity:1;background:transparent}
+.preview-wrap.playing:hover .pv-overlay .ic{margin-left:0}
+#playBtn{height:38px;min-width:96px;background:var(--accent);border-color:transparent;color:#06210f;font-weight:700}
+#playBtn:hover{background:#3bd168}
 .transport{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 #seek{flex:1;min-width:200px}
 .time{font-variant-numeric:tabular-nums;min-width:120px}
-.editbar{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.editbar .sep{width:1px;height:22px;background:var(--line);margin:0 2px}
-.editbar kbd{margin-left:2px}
-.m-orig{border-color:var(--orig)}.m-inst{border-color:var(--inst)}
+.editbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.editbar .grp{display:inline-flex;gap:4px;align-items:center;padding:4px;background:#15181b;border:1px solid var(--line);border-radius:10px}
+.editbar .grp>button{height:30px;border-color:transparent;background:transparent}
+.editbar .grp>button:hover{background:#2a2f35}
+.editbar .grp-label{font-size:11px;color:var(--dim);padding:0 6px 0 4px}
+.editbar kbd{margin-left:2px;opacity:.7}
+.editbar label{display:inline-flex;align-items:center;gap:4px}
 .selinfo{display:flex;gap:12px;align-items:center;flex-wrap:wrap;min-height:30px}
 .selinfo input{width:90px}
 #edMsg{color:var(--warn);font-weight:700}
@@ -61,21 +88,40 @@ tr.next td:first-child{box-shadow:inset 4px 0 0 var(--warn)}
 tr.gap td.txt{color:var(--dim)}
 td input.t{width:84px;font-variant-numeric:tabular-nums}
 td input.t.empty{color:var(--dim)}
-td button{padding:1px 6px;font-size:12px}
+td button{height:24px;padding:0 7px;font-size:12px;border-radius:6px}
+td button .ic{width:12px;height:12px}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
 #tapStatus{font-weight:700}
 .progress{height:10px;background:#0d0f11;border-radius:5px;overflow:hidden;border:1px solid var(--line)}
 .progress>div{height:100%;width:0;background:var(--accent)}
 .warnbox{background:#3a1717;border:1px solid var(--bad);color:#ffd2d2;padding:8px;border-radius:6px;margin-bottom:10px}
-kbd{background:var(--raise);border:1px solid var(--line);border-radius:4px;padding:0 5px;font-size:12px}
+kbd{background:#2a2f35;border:1px solid #3a4048;border-bottom-width:2px;border-radius:4px;padding:0 5px;font-size:11px;font-family:inherit;color:#c8ced5;line-height:16px}
 @media (max-width:900px){.app{grid-template-columns:1fr;height:auto}.side{border-right:none}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5Z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4" height="15" rx="1"/><rect x="14" y="4.5" width="4" height="15" rx="1"/></symbol>
+  <symbol id="i-rec" viewBox="0 0 24 24"><circle cx="12" cy="12" r="6"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6.5" y="6.5" width="11" height="11" rx="2"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></symbol>
+  <symbol id="i-scissors" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="M8.12 8.12 12 12"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
+  <symbol id="i-redo" viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="14" height="14" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+  <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></symbol>
+  <symbol id="i-wand" viewBox="0 0 24 24"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></symbol>
+  <symbol id="i-film" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18"/><path d="M7 2v20"/><path d="M17 2v20"/><path d="M2 12h20"/><path d="M2 7h5"/><path d="M2 17h5"/><path d="M17 17h5"/><path d="M17 7h5"/></symbol>
+</svg>
 <div class="app">
 <!-- ================= 왼쪽: 입력 ================= -->
 <aside class="side">
-  <h1>🎤 리믹스 가사 영상 제작기</h1>
+  <h1><svg class="ic"><use href="#i-mic"/></svg>리믹스 가사 영상 제작기</h1>
   <div id="noCodecs" class="warnbox" hidden>이 브라우저는 MP4 내보내기(WebCodecs)를 지원하지 않습니다. <b>Chrome 또는 Edge 최신 버전을 사용하세요.</b></div>
 
   <section class="box">
@@ -85,7 +131,9 @@ kbd{background:var(--raise);border:1px solid var(--line);border-radius:4px;paddi
     <div class="row"><label style="color:var(--inst)">● Inst</label><input type="file" id="instFile" accept="audio/*,.mp3,.wav,.m4a" class="grow"></div>
     <div class="row"><label>볼륨</label><input type="range" id="gainInst" min="0" max="150" value="100" class="grow"><b id="gainInstLbl" class="pct">100%</b></div>
     <div class="row"><label>박자 맞춤</label><span id="alignLbl" class="grow hint">Inst를 열면 원곡에 자동으로 맞춥니다</span>
-      <button id="alignAuto" title="원곡과 Inst 박자를 다시 자동으로 맞추기">자동</button><button data-shift="-0.01" title="Inst를 0.01초 앞으로">−.01</button><button data-shift="0.01" title="Inst를 0.01초 뒤로">+.01</button></div>
+      <button id="alignAuto" title="원곡과 Inst 박자를 다시 자동으로 맞추기"><svg class="ic"><use href="#i-wand"/></svg>자동 맞춤</button></div>
+    <div class="row"><button id="alignCheck" title="편집과 상관없이 두 트랙 전체를 겹쳐 재생. 소리가 두 번 들리거나 울리면 어긋난 것"><svg class="ic"><use href="#i-headphones"/></svg>겹쳐 듣기</button>
+      <span class="seg"><button data-shift="-0.01" title="Inst를 10ms 앞으로">−10</button><button data-shift="-0.001" title="Inst를 1ms 앞으로">−1</button><button data-shift="0.001" title="Inst를 1ms 뒤로">+1</button><button data-shift="0.01" title="Inst를 10ms 뒤로">+10</button></span><span class="hint">ms</span></div>
     <div class="hint" id="audioInfo">mp3 / wav / m4a · Inst 없이 원곡만 써도 됩니다</div>
   </section>
 
@@ -126,7 +174,6 @@ kbd{background:var(--raise);border:1px solid var(--line);border-radius:4px;paddi
       <input type="color" id="sAccent" value="#25b84c" title="하이라이트 바·스펙트럼 막대·태그 색">
       <label><input type="checkbox" id="sAccentAuto" checked> 앨범 커버에서 자동</label></div>
     <div class="row"><label><input type="checkbox" id="sBarColor"> 하이라이트 바를 현재 래퍼 색으로</label></div>
-    <div class="row"><label><input type="checkbox" id="sDots" checked> 앞뒤 줄에 담당자 색 점(●)</label></div>
     <div class="row"><label><input type="checkbox" id="sSpectrum" checked> 하단 스펙트럼 막대</label></div>
   </section>
 
@@ -149,7 +196,7 @@ kbd{background:var(--raise);border:1px solid var(--line);border-radius:4px;paddi
       <button id="eRangeCur" title="현재 위치부터 10초">현재+10초</button></div>
     <div class="row"><label>페이드</label>시작 <input type="number" id="eFadeIn" value="0.5" min="0" step="0.1" style="width:60px">초
       끝 <input type="number" id="eFadeOut" value="1" min="0" step="0.1" style="width:60px">초</div>
-    <div class="row"><button id="exportBtn" class="primary">MP4 내보내기</button><button id="cancelBtn" hidden class="danger">취소</button></div>
+    <div class="row"><button id="exportBtn" class="primary"><svg class="ic"><use href="#i-film"/></svg>MP4 내보내기</button><button id="cancelBtn" hidden class="danger">취소</button></div>
     <div class="progress"><div id="progBar"></div></div>
     <div class="hint" id="exportMsg"></div>
   </section>
@@ -157,35 +204,37 @@ kbd{background:var(--raise);border:1px solid var(--line);border-radius:4px;paddi
 
 <!-- ================= 오른쪽: 미리보기 / 싱크 ================= -->
 <main class="main">
-  <div class="preview-wrap"><canvas id="preview" width="1280" height="720"></canvas></div>
+  <div class="preview-wrap" id="pvWrap" title="클릭해서 재생/정지"><canvas id="preview" width="1280" height="720"></canvas>
+    <div class="pv-overlay"><span><svg class="ic solid" id="pvIcon"><use href="#i-play"/></svg></span></div></div>
   <audio id="audio" preload="auto"></audio>
   <div class="transport">
-    <button id="playBtn">▶ 재생</button>
+    <button id="playBtn"><svg class="ic solid"><use href="#i-play"/></svg><span>재생</span></button>
     <input type="range" id="seek" min="0" max="0" step="0.01" value="0">
     <span class="time" id="timeLbl">0:00.00 / 0:00.00</span>
     <label>속도 <select id="rate"><option value="0.5">0.5x</option><option value="0.75">0.75x</option><option value="1" selected>1x</option></select></label>
   </div>
   <div class="transport">
-    <button id="tapBtn">⏺ 탭 모드</button>
+    <button id="tapBtn"></button>
     <span id="tapStatus" class="hint"></span>
     <span class="grow"></span>
     <label>전체 오프셋 <input type="range" id="offset" min="-500" max="500" step="10" value="-150"> <b id="offsetLbl">-150ms</b></label>
   </div>
   <div class="hint">탭 모드: <kbd>Space</kbd> 다음 줄 시작 기록(멈춰 있으면 재생) · <kbd>Backspace</kbd> 마지막 기록 취소 · 탭 모드가 아닐 때 <kbd>Space</kbd>는 재생/정지. 표의 # 를 누르면 그 줄부터 탭합니다.</div>
   <div class="editbar">
-    <button id="edCut" title="재생 위치에서 원곡과 Inst를 같은 지점에서 자르기">✂ 같이 자르기 <kbd>S</kbd></button>
-    <button id="edCutOne" title="선택한 트랙만 자르기">✂ 선택 트랙만 <kbd>Shift+S</kbd></button>
-    <button id="edDel" title="선택한 클립 지우기 (그 자리는 무음). Shift+Del은 빈칸 없이 당기기">지우기 <kbd>Del</kbd></button>
-    <span class="sep"></span>
-    <button id="edOrig" class="m-orig" title="재생 위치부터 다음 자른 곳까지 원곡만 (구간을 잡았으면 그 구간)">여기부터 원곡만 <kbd>1</kbd></button>
-    <button id="edInst" class="m-inst" title="재생 위치부터 다음 자른 곳까지 Inst만">Inst만 <kbd>2</kbd></button>
-    <button id="edBoth" title="재생 위치부터 다음 자른 곳까지 둘 다">둘 다 <kbd>3</kbd></button>
-    <span class="sep"></span>
-    <button id="edSwapL" title="선택한 파트를 앞 파트와 자리 바꾸기">◀ 앞 파트와 바꾸기 <kbd>Alt+←</kbd></button>
-    <button id="edSwapR" title="선택한 파트를 뒤 파트와 자리 바꾸기">뒤 파트와 바꾸기 ▶ <kbd>Alt+→</kbd></button>
-    <button id="edDup" title="선택한 파트를 바로 뒤에 한 번 더 넣기 (뒤는 밀림)">복제 <kbd>Ctrl+D</kbd></button>
-    <span class="sep"></span>
-    <button id="edUndo" title="되돌리기 (Ctrl+Z)">↶ 되돌리기</button><button id="edRedo" title="다시 하기 (Ctrl+Y)">↷</button>
+    <div class="grp"><span class="grp-label">자르기</span>
+      <button id="edCut" title="재생 위치에서 원곡과 Inst를 같은 지점에서 자르기"><svg class="ic"><use href="#i-scissors"/></svg>같이 <kbd>S</kbd></button>
+      <button id="edCutOne" title="선택한 트랙만 자르기"><svg class="ic"><use href="#i-scissors"/></svg>선택 트랙만 <kbd>⇧S</kbd></button>
+      <button id="edDel" title="선택한 클립 지우기 (그 자리는 무음). Shift+Del은 빈칸 없이 당기기"><svg class="ic"><use href="#i-trash"/></svg>지우기 <kbd>Del</kbd></button></div>
+    <div class="grp"><span class="grp-label">여기부터</span>
+      <button id="edOrig" class="dotb" style="--c:var(--orig)" title="재생 위치부터 다음 자른 곳까지 원곡만 (구간을 잡았으면 그 구간)">원곡만 <kbd>1</kbd></button>
+      <button id="edInst" class="dotb" style="--c:var(--inst)" title="재생 위치부터 다음 자른 곳까지 Inst만">Inst만 <kbd>2</kbd></button>
+      <button id="edBoth" class="dotb" style="--c:linear-gradient(90deg,var(--orig) 50%,var(--inst) 50%)" title="재생 위치부터 다음 자른 곳까지 둘 다">둘 다 <kbd>3</kbd></button></div>
+    <div class="grp"><span class="grp-label">파트</span>
+      <button id="edSwapL" title="선택한 파트(원곡+Inst)를 앞 파트와 자리 바꾸기 (Alt+←)"><svg class="ic"><use href="#i-left"/></svg>앞과 바꾸기</button>
+      <button id="edSwapR" title="선택한 파트(원곡+Inst)를 뒤 파트와 자리 바꾸기 (Alt+→)">뒤와 바꾸기<svg class="ic"><use href="#i-right"/></svg></button>
+      <button id="edDup" title="선택한 파트를 바로 뒤에 한 번 더 넣기 (뒤는 밀림, Ctrl+D)"><svg class="ic"><use href="#i-copy"/></svg>복제</button></div>
+    <div class="grp">
+      <button id="edUndo" class="icon" title="되돌리기 (Ctrl+Z)"><svg class="ic"><use href="#i-undo"/></svg></button><button id="edRedo" class="icon" title="다시 하기 (Ctrl+Y)"><svg class="ic"><use href="#i-redo"/></svg></button></div>
     <label><input type="checkbox" id="edLink" checked> 두 트랙 같이 이동</label>
     <label><input type="checkbox" id="edFollow" checked> 가사도 같이 이동</label>
   </div>
@@ -240,7 +289,7 @@ const state = {
   lines: [],            // {text, gap, rappers:[], time: raw초|null}
   members: [],          // {name, color}
   offsetMs: -150,
-  settings: { preset:'classic', namePos:'bar', barColor:false, dots:true, spectrum:true, accentAuto:true, accent:'#25b84c' },
+  settings: { preset:'classic', namePos:'bar', barColor:false, spectrum:true, accentAuto:true, accent:'#25b84c' },
   mix: defaultMix()
 };
 let coverImg = null;          // HTMLImageElement
@@ -384,7 +433,8 @@ const audio = $('audio');
 let audioCtx = null;
 /* ---------- 두 트랙(원곡 / Inst) 클립 편집 ----------
    클립 = 소스의 [src0, src1] 구간을 타임라인 at초에 놓은 것. 원본 파일은 건드리지 않는다.
-   src 좌표는 "박자 맞춤된" 소스 시간: 실제 재생 위치 = src + shift[트랙].
+   src 좌표는 "박자 맞춤된" 소스 시간: 실제 소스 위치 = src × rate[트랙] + shift[트랙].
+   (shift = 앞부분 무음 차이, rate = 두 파일의 미세한 속도 차이)
    편집 결과는 믹스 하나(audioBuf)로 렌더링되어 미리보기·탭·스펙트럼·내보내기가 모두 같은 소리를 쓴다. */
 const TRACKS = ['orig', 'inst'];
 const TRACK_NAME = { orig:'원곡', inst:'Inst' };
@@ -393,14 +443,16 @@ const EPS = 1e-4;
 const sources = { orig:null, inst:null };      // 디코딩된 AudioBuffer
 const srcMono = { orig:null, inst:null };
 const srcPeaks = { orig:null, inst:null };
-function defaultMix(){ return { clips:[], shift:{ orig:0, inst:0 }, gain:{ orig:1, inst:1 }, names:{ orig:'', inst:'' }, link:true, follow:true }; }
+function defaultMix(){ return { clips:[], shift:{ orig:0, inst:0 }, rate:{ orig:1, inst:1 }, gain:{ orig:1, inst:1 }, names:{ orig:'', inst:'' }, link:true, follow:true }; }
 let clipSeq = 1;
 const newClip = (track, at, src0, src1) => ({ id:clipSeq++, track, at, src0, src1 });
 const clipLen = c => c.src1 - c.src0;
 const clipEnd = c => c.at + c.src1 - c.src0;
 const otherTrack = t => t === 'orig' ? 'inst' : 'orig';
 // 소스가 덮는 src 좌표 범위
-const srcRange = tr => sources[tr] ? [-state.mix.shift[tr], sources[tr].duration - state.mix.shift[tr]] : [-1e9, 1e9];
+const srcRange = tr => sources[tr] ? [-state.mix.shift[tr] / state.mix.rate[tr], (sources[tr].duration - state.mix.shift[tr]) / state.mix.rate[tr]] : [-1e9, 1e9];
+const realPos = (tr, src) => src * state.mix.rate[tr] + state.mix.shift[tr];   // 맞춤 좌표 → 실제 소스 초
+let alignCheck = false;   // 겹쳐 듣기: 편집과 상관없이 두 트랙 전체를 겹쳐서 싱크 확인
 
 function monoOf(buf){
   const n = buf.length, ch = buf.numberOfChannels, m = new Float32Array(n);
@@ -443,8 +495,10 @@ function updateAudioInfo(){
   for (const t of TRACKS) if (sources[t]) parts.push(`${TRACK_NAME[t]}: ${M.names[t]} (${fmtTime(sources[t].duration)})`);
   else if (M.names[t]) parts.push(`${TRACK_NAME[t]}(${M.names[t]})를 다시 열어 주세요`);
   $('audioInfo').textContent = parts.join(' · ') || 'mp3 / wav / m4a · Inst 없이 원곡만 써도 됩니다';
-  const sh = M.shift.inst;
-  $('alignLbl').textContent = sources.inst && sources.orig ? `Inst ${sh >= 0 ? '+' : ''}${sh.toFixed(3)}초 보정` : 'Inst를 열면 원곡에 자동으로 맞춥니다';
+  const sh = M.shift.inst, rt = M.rate.inst;
+  $('alignLbl').textContent = sources.inst && sources.orig
+    ? `Inst ${sh >= 0 ? '+' : ''}${(sh * 1000).toFixed(0)}ms${Math.abs(rt - 1) > 1e-6 ? ` · 속도 ${((rt - 1) * 100).toFixed(3)}%` : ''}`
+    : 'Inst를 열면 원곡에 자동으로 맞춥니다';
   for (const t of TRACKS){ const id = t === 'orig' ? 'Orig' : 'Inst'; $('gain' + id).value = Math.round(M.gain[t] * 100); $('gain' + id + 'Lbl').textContent = Math.round(M.gain[t] * 100) + '%'; }
 }
 
@@ -468,8 +522,8 @@ function fftAny(re, im, inv){
     }
   }
 }
-// b(t + d) ≈ a(t) 인 d(초)
-function estimateOffset(a, b, sr){
+// b(t + d) ≈ a(t) 인 d(초). a의 T0초부터 W초 구간을 b에서 ±M초 범위로 찾는다.
+function estimateOffset(a, b, sr, T0, W, M = 6, guess = 0){
   const rate = 4000, f = sr / rate;
   const ds = (m, t0, len) => {
     const out = new Float64Array(len), s0 = Math.round(t0 * sr); let prev = 0;
@@ -480,10 +534,9 @@ function estimateOffset(a, b, sr){
     }
     return out;
   };
-  const durA = a.length / sr, durB = b.length / sr, M = 6;
-  const W = Math.min(30, durA * 0.5), T0 = clamp(durA * 0.3, 0, Math.max(0, durA - W));
+  const durB = b.length / sr;
   const x = ds(a, T0, Math.round(W * rate));
-  const y0 = Math.max(0, T0 - M), yLen = Math.round((Math.min(durB, T0 + W + M) - y0) * rate);
+  const y0 = Math.max(0, T0 + guess - M), yLen = Math.round((Math.min(durB, T0 + guess + W + M) - y0) * rate);
   if (yLen <= x.length) return { d:0, ok:false };
   const y = ds(b, y0, yLen);
   let N = 1; while (N < x.length + y.length) N <<= 1;
@@ -500,18 +553,71 @@ function estimateOffset(a, b, sr){
   const mean = sum / (yLen - x.length + 1);
   return { d: y0 + best / rate - T0, ok: bv > mean * 4 };
 }
+// 곡 여러 지점에서 어긋남을 재서 (앞부분 무음 차이 + 곡이 진행되며 벌어지는 속도 차이)를 함께 구한다
 function autoAlign(userAction){
   if (!sources.orig || !sources.inst) return;
-  const r = estimateOffset(srcMono.orig, srcMono.inst, sources.orig.sampleRate);
-  state.mix.shift.inst = Math.round(r.d * 1000) / 1000;
+  const sr = sources.orig.sampleRate, durA = sources.orig.duration;
+  const W = Math.min(20, durA * 0.4);
+  const fracs = durA >= 60 ? [0.15, 0.35, 0.55, 0.75] : [0.3];
+  const pts = [];
+  for (const f of fracs){
+    const T0 = clamp(durA * f, 0, Math.max(0, durA - W));
+    const r = estimateOffset(srcMono.orig, srcMono.inst, sr, T0, W, 6);
+    if (r.ok) pts.push({ T:T0 + W / 2, d:r.d });
+  }
+  const M = state.mix, med = v => v.slice().sort((x, y) => x - y)[v.length >> 1];
+  let msg, ok = pts.length > 0;
+  // 직선 맞춤 d(T) = (rate-1)·T + shift
+  const fit = pts => {
+    const n = pts.length, mt = pts.reduce((a, p) => a + p.T, 0) / n, md = pts.reduce((a, p) => a + p.d, 0) / n;
+    const slope = pts.reduce((a, p) => a + (p.T - mt) * (p.d - md), 0) / pts.reduce((a, p) => a + (p.T - mt) ** 2, 0);
+    const resid = Math.max(...pts.map(p => Math.abs(p.d - (md + slope * (p.T - mt)))));
+    return { slope, shift: md - slope * mt, resid, mt, md };
+  };
+  if (!pts.length){ msg = '자동 맞춤 실패: 겹쳐 듣기를 켜고 ±버튼으로 직접 맞춰 주세요'; }
+  else if (pts.length >= 3){
+    const { slope, resid, mt, md } = fit(pts);
+    if (resid > 0.03){
+      M.shift.inst = med(pts.map(p => p.d)); M.rate.inst = 1;
+      msg = '지점마다 어긋남이 달라요(편곡이 다른 버전일 수 있음). 겹쳐 듣기로 확인해 주세요'; ok = false;
+    } else if (Math.abs(slope) < 2e-5){
+      M.shift.inst = md; M.rate.inst = 1;
+    } else {
+      M.rate.inst = 1 + slope; M.shift.inst = md - slope * mt;
+    }
+  } else { M.shift.inst = med(pts.map(p => p.d)); M.rate.inst = 1; }
+  // 2차: 짧은 구간(4초) 여러 곳을 1차 결과 근처에서 다시 재서 정밀하게 (긴 구간은 속도 차이 때문에 뭉개짐)
+  if (ok){
+    const fine = [], W2 = 4;
+    for (let k = 0; k < 12; k++){
+      const T0 = clamp(durA * (0.05 + 0.85 * k / 11), 0, Math.max(0, durA - W2));
+      const guess = T0 * (M.rate.inst - 1) + M.shift.inst;
+      const r = estimateOffset(srcMono.orig, srcMono.inst, sr, T0, W2, 0.08, guess);
+      if (r.ok) fine.push({ T:T0 + W2 / 2, d:r.d });
+    }
+    if (fine.length >= 4){
+      // 튀는 값(반복되는 박자에 잘못 걸린 곳) 제외 후 다시 맞춤
+      let f = fit(fine), use = fine;
+      for (let it = 0; it < 2 && use.length > 4; it++){
+        use = use.filter(p => Math.abs(p.d - (f.shift + f.slope * p.T)) < 0.004);
+        if (use.length >= 4) f = fit(use);
+      }
+      if (use.length >= 4 && f.resid < 0.006){
+        M.rate.inst = Math.abs(f.slope) < 1e-5 ? 1 : 1 + f.slope;
+        M.shift.inst = Math.abs(f.slope) < 1e-5 ? use.reduce((a, p) => a + p.d, 0) / use.length : f.shift;
+      }
+    }
+  }
+  M.shift.inst = Math.round(M.shift.inst * 10000) / 10000;
   updateAudioInfo();
-  if (userAction) flash(r.ok ? `박자 맞춤: Inst ${r.d >= 0 ? '+' : ''}${r.d.toFixed(3)}초` : '자동 맞춤이 불확실합니다. ±.01 버튼으로 직접 맞춰 주세요');
-  else if (!r.ok) flash('원곡과 Inst 박자 자동 맞춤이 불확실합니다. 들어보고 ±.01로 맞춰 주세요');
+  if (!msg) msg = `박자 맞춤 완료: ${$('alignLbl').textContent}`;
+  if (userAction || !ok) flash(msg);
 }
 
 /* ---------- 믹스 렌더링 ---------- */
 // 이어지는 클립(자르기만 한 곳)은 하나로 합쳐 자른 자리에서 소리가 끊기지 않게 한다
 function mergedSegments(){
+  if (alignCheck) return TRACKS.filter(t => sources[t]).map(t => { const [r0, r1] = srcRange(t), s0 = Math.max(0, r0); return { track:t, at:s0, src0:s0, src1:r1 }; });
   const out = [];
   for (const tr of TRACKS){
     const cs = state.mix.clips.filter(c => c.track === tr).sort((a, b) => a.at - b.at);
@@ -538,25 +644,25 @@ async function runMix(){
 async function rebuildMix(){
   const M = state.mix;
   const segs = mergedSegments().filter(s => sources[s.track]);
-  const key = JSON.stringify([segs, M.gain, M.shift]);
+  const key = JSON.stringify([segs, M.gain, M.shift, M.rate, alignCheck]);
   if (key === mixKey) return;
   if (!segs.length){ mixKey = key; audioBuf = mono = peaks = null; barEdges = null; audio.removeAttribute('src'); return; }
   const SR = 48000, total = Math.max(...segs.map(s => s.at + s.src1 - s.src0));
   const oc = new OfflineAudioContext(2, Math.max(1, Math.ceil(total * SR)), SR);
   for (const s of segs){
-    const buf = sources[s.track], g = M.gain[s.track];
-    let off = s.src0 + M.shift[s.track], at = s.at, len = s.src1 - s.src0;
-    if (off < 0){ at -= off; len += off; off = 0; }
-    len = Math.min(len, buf.duration - off);
+    const buf = sources[s.track], g = M.gain[s.track], rt = M.rate[s.track];
+    let off = realPos(s.track, s.src0), at = s.at, len = s.src1 - s.src0;   // len = 타임라인 길이
+    if (off < 0){ at += -off / rt; len -= -off / rt; off = 0; }
+    len = Math.min(len, (buf.duration - off) / rt);
     if (len <= 0.001) continue;
-    const src = oc.createBufferSource(); src.buffer = buf;
+    const src = oc.createBufferSource(); src.buffer = buf; src.playbackRate.value = rt;
     const gn = oc.createGain(); src.connect(gn); gn.connect(oc.destination);
     // 자른 경계에 15ms 페이드 (틱 소리 방지). 소스의 진짜 처음/끝은 그대로.
-    const F = Math.min(0.015, len / 4), fin = off > 0.001, fout = off + len < buf.duration - 0.001;
+    const F = Math.min(0.015, len / 4), fin = off > 0.001, fout = off + len * rt < buf.duration - 0.001;
     gn.gain.setValueAtTime(fin ? 0 : g, at);
     if (fin) gn.gain.linearRampToValueAtTime(g, at + F);
     if (fout){ gn.gain.setValueAtTime(g, at + len - F); gn.gain.linearRampToValueAtTime(0, at + len); }
-    src.start(at, off, len);
+    src.start(at, off); src.stop(at + len);
   }
   const out = await oc.startRendering();
   if (mixPending) return;                     // 그 사이 또 바뀌었으면 다음 렌더 결과만 쓴다
@@ -698,20 +804,31 @@ function songTitleLine(){
 }
 function dateText(){ return state.song.date ? state.song.date.replace(/-/g, '.') : ''; }
 
+const MIC_PATHS = ['M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z', 'M19 10v2a7 7 0 0 1-14 0v-2', 'M12 19v3'].map(d => new Path2D(d));
+function drawMic(ctx, x, cy, color){
+  ctx.save();
+  ctx.translate(x, cy - 14); ctx.scale(28 / 24, 28 / 24);
+  ctx.strokeStyle = color; ctx.lineWidth = 2.3; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  for (const p of MIC_PATHS) ctx.stroke(p);
+  ctx.restore();
+}
 function drawRapperLabel(ctx, rappers, x, y, alpha, align){
   if (!rappers || !rappers.length || alpha <= 0) return;
   ctx.save();
   ctx.globalAlpha = alpha;
   ctx.font = `700 30px ${FONT}`;
   const pads = 18, gap = 10, h = 48;
-  const widths = rappers.map((n, i) => ctx.measureText((i === 0 ? '🎤 ' : '') + n).width + pads * 2);
+  const ICON = 36;    // 첫 이름표 앞 마이크 그림 자리
+  const widths = rappers.map((n, i) => ctx.measureText(n).width + pads * 2 + (i === 0 ? ICON : 0));
   const total = widths.reduce((a, b) => a + b, 0) + gap * (rappers.length - 1);
   let cx = align === 'center' ? x - total / 2 : x;
   rappers.forEach((n, i) => {
     const col = memberColor(n);
     ctx.fillStyle = col; roundRect(ctx, cx, y, widths[i], h, 10); ctx.fill();
     ctx.fillStyle = textColorFor(col); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-    ctx.fillText((i === 0 ? '🎤 ' : '') + n, cx + pads, y + h / 2 + 1);
+    if (i === 0) drawMic(ctx, cx + pads - 2, y + h / 2, textColorFor(col));
+    ctx.fillStyle = textColorFor(col);
+    ctx.fillText(n, cx + pads + (i === 0 ? ICON : 0), y + h / 2 + 1);
     cx += widths[i] + gap;
   });
   ctx.restore();
@@ -807,14 +924,6 @@ function drawFrame(ctx, t, W, H, opts = {}){
     ctx.fillStyle = `rgba(${g},${g},${g},${alpha})`;
     ctx.textAlign = 'center';
     ctx.fillText(L[i].text, cxText, y);
-    if (st.dots && em < 0.5 && L[i].rappers.length){
-      const tw = ctx.measureText(L[i].text).width;
-      L[i].rappers.forEach((n, j) => {
-        ctx.fillStyle = memberColor(n); ctx.globalAlpha = Math.max(alpha, 0.25) + 0.2;
-        ctx.beginPath(); ctx.arc(cxText - tw / 2 - 22 - j * 18, y, 7, 0, Math.PI * 2); ctx.fill();
-      });
-      ctx.globalAlpha = 1;
-    }
   }
   ctx.restore();
   if (st.namePos === 'bar') drawRapperTransition(ctx, tl, Ly.x + 24, barY - 58, 'left');
@@ -850,8 +959,15 @@ function frameLoop(){
 }
 let lastRowK = -2, seeking = false;
 function togglePlay(){ if (!audio.src) return; audio.paused ? audio.play() : audio.pause(); }
-audio.addEventListener('play', () => $('playBtn').textContent = '⏸ 정지');
-audio.addEventListener('pause', () => $('playBtn').textContent = '▶ 재생');
+function syncPlayUI(){
+  const playing = !audio.paused;
+  $('playBtn').innerHTML = `<svg class="ic solid"><use href="#i-${playing ? 'pause' : 'play'}"/></svg><span>${playing ? '정지' : '재생'}</span>`;
+  $('pvIcon').innerHTML = `<use href="#i-${playing ? 'pause' : 'play'}"/>`;
+  $('pvWrap').classList.toggle('playing', playing);
+}
+audio.addEventListener('play', syncPlayUI);
+audio.addEventListener('pause', syncPlayUI);
+$('pvWrap').addEventListener('click', togglePlay);
 $('playBtn').onclick = togglePlay;
 $('seek').addEventListener('input', () => { seeking = true; audio.currentTime = +$('seek').value; });
 $('seek').addEventListener('change', () => { seeking = false; });
@@ -864,7 +980,7 @@ const tap = { on:false, next:0, history:[] };
 function firstUntimed(){ const i = state.lines.findIndex(l => l.time == null); return i < 0 ? state.lines.length : i; }
 function updateTapStatus(){
   $('tapBtn').classList.toggle('on', tap.on);
-  $('tapBtn').textContent = tap.on ? '⏹ 탭 모드 끄기' : '⏺ 탭 모드';
+  $('tapBtn').innerHTML = `<svg class="ic solid" style="color:${tap.on ? 'inherit' : 'var(--bad)'}"><use href="#i-${tap.on ? 'stop' : 'rec'}"/></svg>${tap.on ? '탭 모드 끄기' : '탭 모드'}`;
   const L = state.lines;
   $('tapStatus').textContent = tap.on
     ? (tap.next < L.length ? `다음: #${tap.next + 1} “${L[tap.next].text}”` : '모든 줄 기록 완료')
@@ -935,7 +1051,7 @@ function renderTable(){
       <td><input type="text" class="t" data-act="time" value="${fmtTime(eff(i))}" placeholder="--:--.--"></td>
       <td><button data-act="nudge" data-d="-0.1">−.1</button><button data-act="nudge" data-d="-0.01">−.01</button><button data-act="nudge" data-d="0.01">+.01</button><button data-act="nudge" data-d="0.1">+.1</button><button data-act="clear" title="시간 지우기">×</button></td>
       <td>${dotsHTML(l.rappers)}<select data-act="rapper">${rapperOptions(l.rappers)}</select></td>
-      <td><button data-act="play" title="이 줄부터 재생">▶</button></td>
+      <td><button data-act="play" title="이 줄부터 재생"><svg class="ic solid"><use href="#i-play"/></svg></button></td>
       <td class="txt">${esc(l.text)}</td>
     </tr>`).join('');
   markNextRow(); lastRowK = -2; updateTapStatus();
@@ -1047,6 +1163,11 @@ function cut(tracks){
   afterEdit();
 }
 // 선택 클립 + (같이 이동이면) 그 구간 안에 들어 있는 다른 트랙 클립
+// 같이 이동할 때는 먼저 다른 트랙을 같은 경계에서 잘라 두어 파트 전체(원곡+Inst)가 함께 움직이게 한다
+function prepareGroup(c){
+  if (state.mix.link) splitAt(c.at, [otherTrack(c.track)]), splitAt(clipEnd(c), [otherTrack(c.track)]);
+  return groupOf(c);
+}
 function groupOf(c){
   if (!c) return [];
   const a = c.at, e = clipEnd(c);
@@ -1127,44 +1248,64 @@ function applyMode(mode){
 function moveGroup(g, lines, d){ for (const x of g) x.at = Math.round((x.at + d) * 10000) / 10000; shiftLines(lines, d); }
 function nudgeSel(d){
   const c = selClip(); if (!c) return;
-  const g = groupOf(c);
+  pushUndo();
+  const g = prepareGroup(c);
   d = Math.max(d, -Math.min(...g.map(x => x.at)));
-  if (!d) return;
-  pushUndo(); moveGroup(g, linesIn(c.at, clipEnd(c)), d); afterEdit();
+  if (!d){ hist.undo.pop(); return; }
+  moveGroup(g, linesIn(c.at, clipEnd(c)), d); afterEdit();
 }
 function moveSelTo(t){
   const c = selClip(); if (!c || !isFinite(t)) return;
-  const g = groupOf(c), d = Math.max(t - c.at, -Math.min(...g.map(x => x.at)));
-  pushUndo(); moveGroup(g, linesIn(c.at, clipEnd(c)), d); afterEdit();
-}
-function swapSel(dir){
-  const c = selClip(); if (!c) return flash('바꿀 파트를 먼저 클릭하세요');
-  const same = state.mix.clips.filter(x => x.track === c.track && x !== c);
-  const nb = dir < 0
-    ? same.filter(x => clipEnd(x) <= c.at + 0.005).sort((p, q) => clipEnd(q) - clipEnd(p))[0]
-    : same.filter(x => x.at >= clipEnd(c) - 0.005).sort((p, q) => p.at - q.at)[0];
-  if (!nb) return flash(dir < 0 ? '앞에 파트가 없습니다' : '뒤에 파트가 없습니다');
-  const A = { c, g:groupOf(c) }, B = { c:nb, g:groupOf(nb) };
-  if (A.g.some(x => B.g.includes(x))) return flash('두 트랙 경계가 달라 바꿀 수 없습니다. 같이 자르기로 경계를 맞추세요');
-  const [first, second] = dir < 0 ? [B, A] : [A, B];
-  const fs = first.c.at, fe = clipEnd(first.c), ss = second.c.at, se = clipEnd(second.c);
-  const fl = linesIn(fs, fe), sl = linesIn(ss, se);
   pushUndo();
-  moveGroup(second.g, sl, fs - ss);
-  moveGroup(first.g, fl, (fs + (se - ss) + (ss - fe)) - fs);
-  flash('파트 순서를 바꿨습니다');
+  const g = prepareGroup(c), d = Math.max(t - c.at, -Math.min(...g.map(x => x.at)));
+  moveGroup(g, linesIn(c.at, clipEnd(c)), d); afterEdit();
+}
+// 파트 = 선택 클립(또는 눈금줄로 잡은 구간)의 시간 범위. 바꾸기·복제는 항상 원곡과 Inst를 함께 옮긴다.
+function selPart(){
+  const c = selClip();
+  if (ed.range) return ed.range.slice();
+  if (c) return [c.at, clipEnd(c)];
+  return null;
+}
+const inRange = (x, a, b) => x.at >= a - 0.005 && clipEnd(x) <= b + 0.005;
+function swapSel(dir){
+  const part = selPart(); if (!part) return flash('바꿀 파트를 먼저 클릭하세요 (또는 눈금줄에서 구간을 잡으세요)');
+  const [a, b] = part;
+  const edges = new Set([a, b]);
+  for (const x of state.mix.clips){ edges.add(x.at); edges.add(clipEnd(x)); }
+  const E = [...edges];
+  let fs, fe, ss, se;
+  if (dir < 0){
+    const prev = E.filter(x => x < a - 0.005); if (!prev.length) return flash('앞에 파트가 없습니다');
+    [fs, fe, ss, se] = [Math.max(...prev), a, a, b];
+  } else {
+    const next = E.filter(x => x > b + 0.005); if (!next.length) return flash('뒤에 파트가 없습니다');
+    [fs, fe, ss, se] = [a, b, b, Math.min(...next)];
+  }
+  pushUndo();
+  for (const t of [fs, fe, se]) splitAt(t, TRACKS);
+  const F = state.mix.clips.filter(x => inRange(x, fs, fe)), Sg = state.mix.clips.filter(x => inRange(x, ss, se));
+  const fl = linesIn(fs, fe), sl = linesIn(ss, se);
+  moveGroup(Sg, sl, fs - ss);
+  moveGroup(F, fl, se - ss);
+  // 옮긴 파트를 계속 선택해 두어 Alt+←/→를 연달아 누를 수 있게
+  const len = b - a, na = dir < 0 ? fs : a + (se - ss);
+  if (ed.range) ed.range = [na, na + len];
+  flash(`파트 순서를 바꿨습니다 (원곡+Inst${state.mix.follow ? '+가사' : ''})`);
   afterEdit();
 }
 function duplicateSel(){
-  const c = selClip(); if (!c) return flash('복제할 파트를 먼저 클릭하세요');
-  const g = groupOf(c), a = c.at, e = clipEnd(c), len = e - a;
+  const part = selPart(); if (!part) return flash('복제할 파트를 먼저 클릭하세요');
+  const [a, e] = part, len = e - a;
   pushUndo();
+  splitAt(a, TRACKS); splitAt(e, TRACKS);
+  const g = state.mix.clips.filter(x => inRange(x, a, e));
   for (const x of state.mix.clips) if (!g.includes(x) && x.at >= e - 0.005) x.at += len;
   shiftLines(linesIn(e, 1e9), len);
-  let first = null;
-  for (const x of g){ const n = newClip(x.track, x.at + len, x.src0, x.src1); state.mix.clips.push(n); if (x === c) first = n; }
-  ed.sel = first.id;
-  flash(`${fmtTime(a)}~${fmtTime(e)} 파트를 바로 뒤에 한 번 더 넣었습니다`);
+  const sel = selClip();
+  for (const x of g){ const n = newClip(x.track, x.at + len, x.src0, x.src1); state.mix.clips.push(n); if (x === sel) ed.sel = n.id; }
+  if (ed.range) ed.range = [e, e + len];
+  flash(`${fmtTime(a)}~${fmtTime(e)} 파트(원곡+Inst)를 바로 뒤에 한 번 더 넣었습니다`);
   afterEdit();
 }
 
@@ -1203,7 +1344,7 @@ function drawWave(t){
   for (const tr of TRACKS){
     const [y0, y1] = LAYOUT[tr].map(Y), mid = (y0 + y1) / 2, amp = (y1 - y0) / 2 * 0.9;
     const cs = state.mix.clips.filter(c => c.track === tr);
-    const pk = srcPeaks[tr], sr = sources[tr] ? sources[tr].sampleRate : 1, sh = state.mix.shift[tr];
+    const pk = srcPeaks[tr], sr = sources[tr] ? sources[tr].sampleRate : 1;
     for (const c of cs){
       const x0 = Math.max(0, waveX(c.at)), x1 = Math.min(W, waveX(clipEnd(c)));
       if (x1 <= 0 || x0 >= W) continue;
@@ -1211,7 +1352,7 @@ function drawWave(t){
       if (pk){
         wctx.fillStyle = TRACK_COLOR[tr] + 'cc';
         for (let x = Math.floor(x0); x < x1; x++){
-          const s0 = (c.src0 + (waveT(x) - c.at) + sh) * sr, s1 = (c.src0 + (waveT(x + 1) - c.at) + sh) * sr;
+          const s0 = realPos(tr, c.src0 + waveT(x) - c.at) * sr, s1 = realPos(tr, c.src0 + waveT(x + 1) - c.at) * sr;
           let lo = 0, hi = 0;
           if (s1 - s0 >= pk.bucket){
             for (let b = Math.max(0, Math.floor(s0 / pk.bucket)), e = Math.min(pk.min.length, Math.ceil(s1 / pk.bucket)); b < e; b++){ if (pk.min[b] < lo) lo = pk.min[b]; if (pk.max[b] > hi) hi = pk.max[b]; }
@@ -1289,7 +1430,7 @@ wv.addEventListener('mousedown', e => {
   if (Math.abs(px - waveX(c.at)) <= edge) wave.drag = { ...base, mode:'trimL', c, at0:c.at, s0:c.src0 };
   else if (Math.abs(px - waveX(clipEnd(c))) <= edge) wave.drag = { ...base, mode:'trimR', c, s1:c.src1 };
   else {
-    const g = groupOf(c), lines = linesIn(c.at, clipEnd(c));
+    const g = prepareGroup(c), lines = linesIn(c.at, clipEnd(c));
     wave.drag = { ...base, mode:'move', c, g, ats:g.map(x => x.at), lines, times:lines.map(i => state.lines[i].time) };
   }
 });
@@ -1407,9 +1548,16 @@ for (const [id, tr] of [['gainOrig', 'orig'], ['gainInst', 'inst']]){
   });
 }
 $('alignAuto').onclick = () => { if (!sources.orig || !sources.inst) return flash('원곡과 Inst를 둘 다 열어야 합니다'); autoAlign(true); scheduleMix(); save(); };
+$('alignCheck').onclick = e => {
+  if (!sources.orig || !sources.inst) return flash('원곡과 Inst를 둘 다 열어야 합니다');
+  alignCheck = !alignCheck;
+  e.currentTarget.classList.toggle('on', alignCheck); e.currentTarget.blur();
+  flash(alignCheck ? '겹쳐 듣기: 두 트랙 전체를 겹쳐 재생합니다. 울리거나 두 번 들리면 ±로 맞추세요' : '겹쳐 듣기 끔 (편집한 결과로 돌아감)');
+  scheduleMix();
+};
 document.querySelectorAll('[data-shift]').forEach(b => b.onclick = () => {
-  state.mix.shift.inst = Math.round((state.mix.shift.inst + +b.dataset.shift) * 1000) / 1000;
-  updateAudioInfo(); scheduleMix(150); save();
+  state.mix.shift.inst = Math.round((state.mix.shift.inst + +b.dataset.shift) * 10000) / 10000;
+  updateAudioInfo(); scheduleMix(150); save(); b.blur();
 });
 
 /* =====================================================================
@@ -1490,7 +1638,7 @@ $('coverFile').onchange = async () => {
   await setCover(c.toDataURL('image/jpeg', 0.92));
   save();
 };
-const settingFields = { sPreset:['preset', 'value'], sNamePos:['namePos', 'value'], sBarColor:['barColor', 'checked'], sDots:['dots', 'checked'], sSpectrum:['spectrum', 'checked'] };
+const settingFields = { sPreset:['preset', 'value'], sNamePos:['namePos', 'value'], sBarColor:['barColor', 'checked'], sSpectrum:['spectrum', 'checked'] };
 function fillSettings(){ for (const [id, [k, p]] of Object.entries(settingFields)) $(id)[p] = state.settings[k]; refreshAccentUI(); }
 for (const [id, [k, p]] of Object.entries(settingFields)) $(id).addEventListener('change', () => { state.settings[k] = $(id)[p]; refreshAccentUI(); save(); });
 
@@ -1519,6 +1667,7 @@ async function loadProject(obj){
   state.mix = Object.assign(defaultMix(), obj.mix);
   state.mix.shift = Object.assign({ orig:0, inst:0 }, state.mix.shift);
   state.mix.gain = Object.assign({ orig:1, inst:1 }, state.mix.gain);
+  state.mix.rate = Object.assign({ orig:1, inst:1 }, state.mix.rate);
   state.mix.names = Object.assign({ orig: obj.audioName || '', inst:'' }, state.mix.names);
   state.mix.clips = (state.mix.clips || []).filter(c => TRACKS.includes(c.track)).map(c => ({ id:+c.id, track:c.track, at:+c.at, src0:+c.src0, src1:+c.src1 }));
   clipSeq = Math.max(0, ...state.mix.clips.map(c => c.id)) + 1;
@@ -1593,6 +1742,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function exportMp4(){
   if (!hasCodecs){ alert('Chrome 또는 Edge 최신 버전을 사용하세요. (WebCodecs 미지원)'); return; }
   if (typeof Mp4Muxer === 'undefined'){ alert('mp4-muxer 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인하세요.'); return; }
+  if (alignCheck){ alignCheck = false; $('alignCheck').classList.remove('on'); scheduleMix(); }
   while (mixBusy()) await sleep(50);     // 편집 결과 믹스가 끝날 때까지
   if (!audioBuf){ alert('먼저 음원을 불러오세요.'); return; }
   const D = audioBuf.duration;
@@ -1611,7 +1761,7 @@ async function exportMp4(){
 
   // 폰트·이미지 준비 (폰트 깨짐 방지)
   setExportMsg('폰트와 이미지 준비 중…');
-  await Promise.all(['500', '600', '700', '800'].map(w => document.fonts.load(`${w} 40px Pretendard`, '가나다ABC♪🎤')).concat(document.fonts.ready));
+  await Promise.all(['500', '600', '700', '800'].map(w => document.fonts.load(`${w} 40px Pretendard`, '가나다ABC♪')).concat(document.fonts.ready));
   if (coverImg) await coverImg.decode().catch(() => {});
 
   const vcfg = await pickVideoCodec(W, H, fps);
