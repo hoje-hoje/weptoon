@@ -215,6 +215,7 @@ kbd{background:#2a2f35;border:1px solid #3a4048;border-bottom-width:2px;border-r
   </div>
   <div class="transport">
     <button id="tapBtn"></button>
+    <button id="clearSync" class="danger" title="찍은 가사 싱크 시간을 모두 지우기 (Ctrl+Z로 되돌리기 가능)"><svg class="ic"><use href="#i-trash"/></svg>싱크 전체 지우기</button>
     <span id="tapStatus" class="hint"></span>
     <span class="grow"></span>
     <label>전체 오프셋 <input type="range" id="offset" min="-500" max="500" step="10" value="-150"> <b id="offsetLbl">-150ms</b></label>
@@ -235,12 +236,12 @@ kbd{background:#2a2f35;border:1px solid #3a4048;border-bottom-width:2px;border-r
       <button id="edDup" title="선택한 파트를 바로 뒤에 한 번 더 넣기 (뒤는 밀림, Ctrl+D)"><svg class="ic"><use href="#i-copy"/></svg>복제</button></div>
     <div class="grp">
       <button id="edUndo" class="icon" title="되돌리기 (Ctrl+Z)"><svg class="ic"><use href="#i-undo"/></svg></button><button id="edRedo" class="icon" title="다시 하기 (Ctrl+Y)"><svg class="ic"><use href="#i-redo"/></svg></button></div>
-    <label><input type="checkbox" id="edLink" checked> 두 트랙 같이 이동</label>
+    <label title="클립을 지울 때 같은 구간의 다른 트랙도 함께 지움"><input type="checkbox" id="edLink" checked> 두 트랙 같이 지우기</label>
     <label><input type="checkbox" id="edFollow" checked> 가사도 같이 이동</label>
   </div>
   <canvas id="wave"></canvas>
   <div class="selinfo"><span id="selInfo" class="hint"></span><span id="edMsg"></span></div>
-  <div class="hint">맨 위 눈금줄: 클릭=이동, 드래그=구간 잡기 · 클립: 클릭=선택, 끌기=위치 이동(가장자리에 자석처럼 붙음), 양 끝 끌기=길이 조절 · 아래 줄: 가사 마커 끌기 · 휠=확대/축소, Shift+휠=좌우 · <kbd>←</kbd><kbd>→</kbd> 선택 클립 0.01초 이동(<kbd>Shift</kbd> 0.1초) · <kbd>Ctrl+Z</kbd> 되돌리기</div>
+  <div class="hint">맨 위 눈금줄: 클릭=이동, 드래그=구간 잡기 · 클립: 클릭=선택(음원 위치는 고정), 양 끝 끌기=길이 조절 · 아래 줄: 가사 마커 끌기 · 빈 곳 끌기·Shift+휠=좌우, 휠=확대/축소 · <kbd>Alt+←</kbd><kbd>Alt+→</kbd> 파트 순서 바꾸기 · <kbd>Ctrl+Z</kbd> 되돌리기</div>
   <div class="tablewrap"><table>
     <thead><tr><th>#</th><th>시작</th><th>미세조정</th><th>담당자</th><th></th><th>가사</th></tr></thead>
     <tbody id="tbody"></tbody>
@@ -1025,6 +1026,17 @@ window.addEventListener('keyup', e => {
   if (e.code === 'Space' && !isTyping(e.target)){ e.preventDefault(); e.stopPropagation(); }
 }, true);
 
+function clearAllSync(){
+  if (!state.lines.some(l => l.time != null)) return flash('지울 싱크가 없습니다');
+  if (!confirm('찍어 둔 가사 싱크 시간을 모두 지울까요?\n(가사와 음원 편집은 그대로이고, Ctrl+Z로 되돌릴 수 있습니다)')) return;
+  pushUndo();
+  state.lines.forEach(l => l.time = null);
+  tap.history = []; tap.next = 0;
+  refreshTimes(); markNextRow(); updateTapStatus(); save();
+  flash('가사 싱크를 모두 지웠습니다. 처음부터 다시 탭하세요');
+}
+$('clearSync').onclick = e => { e.currentTarget.blur(); clearAllSync(); };
+
 $('offset').oninput = () => {
   state.offsetMs = +$('offset').value;
   $('offsetLbl').textContent = (state.offsetMs > 0 ? '+' : '') + state.offsetMs + 'ms';
@@ -1136,6 +1148,7 @@ function restoreSnap(sn){
   const o = JSON.parse(sn);
   state.mix.clips = o.clips;
   if (o.times.length === state.lines.length) o.times.forEach((t, i) => state.lines[i].time = t);
+  tap.history = []; tap.next = firstUntimed(); markNextRow(); updateTapStatus();
   if (!selClip()) ed.sel = null;
   afterEdit();
 }
@@ -1163,11 +1176,6 @@ function cut(tracks){
   afterEdit();
 }
 // 선택 클립 + (같이 이동이면) 그 구간 안에 들어 있는 다른 트랙 클립
-// 같이 이동할 때는 먼저 다른 트랙을 같은 경계에서 잘라 두어 파트 전체(원곡+Inst)가 함께 움직이게 한다
-function prepareGroup(c){
-  if (state.mix.link) splitAt(c.at, [otherTrack(c.track)]), splitAt(clipEnd(c), [otherTrack(c.track)]);
-  return groupOf(c);
-}
 function groupOf(c){
   if (!c) return [];
   const a = c.at, e = clipEnd(c);
@@ -1246,20 +1254,6 @@ function applyMode(mode){
 }
 // 클립 묶음 이동 (가사 따라감)
 function moveGroup(g, lines, d){ for (const x of g) x.at = Math.round((x.at + d) * 10000) / 10000; shiftLines(lines, d); }
-function nudgeSel(d){
-  const c = selClip(); if (!c) return;
-  pushUndo();
-  const g = prepareGroup(c);
-  d = Math.max(d, -Math.min(...g.map(x => x.at)));
-  if (!d){ hist.undo.pop(); return; }
-  moveGroup(g, linesIn(c.at, clipEnd(c)), d); afterEdit();
-}
-function moveSelTo(t){
-  const c = selClip(); if (!c || !isFinite(t)) return;
-  pushUndo();
-  const g = prepareGroup(c), d = Math.max(t - c.at, -Math.min(...g.map(x => x.at)));
-  moveGroup(g, linesIn(c.at, clipEnd(c)), d); afterEdit();
-}
 // 파트 = 선택 클립(또는 눈금줄로 잡은 구간)의 시간 범위. 바꾸기·복제는 항상 원곡과 Inst를 함께 옮긴다.
 function selPart(){
   const c = selClip();
@@ -1314,8 +1308,7 @@ function updateSelInfo(){
   const c = selClip(), el = $('selInfo');
   if (c){
     const g = groupOf(c);
-    el.innerHTML = `선택: <b style="color:${TRACK_COLOR[c.track]}">${TRACK_NAME[c.track]}</b>${g.length > 1 ? ' + ' + TRACK_NAME[otherTrack(c.track)] : ''} · ${fmtTime(c.at)} ~ ${fmtTime(clipEnd(c))} (${clipLen(c).toFixed(2)}초) · 시작 위치 <input type="text" id="selAt" value="${fmtTime(c.at)}"> <button id="selRipple" title="Shift+Del">빈칸 없이 지우기</button>`;
-    $('selAt').onchange = () => { const t = parseTime($('selAt').value); if (isFinite(t) && t >= 0) moveSelTo(t); else updateSelInfo(); };
+    el.innerHTML = `선택: <b style="color:${TRACK_COLOR[c.track]}">${TRACK_NAME[c.track]}</b>${g.length > 1 ? ' + ' + TRACK_NAME[otherTrack(c.track)] : ''} · ${fmtTime(c.at)} ~ ${fmtTime(clipEnd(c))} (${clipLen(c).toFixed(2)}초) <button id="selRipple" title="Shift+Del">빈칸 없이 지우기</button>`;
     $('selRipple').onclick = () => deleteSel(true);
   } else if (ed.range){
     el.innerHTML = `구간: <b>${fmtTime(ed.range[0])} ~ ${fmtTime(ed.range[1])}</b> · <kbd>1</kbd> 원곡만 <kbd>2</kbd> Inst만 <kbd>3</kbd> 둘 다 · <kbd>Esc</kbd> 해제`;
@@ -1426,13 +1419,10 @@ wv.addEventListener('mousedown', e => {
   if (!c){ ed.sel = null; ed.range = null; updateSelInfo(); wave.drag = { ...base, mode:'pan', s0:wave.start }; return; }
   ed.sel = c.id; ed.range = null; updateSelInfo();
   const edge = 6 * dpr;
-  pushUndo();      // 클릭만 하고 놓으면 mouseup에서 취소
-  if (Math.abs(px - waveX(c.at)) <= edge) wave.drag = { ...base, mode:'trimL', c, at0:c.at, s0:c.src0 };
-  else if (Math.abs(px - waveX(clipEnd(c))) <= edge) wave.drag = { ...base, mode:'trimR', c, s1:c.src1 };
-  else {
-    const g = prepareGroup(c), lines = linesIn(c.at, clipEnd(c));
-    wave.drag = { ...base, mode:'move', c, g, ats:g.map(x => x.at), lines, times:lines.map(i => state.lines[i].time) };
-  }
+  // 음원 클립은 위치를 옮기지 않는다: 끌면 화면만 좌우로 이동, 양 끝만 길이 조절
+  if (Math.abs(px - waveX(c.at)) <= edge){ pushUndo(); wave.drag = { ...base, mode:'trimL', c, at0:c.at, s0:c.src0 }; }
+  else if (Math.abs(px - waveX(clipEnd(c))) <= edge){ pushUndo(); wave.drag = { ...base, mode:'trimR', c, s1:c.src1 }; }
+  else wave.drag = { ...base, mode:'select', s0:wave.start };
 });
 window.addEventListener('mousemove', e => {
   const D = wave.drag; if (!D) return;
@@ -1440,18 +1430,11 @@ window.addEventListener('mousemove', e => {
   if (Math.abs(px - D.x0) > 3) D.moved = true;
   if (!D.moved) return;
   const dt = (px - D.x0) / wv.width * wave.span;
-  if (D.mode === 'pan') wave.start = clamp(D.s0 - dt, 0, Math.max(0, viewMax() - wave.span));
+  if (D.mode === 'pan' || D.mode === 'select') wave.start = clamp(D.s0 - dt, 0, Math.max(0, viewMax() - wave.span));
   else if (D.mode === 'range'){ const b = clamp(waveT(px), 0, viewMax()); ed.range = [Math.min(D.a, b), Math.max(D.a, b)]; ed.sel = null; updateSelInfo(); }
   else if (D.mode === 'marker'){
     state.lines[D.i].time = Math.round((clamp(waveT(px), 0, viewMax()) - state.offsetMs / 1000) * 1000) / 1000;
     updateRow(D.i);
-  } else if (D.mode === 'move'){
-    const c = D.c, ci = D.g.indexOf(c), s = D.ats[ci], len = clipLen(c);
-    let d = snapDelta([s, s + len], dt, snapCandidates(D.g));
-    d = Math.max(d, -Math.min(...D.ats));
-    D.g.forEach((x, k) => x.at = Math.round((D.ats[k] + d) * 10000) / 10000);
-    D.lines.forEach((i, k) => state.lines[i].time = Math.round((D.times[k] + d) * 1000) / 1000);
-    updateSelInfo();
   } else if (D.mode === 'trimL'){
     const c = D.c, [r0] = srcRange(c.track);
     let d = snapDelta([D.at0], dt, snapCandidates([c]));
@@ -1467,14 +1450,14 @@ window.addEventListener('mouseup', e => {
   const D = wave.drag; if (!D) return;
   wave.drag = null;
   if (!D.moved){
-    if (['move', 'marker', 'trimL', 'trimR'].includes(D.mode)) hist.undo.pop();     // 클릭만 했으면 기록 취소
+    if (['marker', 'trimL', 'trimR'].includes(D.mode)) hist.undo.pop();     // 클릭만 했으면 기록 취소
     if (D.mode === 'pan' || D.mode === 'range' || D.mode === 'marker'){
       if (D.mode === 'range'){ ed.range = null; updateSelInfo(); }
       audio.currentTime = clamp(waveT(D.x0), 0, duration());
     }
     return;
   }
-  if (D.mode === 'move' || D.mode === 'trimL' || D.mode === 'trimR') afterEdit();
+  if (D.mode === 'trimL' || D.mode === 'trimR') afterEdit();
   if (D.mode === 'marker') save();
 });
 wv.addEventListener('mousemove', e => {
@@ -1484,7 +1467,7 @@ wv.addEventListener('mousemove', e => {
   if (lane === 'lyr') cur = markerAt(px) >= 0 ? 'ew-resize' : 'crosshair';
   else if (lane === 'orig' || lane === 'inst'){
     const c = clipAt(lane, px);
-    if (c) cur = Math.abs(px - waveX(c.at)) <= 6 * dprNow() || Math.abs(px - waveX(clipEnd(c))) <= 6 * dprNow() ? 'col-resize' : 'grab';
+    if (c) cur = Math.abs(px - waveX(c.at)) <= 6 * dprNow() || Math.abs(px - waveX(clipEnd(c))) <= 6 * dprNow() ? 'col-resize' : 'pointer';
   } else cur = 'text';
   wv.style.cursor = cur;
 });
@@ -1524,16 +1507,13 @@ window.addEventListener('keydown', e => {
   if (ctrl && k === 'KeyZ') go(() => e.shiftKey ? redo() : undo());
   else if (ctrl && k === 'KeyY') go(redo);
   else if (ctrl && k === 'KeyD') go(duplicateSel);
-  else if (ctrl || e.repeat && k !== 'ArrowLeft' && k !== 'ArrowRight') return;
+  else if (ctrl || e.repeat) return;
   else if (k === 'KeyS') go(() => cut(e.shiftKey ? [selClip() ? selClip().track : ed.track] : TRACKS));
   else if (k === 'Digit1' || k === 'Numpad1') go(() => applyMode('orig'));
   else if (k === 'Digit2' || k === 'Numpad2') go(() => applyMode('inst'));
   else if (k === 'Digit3' || k === 'Numpad3') go(() => applyMode('both'));
   else if (k === 'Delete' || (k === 'Backspace' && !tap.on)) go(() => deleteSel(e.shiftKey));
-  else if ((k === 'ArrowLeft' || k === 'ArrowRight') && selClip()){
-    const dir = k === 'ArrowLeft' ? -1 : 1;
-    go(() => e.altKey ? swapSel(dir) : nudgeSel(dir * (e.shiftKey ? 0.1 : 0.01)));
-  }
+  else if ((k === 'ArrowLeft' || k === 'ArrowRight') && e.altKey && (selClip() || ed.range)) go(() => swapSel(k === 'ArrowLeft' ? -1 : 1));
   else if (k === 'Escape'){ ed.sel = null; ed.range = null; updateSelInfo(); }
 });
 
