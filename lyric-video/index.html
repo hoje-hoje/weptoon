@@ -134,6 +134,8 @@ kbd{background:#2a2f35;border:1px solid #3a4048;border-bottom-width:2px;border-r
       <button id="alignAuto" title="원곡과 Inst 박자를 다시 자동으로 맞추기"><svg class="ic"><use href="#i-wand"/></svg>자동 맞춤</button></div>
     <div class="row"><button id="alignCheck" title="편집과 상관없이 두 트랙 전체를 겹쳐 재생. 소리가 두 번 들리거나 울리면 어긋난 것"><svg class="ic"><use href="#i-headphones"/></svg>겹쳐 듣기</button>
       <span class="seg"><button data-shift="-0.01" title="Inst를 10ms 앞으로">−10</button><button data-shift="-0.001" title="Inst를 1ms 앞으로">−1</button><button data-shift="0.001" title="Inst를 1ms 뒤로">+1</button><button data-shift="0.01" title="Inst를 10ms 뒤로">+10</button></span><span class="hint">ms</span></div>
+    <div class="row"><label style="min-width:0" title="이어폰으로 들을 때 원곡은 왼쪽, Inst는 오른쪽에서 나옴. 미리보기에만 적용되고 MP4에는 들어가지 않음"><input type="checkbox" id="splitLR"> 좌우로 나눠 듣기</label>
+      <span class="hint">원곡 <b style="color:var(--orig)">L</b> · Inst <b style="color:var(--inst)">R</b> · 미리보기만 (겹쳐 듣기는 항상 나눠서)</span></div>
     <div class="hint" id="audioInfo">mp3 / wav / m4a · Inst 없이 원곡만 써도 됩니다</div>
   </section>
 
@@ -444,7 +446,7 @@ const EPS = 1e-4;
 const sources = { orig:null, inst:null };      // 디코딩된 AudioBuffer
 const srcMono = { orig:null, inst:null };
 const srcPeaks = { orig:null, inst:null };
-function defaultMix(){ return { clips:[], shift:{ orig:0, inst:0 }, rate:{ orig:1, inst:1 }, gain:{ orig:1, inst:1 }, names:{ orig:'', inst:'' }, link:true, follow:true }; }
+function defaultMix(){ return { clips:[], shift:{ orig:0, inst:0 }, rate:{ orig:1, inst:1 }, gain:{ orig:1, inst:1 }, names:{ orig:'', inst:'' }, link:true, follow:true, splitLR:false }; }
 let clipSeq = 1;
 const newClip = (track, at, src0, src1) => ({ id:clipSeq++, track, at, src0, src1 });
 const clipLen = c => c.src1 - c.src0;
@@ -454,6 +456,9 @@ const otherTrack = t => t === 'orig' ? 'inst' : 'orig';
 const srcRange = tr => sources[tr] ? [-state.mix.shift[tr] / state.mix.rate[tr], (sources[tr].duration - state.mix.shift[tr]) / state.mix.rate[tr]] : [-1e9, 1e9];
 const realPos = (tr, src) => src * state.mix.rate[tr] + state.mix.shift[tr];   // 맞춤 좌표 → 실제 소스 초
 let alignCheck = false;   // 겹쳐 듣기: 편집과 상관없이 두 트랙 전체를 겹쳐서 싱크 확인
+let exportCenter = false; // 내보내는 동안은 좌우 나누기를 끈다 (영상에는 항상 원래 스테레오)
+// 원곡 왼쪽 / Inst 오른쪽 모니터링 (미리보기 전용)
+const panOn = () => (alignCheck || state.mix.splitLR) && !exportCenter;
 
 function monoOf(buf){
   const n = buf.length, ch = buf.numberOfChannels, m = new Float32Array(n);
@@ -645,19 +650,23 @@ async function runMix(){
 async function rebuildMix(){
   const M = state.mix;
   const segs = mergedSegments().filter(s => sources[s.track]);
-  const key = JSON.stringify([segs, M.gain, M.shift, M.rate, alignCheck]);
+  const pan = panOn();
+  const key = JSON.stringify([segs, M.gain, M.shift, M.rate, alignCheck, pan]);
   if (key === mixKey) return;
   if (!segs.length){ mixKey = key; audioBuf = mono = peaks = null; barEdges = null; audio.removeAttribute('src'); return; }
   const SR = 48000, total = Math.max(...segs.map(s => s.at + s.src1 - s.src0));
   const oc = new OfflineAudioContext(2, Math.max(1, Math.ceil(total * SR)), SR);
   for (const s of segs){
-    const buf = sources[s.track], g = M.gain[s.track], rt = M.rate[s.track];
+    // 한쪽으로 몰면 스테레오 두 채널이 한 귀에 합쳐지므로 절반으로 (= 그 트랙의 모노 음량)
+    const buf = sources[s.track], g = M.gain[s.track] * (pan ? 0.5 : 1), rt = M.rate[s.track];
     let off = realPos(s.track, s.src0), at = s.at, len = s.src1 - s.src0;   // len = 타임라인 길이
     if (off < 0){ at += -off / rt; len -= -off / rt; off = 0; }
     len = Math.min(len, (buf.duration - off) / rt);
     if (len <= 0.001) continue;
     const src = oc.createBufferSource(); src.buffer = buf; src.playbackRate.value = rt;
-    const gn = oc.createGain(); src.connect(gn); gn.connect(oc.destination);
+    const gn = oc.createGain(); src.connect(gn);
+    if (pan){ const pn = oc.createStereoPanner(); pn.pan.value = s.track === 'orig' ? -1 : 1; gn.connect(pn); pn.connect(oc.destination); }
+    else gn.connect(oc.destination);
     // 자른 경계에 15ms 페이드 (틱 소리 방지). 소스의 진짜 처음/끝은 그대로.
     const F = Math.min(0.015, len / 4), fin = off > 0.001, fout = off + len * rt < buf.duration - 0.001;
     gn.gain.setValueAtTime(fin ? 0 : g, at);
@@ -1366,7 +1375,7 @@ function drawWave(t){
       wctx.strokeRect(waveX(c.at) + wctx.lineWidth / 2, y0 + wctx.lineWidth / 2, waveX(clipEnd(c)) - waveX(c.at) - wctx.lineWidth, y1 - y0 - wctx.lineWidth);
     }
     wctx.fillStyle = TRACK_COLOR[tr]; wctx.font = `bold ${11 * dpr}px ${FONT}`; wctx.textAlign = 'left';
-    wctx.fillText(`${TRACK_NAME[tr]} ${Math.round(state.mix.gain[tr] * 100)}%${sources[tr] ? '' : ' (파일 없음)'}`, 4 * dpr, y0 + 13 * dpr);
+    wctx.fillText(`${TRACK_NAME[tr]} ${Math.round(state.mix.gain[tr] * 100)}%${panOn() ? (tr === 'orig' ? ' · 왼쪽' : ' · 오른쪽') : ''}${sources[tr] ? '' : ' (파일 없음)'}`, 4 * dpr, y0 + 13 * dpr);
   }
   // 가사 마커
   const [ly0, ly1] = LAYOUT.lyr.map(Y);
@@ -1528,11 +1537,16 @@ for (const [id, tr] of [['gainOrig', 'orig'], ['gainInst', 'inst']]){
   });
 }
 $('alignAuto').onclick = () => { if (!sources.orig || !sources.inst) return flash('원곡과 Inst를 둘 다 열어야 합니다'); autoAlign(true); scheduleMix(); save(); };
+$('splitLR').onchange = e => {
+  state.mix.splitLR = e.target.checked; e.target.blur();
+  flash(state.mix.splitLR ? '좌우로 나눠 듣기: 원곡 왼쪽, Inst 오른쪽 (MP4에는 적용 안 됨)' : '좌우 나눠 듣기 끔');
+  scheduleMix(); save();
+};
 $('alignCheck').onclick = e => {
   if (!sources.orig || !sources.inst) return flash('원곡과 Inst를 둘 다 열어야 합니다');
   alignCheck = !alignCheck;
   e.currentTarget.classList.toggle('on', alignCheck); e.currentTarget.blur();
-  flash(alignCheck ? '겹쳐 듣기: 두 트랙 전체를 겹쳐 재생합니다. 울리거나 두 번 들리면 ±로 맞추세요' : '겹쳐 듣기 끔 (편집한 결과로 돌아감)');
+  flash(alignCheck ? '겹쳐 듣기: 원곡은 왼쪽, Inst는 오른쪽에서 나옵니다. 박자가 갈라져 들리면 ±로 맞추세요' : '겹쳐 듣기 끔 (편집한 결과로 돌아감)');
   scheduleMix();
 };
 document.querySelectorAll('[data-shift]').forEach(b => b.onclick = () => {
@@ -1651,7 +1665,7 @@ async function loadProject(obj){
   state.mix.names = Object.assign({ orig: obj.audioName || '', inst:'' }, state.mix.names);
   state.mix.clips = (state.mix.clips || []).filter(c => TRACKS.includes(c.track)).map(c => ({ id:+c.id, track:c.track, at:+c.at, src0:+c.src0, src1:+c.src1 }));
   clipSeq = Math.max(0, ...state.mix.clips.map(c => c.id)) + 1;
-  $('edLink').checked = state.mix.link; $('edFollow').checked = state.mix.follow;
+  $('edLink').checked = state.mix.link; $('edFollow').checked = state.mix.follow; $('splitLR').checked = !!state.mix.splitLR;
   hist.undo = []; hist.redo = []; ed.sel = null; ed.range = null;
   ensureMembers(state.lines.flatMap(l => l.rappers));
   await setCover(state.song.cover).catch(() => setCover(''));
@@ -1719,10 +1733,16 @@ async function renderAudioSegment(start, end, fadeIn, fadeOut, ch){
 }
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
+// 어떤 경로로 끝나든(완료·취소·오류·중간 return) 좌우 나눠 듣기 상태를 되돌린다
 async function exportMp4(){
+  try { await exportMp4Inner(); }
+  finally { if (exportCenter){ exportCenter = false; scheduleMix(); } }
+}
+async function exportMp4Inner(){
   if (!hasCodecs){ alert('Chrome 또는 Edge 최신 버전을 사용하세요. (WebCodecs 미지원)'); return; }
   if (typeof Mp4Muxer === 'undefined'){ alert('mp4-muxer 라이브러리를 불러오지 못했습니다. 인터넷 연결을 확인하세요.'); return; }
-  if (alignCheck){ alignCheck = false; $('alignCheck').classList.remove('on'); scheduleMix(); }
+  if (alignCheck){ alignCheck = false; $('alignCheck').classList.remove('on'); }
+  exportCenter = true; scheduleMix();     // 좌우 나누기 없이 원래 스테레오로 다시 믹스
   while (mixBusy()) await sleep(50);     // 편집 결과 믹스가 끝날 때까지
   if (!audioBuf){ alert('먼저 음원을 불러오세요.'); return; }
   const D = audioBuf.duration;
