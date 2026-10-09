@@ -109,6 +109,9 @@ kbd{background:var(--raise);border:1px solid var(--line);border-radius:4px;paddi
       <select id="sPreset" class="grow"><option value="classic">1. 클래식 (카드 커버 · 초록 바)</option><option value="circle">2. 원형 커버 · 청록 바</option></select></div>
     <div class="row"><label>래퍼 이름</label>
       <select id="sNamePos" class="grow"><option value="bar">하이라이트 바 위</option><option value="panel">왼쪽 패널 하단</option><option value="off">표시 안 함</option></select></div>
+    <div class="row"><label>바 색</label>
+      <input type="color" id="sAccent" value="#25b84c" title="하이라이트 바·스펙트럼 막대·태그 색">
+      <label><input type="checkbox" id="sAccentAuto" checked> 앨범 커버에서 자동</label></div>
     <div class="row"><label><input type="checkbox" id="sBarColor"> 하이라이트 바를 현재 래퍼 색으로</label></div>
     <div class="row"><label><input type="checkbox" id="sDots" checked> 앞뒤 줄에 담당자 색 점(●)</label></div>
     <div class="row"><label><input type="checkbox" id="sSpectrum" checked> 하단 스펙트럼 막대</label></div>
@@ -206,7 +209,7 @@ const state = {
   lines: [],            // {text, gap, rappers:[], time: raw초|null}
   members: [],          // {name, color}
   offsetMs: -150,
-  settings: { preset:'classic', namePos:'bar', barColor:false, dots:true, spectrum:true },
+  settings: { preset:'classic', namePos:'bar', barColor:false, dots:true, spectrum:true, accentAuto:true, accent:'#25b84c' },
   audioName: ''
 };
 let coverImg = null;          // HTMLImageElement
@@ -216,6 +219,31 @@ let peaks = null;             // {bucket, min:Float32Array, max:Float32Array}
 
 const eff = i => state.lines[i].time == null ? null : state.lines[i].time + state.offsetMs / 1000;
 const memberColor = name => (state.members.find(m => m.name === name) || {}).color || '#888';
+let coverAccent = null;       // 커버에서 뽑은 대표 색
+// 하이라이트 바·스펙트럼·태그에 쓰는 색: 직접 고른 색, 아니면 커버 대표 색, 커버가 없으면 프리셋 기본색
+function accentColor(){
+  const st = state.settings;
+  if (!st.accentAuto) return st.accent;
+  return coverAccent || (PRESETS[st.preset] || PRESETS.classic).barColor;
+}
+// 커버를 작게 줄여 색을 4비트씩 묶은 뒤 가장 많은 칸의 평균 색. 흰 글자가 안 보일 만큼 밝으면 조금 어둡게.
+function dominantColor(img){
+  const N = 64, c = document.createElement('canvas'); c.width = N; c.height = N;
+  const x = c.getContext('2d'); x.drawImage(img, 0, 0, N, N);
+  const d = x.getImageData(0, 0, N, N).data, bins = new Map();
+  for (let i = 0; i < d.length; i += 4){
+    const k = (d[i] >> 4) << 8 | (d[i + 1] >> 4) << 4 | (d[i + 2] >> 4);
+    const b = bins.get(k) || [0, 0, 0, 0];
+    b[0]++; b[1] += d[i]; b[2] += d[i + 1]; b[3] += d[i + 2];
+    bins.set(k, b);
+  }
+  let best = null;
+  for (const b of bins.values()) if (!best || b[0] > best[0]) best = b;
+  let rgb = [best[1], best[2], best[3]].map(v => v / best[0]);
+  const lum = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255;
+  if (lum > 0.6) rgb = rgb.map(v => v * 0.6 / lum);
+  return '#' + rgb.map(v => Math.round(v).toString(16).padStart(2, '0')).join('');
+}
 function ensureMembers(names){
   for (const n of names) if (n && !state.members.some(m => m.name === n))
     state.members.push({ name:n, color: PALETTE[state.members.length % PALETTE.length] });
@@ -402,12 +430,12 @@ function spectrumAt(t){
 const FONT = 'Pretendard, "Malgun Gothic", sans-serif';
 const PRESETS = {
   classic: {
-    barColor:'#25b84c', specColor:'#3ddc5f',
+    barColor:'#25b84c',
     lyr:{ x:1000, w:840, cy:560, step:108, barH:96, size:44, curSize:56, panelBg:'rgba(0,0,0,.28)', top:0 },
     namePanel:{ x:100, y:960 }
   },
   circle: {
-    barColor:'rgba(32,170,190,.78)', specColor:'#3fd3e0',
+    barColor:'#20aabe', barAlpha:0.8,
     lyr:{ x:900, w:920, cy:580, step:104, barH:92, size:40, curSize:52, panelBg:'rgba(0,0,0,.18)', top:170 },
     namePanel:{ x:380, y:900, center:true }
   }
@@ -494,7 +522,7 @@ function drawRapperTransition(ctx, tl, x, y, align){
 function barFill(ctx, tl, P, x, y, w, h){
   const st = state.settings;
   const r = tl.k >= 0 ? state.lines[tl.k].rappers : [];
-  if (!st.barColor || !r.length) return P.barColor;
+  if (!st.barColor || !r.length) return accentColor();
   if (r.length === 1) return memberColor(r[0]);
   const g = ctx.createLinearGradient(x, 0, x + w, 0);
   r.forEach((n, i) => g.addColorStop(i / (r.length - 1), memberColor(n)));
@@ -536,8 +564,8 @@ function drawFrame(ctx, t, W, H, opts = {}){
     if (state.song.tag){
       const sz = fitFont(ctx, state.song.tag, 700, 34, cs - 40);
       const tw = ctx.measureText(state.song.tag).width;
-      ctx.fillStyle = '#25b84c'; ctx.fillRect(x0 + pad + 16, cy0 + pad + cs - sz - 26, tw + 24, sz + 16);
-      ctx.fillStyle = '#fff'; ctx.textAlign = 'left';
+      ctx.fillStyle = accentColor(); ctx.fillRect(x0 + pad + 16, cy0 + pad + cs - sz - 26, tw + 24, sz + 16);
+      ctx.fillStyle = textColorFor(accentColor()); ctx.textAlign = 'left';
       ctx.fillText(state.song.tag, x0 + pad + 28, cy0 + pad + cs - sz / 2 - 18);
     }
     if (dateText()){
@@ -552,7 +580,9 @@ function drawFrame(ctx, t, W, H, opts = {}){
   ctx.fillStyle = Ly.panelBg; ctx.fillRect(Ly.x, 0, Ly.w, 1080);
   const barY = Ly.cy - Ly.barH / 2;
   ctx.fillStyle = barFill(ctx, tl, P, Ly.x, barY, Ly.w, Ly.barH);
+  ctx.globalAlpha = P.barAlpha || 1;
   ctx.fillRect(Ly.x, barY, Ly.w, Ly.barH);
+  ctx.globalAlpha = 1;
   ctx.save();
   ctx.beginPath(); ctx.rect(Ly.x, Ly.top, Ly.w, 1080 - Ly.top); ctx.clip();
   // 바 위에 래퍼 이름표를 붙일 때는 윗줄들을 조금 더 올려 이름표 자리를 비운다
@@ -586,7 +616,7 @@ function drawFrame(ctx, t, W, H, opts = {}){
   /* ----- 스펙트럼 ----- */
   if (st.spectrum && mono){
     const spec = spectrumAt(t), bw = 1920 / BARS, maxH = 120;
-    ctx.fillStyle = P.specColor; ctx.globalAlpha = 0.85;
+    ctx.fillStyle = accentColor(); ctx.globalAlpha = 0.85;
     for (let b = 0; b < BARS; b++){
       const h = Math.max(3, spec[b] * maxH);
       ctx.fillRect(b * bw + 3, 1080 - h, bw - 6, h);
@@ -903,11 +933,25 @@ function fillSongForm(){ for (const [id, k] of Object.entries(songFields)) $(id)
 for (const [id, k] of Object.entries(songFields)) $(id).addEventListener('input', () => { state.song[k] = $(id).value; save(); });
 async function setCover(dataUrl){
   state.song.cover = dataUrl || '';
-  if (!dataUrl){ coverImg = null; return; }
+  if (!dataUrl){ coverImg = null; coverAccent = null; refreshAccentUI(); return; }
   const img = new Image(); img.src = dataUrl;
   await img.decode();
   coverImg = img;
+  coverAccent = dominantColor(img);
+  refreshAccentUI();
 }
+function refreshAccentUI(){
+  $('sAccentAuto').checked = state.settings.accentAuto;
+  $('sAccent').value = accentColor();
+}
+$('sAccent').addEventListener('input', () => {   // 색을 직접 고르면 자동 해제
+  state.settings.accent = $('sAccent').value; state.settings.accentAuto = false;
+  $('sAccentAuto').checked = false; save();
+});
+$('sAccentAuto').addEventListener('change', () => {
+  state.settings.accentAuto = $('sAccentAuto').checked;
+  refreshAccentUI(); save();
+});
 $('coverFile').onchange = async () => {
   const f = $('coverFile').files[0]; if (!f) return;
   const img = new Image(); img.src = URL.createObjectURL(f); await img.decode();
@@ -919,8 +963,8 @@ $('coverFile').onchange = async () => {
   save();
 };
 const settingFields = { sPreset:['preset', 'value'], sNamePos:['namePos', 'value'], sBarColor:['barColor', 'checked'], sDots:['dots', 'checked'], sSpectrum:['spectrum', 'checked'] };
-function fillSettings(){ for (const [id, [k, p]] of Object.entries(settingFields)) $(id)[p] = state.settings[k]; }
-for (const [id, [k, p]] of Object.entries(settingFields)) $(id).addEventListener('change', () => { state.settings[k] = $(id)[p]; save(); });
+function fillSettings(){ for (const [id, [k, p]] of Object.entries(settingFields)) $(id)[p] = state.settings[k]; refreshAccentUI(); }
+for (const [id, [k, p]] of Object.entries(settingFields)) $(id).addEventListener('change', () => { state.settings[k] = $(id)[p]; refreshAccentUI(); save(); });
 
 $('audioFile').onchange = () => { const f = $('audioFile').files[0]; if (f) loadAudioFile(f); };
 let lyrTimer = 0;
