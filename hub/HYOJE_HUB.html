@@ -61,10 +61,14 @@
   /* 아이콘은 마우스로 끌어서 원하는 칸으로 옮길 수 있다 (위치 저장) */
   .icon-grid{position:absolute;inset:0;z-index:2;pointer-events:none;}
   .tile{position:absolute;width:92px;height:100px;display:flex;flex-direction:column;align-items:center;gap:9px;padding:8px 4px;border-radius:12px;border:1px solid transparent;background:none;cursor:pointer;
-    pointer-events:auto;touch-action:none;user-select:none;-webkit-user-select:none;transition:left .15s,top .15s;}
+    pointer-events:auto;touch-action:none;user-select:none;-webkit-user-select:none;}
   .tile:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.18);}
   .tile.dragging{transition:none;z-index:5;opacity:.85;background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.3);cursor:grabbing;}
-  .tile-ghost{position:absolute;width:92px;height:100px;border-radius:12px;border:1.5px dashed rgba(255,255,255,.55);pointer-events:none;display:none;}
+  .desk-menu{position:fixed;z-index:9600;display:none;min-width:180px;padding:5px;border-radius:10px;
+    background:var(--panel);border:1px solid var(--line);box-shadow:0 12px 32px rgba(0,0,0,.4);}
+  .desk-menu button{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;border:none;border-radius:7px;background:none;
+    color:var(--text);font-size:13px;cursor:pointer;text-align:left;}
+  .desk-menu button:hover{background:rgba(128,128,128,.16);}
   .tile .chip{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;}
   .tile .label{font-size:12px;color:var(--label);text-align:center;line-height:1.3;text-shadow:var(--label-shadow);}
 
@@ -166,6 +170,11 @@
   </div>
 
   <div class="icon-grid" id="iconGrid"></div>
+</div>
+
+<div class="desk-menu" id="deskMenu">
+  <button data-act="arrange">아이콘 자동 정렬</button>
+  <button data-act="bg">배경 바꾸기</button>
 </div>
 
 <div id="winLayer"></div>
@@ -284,51 +293,41 @@ function iconSvg(ic, size){
 }
 
 const iconGrid = document.getElementById('iconGrid');
-const ICON_POS_KEY = 'hub_icon_pos';
-const GRID = { left: 36, top: 92, cw: 118, rh: 108, bottom: 44 + 12 };
+/* 아이콘은 놓은 자리(px)에 그대로 머문다. 창 크기가 바뀌어도 저장된 위치는 바뀌지 않고,
+   화면 밖으로 나가는 경우에만 보이는 곳까지 당겨서 보여 준다. */
+const ICON_XY_KEY = 'hub_icon_xy';
+const TILE_W = 92, TILE_H = 100;
+const DEF = { left: 36, top: 92, cw: 118, rh: 108, rows: 4 };
 const tiles = {};   // key -> button
-let iconPos = {};   // key -> [col,row]
-try{ iconPos = JSON.parse(localStorage.getItem(ICON_POS_KEY) || '{}') || {}; }catch(_){ iconPos = {}; }
-
-function gridRows(){ return Math.max(1, Math.floor((window.innerHeight - GRID.top - GRID.bottom) / GRID.rh)); }
-function gridCols(){ return Math.max(1, Math.floor((window.innerWidth - GRID.left) / GRID.cw)); }
-function cellKey(c, r){ return c + ',' + r; }
-
-/* 저장된 칸을 우선, 없거나 화면 밖/겹치면 위→아래, 왼→오른 순으로 빈 칸에 놓는다 */
+let iconXY = {};    // key -> [x,y]
+try{ iconXY = JSON.parse(localStorage.getItem(ICON_XY_KEY) || '{}') || {}; }catch(_){ iconXY = {}; }
+if(!Object.keys(iconXY).length){
+  // 이전 버전(칸 번호) 저장값이 있으면 그대로 옮겨 온다
+  try{
+    const old = JSON.parse(localStorage.getItem('hub_icon_pos') || '{}') || {};
+    Object.entries(old).forEach(([k, [c, r]]) => { iconXY[k] = [DEF.left + c * DEF.cw, DEF.top + r * DEF.rh]; });
+  }catch(_){}
+}
+function defaultXY(i){ return [DEF.left + Math.floor(i / DEF.rows) * DEF.cw, DEF.top + (i % DEF.rows) * DEF.rh]; }
+function clampXY(x, y){
+  const maxX = Math.max(0, window.innerWidth - TILE_W);
+  const maxY = Math.max(52, window.innerHeight - 44 - TILE_H);
+  return [Math.max(0, Math.min(maxX, x)), Math.max(52, Math.min(maxY, y))];
+}
 function layoutIcons(){
-  const rows = gridRows(), cols = gridCols();
-  const used = new Set();
-  const placed = {};
-  ICONS.forEach(ic => {
-    const p = iconPos[ic.key];
-    if(p && p[0] >= 0 && p[1] >= 0 && p[0] < cols && p[1] < rows && !used.has(cellKey(p[0], p[1]))){
-      placed[ic.key] = p; used.add(cellKey(p[0], p[1]));
-    }
-  });
-  let c = 0, r = 0;
-  ICONS.forEach(ic => {
-    if(placed[ic.key]) return;
-    while(used.has(cellKey(c, r))){ r++; if(r >= rows){ r = 0; c++; } }
-    placed[ic.key] = [c, r]; used.add(cellKey(c, r));
-  });
-  ICONS.forEach(ic => {
-    const [pc, pr] = placed[ic.key];
-    const t = tiles[ic.key];
-    t.style.left = (GRID.left + pc * GRID.cw) + 'px';
-    t.style.top = (GRID.top + pr * GRID.rh) + 'px';
-    t.dataset.col = pc; t.dataset.row = pr;
+  ICONS.forEach((ic, i) => {
+    const [x, y] = clampXY(...(iconXY[ic.key] || defaultXY(i)));
+    tiles[ic.key].style.left = x + 'px';
+    tiles[ic.key].style.top = y + 'px';
   });
 }
-function saveIconPos(){
-  const o = {};
-  ICONS.forEach(ic => { const t = tiles[ic.key]; o[ic.key] = [+t.dataset.col, +t.dataset.row]; });
-  iconPos = o;
-  try{ localStorage.setItem(ICON_POS_KEY, JSON.stringify(o)); }catch(_){}
+function saveIconXY(){ try{ localStorage.setItem(ICON_XY_KEY, JSON.stringify(iconXY)); }catch(_){} }
+function arrangeIcons(){
+  iconXY = {};
+  ICONS.forEach((ic, i) => { iconXY[ic.key] = defaultXY(i); });
+  saveIconXY();
+  layoutIcons();
 }
-
-const ghost = document.createElement('div');
-ghost.className = 'tile-ghost';
-iconGrid.appendChild(ghost);
 
 ICONS.forEach(ic => {
   const btn = document.createElement('button');
@@ -343,50 +342,33 @@ ICONS.forEach(ic => {
     else openApp(ic.key); // music app itself defaults to its video(MP4) home
   });
 
-  // 마우스로 아이콘 끌어서 옮기기 (다른 아이콘 칸에 놓으면 서로 자리 바꿈)
+  // 마우스로 끌어서 아무 곳에나 놓기
   btn.addEventListener('pointerdown', e => {
     if(e.button !== 0) return;
     const sx = e.clientX, sy = e.clientY;
     const x0 = btn.offsetLeft, y0 = btn.offsetTop;
-    let moving = false, target = null;
-    const rows = gridRows(), cols = gridCols();
-    const cellAt = (x, y) => {
-      const c = Math.max(0, Math.min(cols - 1, Math.round((x - GRID.left) / GRID.cw)));
-      const r = Math.max(0, Math.min(rows - 1, Math.round((y - GRID.top) / GRID.rh)));
-      return [c, r];
-    };
+    let moving = false;
     const move = ev => {
       const dx = ev.clientX - sx, dy = ev.clientY - sy;
       if(!moving){
-        if(Math.abs(dx) + Math.abs(dy) < 6) return;
+        if(Math.abs(dx) + Math.abs(dy) < 5) return;
         moving = true;
         btn.classList.add('dragging');
-        try{ btn.setPointerCapture(e.pointerId); }catch(_){}
       }
-      const x = x0 + dx, y = y0 + dy;
+      const [x, y] = clampXY(x0 + dx, y0 + dy);
       btn.style.left = x + 'px';
       btn.style.top = y + 'px';
-      target = cellAt(x, y);
-      ghost.style.display = 'block';
-      ghost.style.left = (GRID.left + target[0] * GRID.cw) + 'px';
-      ghost.style.top = (GRID.top + target[1] * GRID.rh) + 'px';
     };
     const up = () => {
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerup', up);
       window.removeEventListener('pointercancel', up);
-      ghost.style.display = 'none';
       if(!moving) return;
       dragged = true;
       setTimeout(() => { dragged = false; }, 0); // 끌기 직후의 click 한 번만 무시
       btn.classList.remove('dragging');
-      const [tc, tr] = target || [+btn.dataset.col, +btn.dataset.row];
-      const oc = +btn.dataset.col, or = +btn.dataset.row;
-      const other = Object.values(tiles).find(t => t !== btn && +t.dataset.col === tc && +t.dataset.row === tr);
-      if(other){ other.dataset.col = oc; other.dataset.row = or; }
-      btn.dataset.col = tc; btn.dataset.row = tr;
-      saveIconPos();
-      layoutIcons();
+      iconXY[ic.key] = [btn.offsetLeft, btn.offsetTop];
+      saveIconXY();
     };
     window.addEventListener('pointermove', move);
     window.addEventListener('pointerup', up);
@@ -398,6 +380,25 @@ ICONS.forEach(ic => {
 });
 layoutIcons();
 window.addEventListener('resize', layoutIcons);
+
+/* 바탕화면 오른쪽 클릭 메뉴 */
+const deskMenu = document.getElementById('deskMenu');
+document.getElementById('homeView').addEventListener('contextmenu', e => {
+  if(e.target.closest('.tile, .storage-chip, .theme-btn, .storage-pop')) return;
+  e.preventDefault();
+  deskMenu.style.display = 'block';
+  const mw = deskMenu.offsetWidth, mh = deskMenu.offsetHeight;
+  deskMenu.style.left = Math.min(e.clientX, window.innerWidth - mw - 4) + 'px';
+  deskMenu.style.top = Math.min(e.clientY, window.innerHeight - mh - 4) + 'px';
+});
+document.addEventListener('pointerdown', e => { if(!deskMenu.contains(e.target)) deskMenu.style.display = 'none'; });
+deskMenu.addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if(!b) return;
+  deskMenu.style.display = 'none';
+  if(b.dataset.act === 'arrange') arrangeIcons();
+  else if(b.dataset.act === 'bg') openBgPicker();
+});
 
 /* ===== Windows ===== */
 const winLayer = document.getElementById('winLayer');
