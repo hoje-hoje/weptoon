@@ -86,21 +86,37 @@
     box-shadow:0 18px 50px rgba(0,0,0,.45),0 2px 8px rgba(0,0,0,.25);}
   .win.min{display:none;}
   .win.max{left:0 !important;top:0 !important;width:100% !important;height:100% !important;border-radius:0;border:none;}
-  .win-bar{height:38px;flex-shrink:0;display:flex;align-items:center;gap:9px;padding:0 0 0 12px;
+  .win-bar{height:38px;flex-shrink:0;display:flex;align-items:flex-end;gap:0;padding:0 0 0 6px;
     background:var(--win-bar);border-bottom:1px solid var(--win-line);cursor:default;user-select:none;-webkit-user-select:none;touch-action:none;}
   .win.active .win-bar{background:var(--win-bar-active);}
-  .win-bar .wico{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-  .win-bar .wtitle{flex:1;min-width:0;font-size:12.5px;font-weight:700;letter-spacing:.02em;color:var(--sub);
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .win.active .win-bar .wtitle{color:var(--text);}
-  .win-ctrls{display:flex;height:100%;}
+  .win.merge-target .win-bar{background:color-mix(in srgb, var(--accent) 22%, var(--win-bar-active));box-shadow:inset 0 0 0 2px var(--accent);}
+  /* 크롬처럼 탭: 끌어서 다른 창 제목줄에 놓으면 합쳐지고, 밖으로 끌면 분리 */
+  .win-tabs{display:flex;align-items:flex-end;gap:2px;min-width:0;flex:0 1 auto;height:100%;padding-top:5px;overflow:hidden;}
+  .wtab{position:relative;display:flex;align-items:center;gap:7px;height:33px;min-width:56px;max-width:210px;flex:0 1 210px;
+    padding:0 6px 0 11px;border-radius:9px 9px 0 0;color:var(--sub);font-size:12px;font-weight:700;cursor:default;}
+  .wtab:hover{background:rgba(128,128,128,.12);}
+  .wtab.on{background:var(--panel);color:var(--text);box-shadow:0 1px 0 var(--panel);}
+  .win.active .wtab.on{color:var(--text);}
+  .wtab.dragging{opacity:.75;}
+  .wtab .wico{width:16px;height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .wtab .wtitle{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .wtab-x{width:20px;height:20px;border-radius:6px;border:none;background:none;color:inherit;cursor:pointer;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;opacity:.6;padding:0;}
+  .wtab-x:hover{background:rgba(128,128,128,.25);opacity:1;}
+  .win-drag{flex:1;min-width:24px;height:100%;}
+  .win-ctrls{display:flex;height:100%;align-self:stretch;}
   .win-ctrls button{width:46px;height:100%;border:none;background:none;color:var(--text);cursor:pointer;
     display:flex;align-items:center;justify-content:center;opacity:.75;}
   .win-ctrls button:hover{background:rgba(128,128,128,.18);opacity:1;}
   .win-ctrls button.x:hover{background:#e81123;color:#fff;}
-  .win-body{position:relative;flex:1;min-height:0;background:#000;}
-  .win-body iframe{width:100%;height:100%;border:none;display:block;background:#fff;}
-  body.dragging .win-body iframe{pointer-events:none;}
+  .win-body{position:relative;flex:1;min-height:0;background:var(--bg);}
+  /* 앱 화면(iframe)은 창 안이 아니라 이 층에 두고 창 위치에 맞춰 덮는다 → 탭을 옮겨도 앱이 새로 고쳐지지 않음 */
+  .app-host{position:absolute;display:none;pointer-events:auto;background:#000;overflow:hidden;border-radius:0 0 7px 7px;}
+  .app-host.flat{border-radius:0;}
+  .app-host iframe{width:100%;height:100%;border:none;display:block;background:#fff;}
+  body.dragging .app-host iframe{pointer-events:none;}
+  .snap-preview{position:absolute;display:none;z-index:99990;pointer-events:none;border-radius:10px;
+    background:color-mix(in srgb, var(--accent) 18%, transparent);border:2px solid var(--accent);transition:left .12s,top .12s,width .12s,height .12s;}
   body.dragging{user-select:none;-webkit-user-select:none;}
   .rz{position:absolute;z-index:3;}
   .rz.n{top:-3px;left:8px;right:8px;height:7px;cursor:ns-resize;}
@@ -600,18 +616,35 @@ deskMenu.addEventListener('click', e => {
   else if(b.dataset.act === 'bg') openBgPicker();
 });
 
-/* ===== Windows ===== */
+/* ===== Windows =====
+   - 창은 여러 앱을 탭으로 가질 수 있다 (크롬처럼)
+     · 탭이나 제목줄을 끌어 다른 창 제목줄에 놓으면 → 그 창의 탭으로 합쳐짐
+     · 탭이 여러 개인 창에서 탭을 아래로 끌어내면 → 새 창으로 분리
+     · 같은 줄에서 좌우로 끌면 탭 순서 바꾸기
+   - 창을 화면 왼쪽/오른쪽 끝으로 끌면 반 화면, 맨 위로 끌면 전체 화면
+     반으로 붙이면 다른 창이 남은 반쪽을 자동으로 채운다. 제목줄의 ◫ 버튼도 같은 동작
+   - 앱 화면(iframe)은 창 밖의 고정 층에 두고 창 위치에 맞춰 덮는다.
+     iframe을 DOM에서 옮기면 새로 고쳐지기 때문 (탭을 옮겨도 음악·읽던 위치가 그대로) */
 const winLayer = document.getElementById('winLayer');
 const tbApps = document.getElementById('tbApps');
-const wins = {};      // key -> { el, iframe, tb, min, max }
+const apps = {};   // key -> { key, host, iframe, tb, winId }
+const wins = {};   // winId -> { id, el, bar, tabsEl, body, tabs:[key], active, min, max, snap, prev }
 let zTop = 10;
-let activeKey = null;
-let cascade = 0;
+let activeWinId = null;
+let activeKey = null;   // 맨 앞 창의 보이는 앱
+let cascade = 0, winSeq = 0;
 
+const snapPreview = document.createElement('div');
+snapPreview.className = 'snap-preview';
+winLayer.appendChild(snapPreview);
+
+const CTRL_SPLIT = '<svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1.5" y="2" width="11" height="10" rx="1"/><path d="M7 2v10"/></svg>';
 const CTRL_MIN = '<svg width="11" height="11" viewBox="0 0 12 12"><path d="M1 6h10" stroke="currentColor" stroke-width="1.2"/></svg>';
 const CTRL_MAX = '<svg width="11" height="11" viewBox="0 0 12 12" fill="none"><rect x="1.5" y="1.5" width="9" height="9" stroke="currentColor" stroke-width="1.2"/></svg>';
 const CTRL_RESTORE = '<svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1.5" y="3.5" width="7" height="7"/><path d="M3.5 3.5V1.5h7v7h-2"/></svg>';
 const CTRL_CLOSE = '<svg width="11" height="11" viewBox="0 0 12 12"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9" stroke="currentColor" stroke-width="1.2"/></svg>';
+const TAB_CLOSE = '<svg width="9" height="9" viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.6"/></svg>';
+const MIN_W = 320, MIN_H = 200;
 
 function layerSize(){ return { w: winLayer.clientWidth, h: winLayer.clientHeight }; }
 
@@ -622,52 +655,25 @@ function buildAppHtml(key){
     : b64ToUtf8(document.getElementById('data-' + SOURCE_KEY[key]).textContent);
 }
 
-function openApp(key){
-  const existing = wins[key];
-  if(existing){
-    if(existing.min) setMin(key, false);
-    focusWin(key);
-    return;
-  }
-
-  const { w: LW, h: LH } = layerSize();
-  const el = document.createElement('div');
-  el.className = 'win';
-  el.innerHTML = `
-    <div class="win-bar">
-      <span class="wico">${iconSvg(ICON_BY_KEY[key], 16)}</span>
-      <span class="wtitle"></span>
-      <div class="win-ctrls">
-        <button data-act="min" title="최소화">${CTRL_MIN}</button>
-        <button data-act="max" title="최대화">${CTRL_MAX}</button>
-        <button data-act="close" class="x" title="닫기">${CTRL_CLOSE}</button>
-      </div>
-    </div>
-    <div class="win-body"><div class="loading-box"><div class="spinner"></div><span>불러오는 중...</span></div></div>
-    ${['n','s','e','w','ne','nw','se','sw'].map(d => `<div class="rz ${d}" data-dir="${d}"></div>`).join('')}`;
-  el.querySelector('.wtitle').textContent = APP_META[key].title;
-
-  const W = Math.min(1180, Math.max(320, LW - 120));
-  const H = Math.min(760, Math.max(200, LH - 90));
-  const off = (cascade++ % 6) * 28;
-  el.style.width = W + 'px';
-  el.style.height = H + 'px';
-  el.style.left = Math.max(0, Math.min(LW - W, Math.round((LW - W) / 2) - 70 + off)) + 'px';
-  el.style.top = Math.max(0, Math.min(LH - H, 40 + off)) + 'px';
-
+/* ---- 앱 (iframe + 작업 표시줄 버튼) ---- */
+function createApp(key){
+  const host = document.createElement('div');
+  host.className = 'app-host';
+  host.innerHTML = '<div class="loading-box"><div class="spinner"></div><span>불러오는 중...</span></div>';
   const iframe = document.createElement('iframe');
   iframe.srcdoc = buildAppHtml(key);
   iframe.addEventListener('load', () => {
-    const lb = el.querySelector('.loading-box');
+    const lb = host.querySelector('.loading-box');
     if(lb) lb.classList.add('hide');
     // srcdoc iframes are same-origin: clicks inside the app bring its window to front
     try{
-      iframe.contentWindow.addEventListener('pointerdown', () => focusWin(key), true);
-      iframe.contentWindow.addEventListener('focus', () => focusWin(key));
+      iframe.contentWindow.addEventListener('pointerdown', () => { if(apps[key]) focusWin(apps[key].winId); }, true);
+      iframe.contentWindow.addEventListener('focus', () => { if(apps[key]) focusWin(apps[key].winId); });
     }catch(_){}
   });
-  el.querySelector('.win-body').appendChild(iframe);
-  winLayer.appendChild(el);
+  host.appendChild(iframe);
+  host.addEventListener('pointerdown', () => { if(apps[key]) focusWin(apps[key].winId); }, true);
+  winLayer.appendChild(host);
 
   const tb = document.createElement('button');
   tb.className = 'tb-app';
@@ -675,82 +681,413 @@ function openApp(key){
   tb.innerHTML = iconSvg(ICON_BY_KEY[key], 16) + '<span></span>';
   tb.querySelector('span').textContent = APP_META[key].title;
   tb.addEventListener('click', () => {
-    const w = wins[key];
-    if(!w) return;
-    if(w.min){ setMin(key, false); focusWin(key); }
-    else if(activeKey === key) setMin(key, true);
-    else focusWin(key);
+    const a = apps[key]; if(!a) return;
+    const w = wins[a.winId];
+    if(w.min){ setMin(w.id, false); activateTab(w.id, key); focusWin(w.id); }
+    else if(activeWinId === w.id && w.active === key) setMin(w.id, true);
+    else{ activateTab(w.id, key); focusWin(w.id); }
   });
   tbApps.appendChild(tb);
 
-  wins[key] = { el, iframe, tb, min: false, max: false };
-  wireWindow(key);
-  if(LW < 700) setMax(key, true); // small screens: open full
-  focusWin(key);
+  apps[key] = { key, host, iframe, tb, winId: null };
+  return apps[key];
 }
 
-function focusWin(key){
-  const w = wins[key];
-  if(!w) return;
-  if(activeKey !== key || w.el.style.zIndex != zTop) w.el.style.zIndex = ++zTop;
-  activeKey = key;
-  Object.entries(wins).forEach(([k, x]) => {
-    const on = (k === key && !x.min);
-    x.el.classList.toggle('active', on);
-    x.tb.classList.toggle('active', on);
+/* ---- 창 ---- */
+function createWin(rect){
+  const id = 'w' + (++winSeq);
+  const el = document.createElement('div');
+  el.className = 'win';
+  el.dataset.win = id;
+  el.innerHTML = `
+    <div class="win-bar">
+      <div class="win-tabs"></div>
+      <div class="win-drag"></div>
+      <div class="win-ctrls">
+        <button data-act="split" title="반반 화면 (다른 창과 나란히)">${CTRL_SPLIT}</button>
+        <button data-act="min" title="최소화">${CTRL_MIN}</button>
+        <button data-act="max" title="최대화">${CTRL_MAX}</button>
+        <button data-act="close" class="x" title="창 닫기 (탭 모두)">${CTRL_CLOSE}</button>
+      </div>
+    </div>
+    <div class="win-body"></div>
+    ${['n','s','e','w','ne','nw','se','sw'].map(d => `<div class="rz ${d}" data-dir="${d}"></div>`).join('')}`;
+  el.style.left = rect.l + 'px'; el.style.top = rect.t + 'px';
+  el.style.width = rect.w + 'px'; el.style.height = rect.h + 'px';
+  winLayer.appendChild(el);
+  const w = { id, el, bar: el.querySelector('.win-bar'), tabsEl: el.querySelector('.win-tabs'), body: el.querySelector('.win-body'),
+              tabs: [], active: null, min: false, max: false, snap: null, prev: null };
+  wins[id] = w;
+  wireWindow(w);
+  return w;
+}
+
+function defaultRect(){
+  const { w: LW, h: LH } = layerSize();
+  const W = Math.min(1180, Math.max(MIN_W, LW - 120));
+  const H = Math.min(760, Math.max(MIN_H, LH - 90));
+  const off = (cascade++ % 6) * 28;
+  return {
+    l: Math.max(0, Math.min(LW - W, Math.round((LW - W) / 2) - 70 + off)),
+    t: Math.max(0, Math.min(LH - H, 40 + off)),
+    w: W, h: H,
+  };
+}
+
+function openApp(key){
+  const a = apps[key];
+  if(a){
+    const w = wins[a.winId];
+    if(w.min) setMin(w.id, false);
+    activateTab(w.id, key);
+    focusWin(w.id);
+    return;
+  }
+  createApp(key);
+  const w = createWin(defaultRect());
+  addTab(w.id, key);
+  if(layerSize().w < 700) setMax(w.id, true); // small screens: open full
+  focusWin(w.id);
+}
+
+function renderTabs(id){
+  const w = wins[id]; if(!w) return;
+  w.tabsEl.innerHTML = w.tabs.map(k => `
+    <div class="wtab${k === w.active ? ' on' : ''}" data-key="${k}" title="${APP_META[k].title}">
+      <span class="wico">${iconSvg(ICON_BY_KEY[k], 15)}</span>
+      <span class="wtitle">${APP_META[k].title}</span>
+      <button class="wtab-x" data-close="${k}" title="탭 닫기">${TAB_CLOSE}</button>
+    </div>`).join('');
+}
+
+/* 창의 보이는 탭 iframe을 창 본문 위치에 맞춰 덮기 */
+function syncWin(id){
+  const w = wins[id]; if(!w) return;
+  const el = w.el;
+  const z = +el.style.zIndex || 10;
+  const x = el.offsetLeft + el.clientLeft + w.body.offsetLeft;
+  const y = el.offsetTop + el.clientTop + w.body.offsetTop;
+  w.tabs.forEach(k => {
+    const h = apps[k].host;
+    const show = !w.min && k === w.active;
+    h.style.display = show ? 'block' : 'none';
+    if(!show) return;
+    // 가장자리 3px은 비워 둬서 창 크기 조절 손잡이를 잡을 수 있게
+    const inset = w.max ? 0 : 3;
+    h.style.left = (x + inset) + 'px'; h.style.top = y + 'px';
+    h.style.width = Math.max(0, w.body.clientWidth - inset * 2) + 'px';
+    h.style.height = Math.max(0, w.body.clientHeight - inset) + 'px';
+    h.style.zIndex = z + 1;
+    h.classList.toggle('flat', w.max);
+  });
+}
+function syncAll(){ Object.keys(wins).forEach(syncWin); }
+
+function addTab(id, key, index){
+  const w = wins[id];
+  apps[key].winId = id;
+  if(index == null || index > w.tabs.length) w.tabs.push(key);
+  else w.tabs.splice(index, 0, key);
+  w.active = key;
+  renderTabs(id);
+  syncWin(id);
+}
+function removeTab(id, key){
+  const w = wins[id];
+  const i = w.tabs.indexOf(key);
+  if(i < 0) return;
+  w.tabs.splice(i, 1);
+  if(w.active === key) w.active = w.tabs[Math.min(i, w.tabs.length - 1)] || null;
+  apps[key].host.style.display = 'none';
+  if(!w.tabs.length){ destroyWin(id); return; }
+  renderTabs(id);
+  syncWin(id);
+}
+function activateTab(id, key){
+  const w = wins[id];
+  if(!w || !w.tabs.includes(key)) return;
+  w.active = key;
+  renderTabs(id);
+  syncWin(id);
+  refreshActive();
+}
+function destroyWin(id){
+  const w = wins[id]; if(!w) return;
+  w.el.remove();
+  delete wins[id];
+  if(activeWinId === id) activeWinId = null;
+  refocusTop();
+  if(!Object.keys(wins).length) cascade = 0;
+}
+function closeApp(key){
+  const a = apps[key]; if(!a) return;
+  const id = a.winId;
+  if(wins[id]) removeTab(id, key);
+  a.host.remove();
+  a.tb.remove();
+  delete apps[key];
+  refreshActive();
+  refreshStorage();
+}
+
+function refreshActive(){
+  const w = activeWinId && wins[activeWinId];
+  activeKey = (w && !w.min) ? w.active : null;
+  Object.values(wins).forEach(x => x.el.classList.toggle('active', x.id === activeWinId && !x.min));
+  Object.values(apps).forEach(a => {
+    const aw = wins[a.winId];
+    a.tb.classList.toggle('active', !!aw && aw.id === activeWinId && !aw.min && aw.active === a.key);
+    a.tb.classList.toggle('minimized', !!aw && aw.min);
   });
 }
 
-function topVisibleKey(){
+function focusWin(id){
+  const w = wins[id];
+  if(!w) return;
+  if(activeWinId !== id || +w.el.style.zIndex !== zTop){
+    zTop += 2;
+    w.el.style.zIndex = zTop;
+  }
+  activeWinId = id;
+  syncWin(id);
+  refreshActive();
+}
+
+function topVisibleWin(exceptId){
   let best = null, bz = -1;
-  Object.entries(wins).forEach(([k, x]) => {
+  Object.values(wins).forEach(x => {
     const z = +x.el.style.zIndex || 0;
-    if(!x.min && z > bz){ bz = z; best = k; }
+    if(x.id !== exceptId && !x.min && z > bz){ bz = z; best = x.id; }
   });
   return best;
 }
-
 function refocusTop(){
-  const k = topVisibleKey();
-  if(k) focusWin(k);
-  else{
-    activeKey = null;
-    Object.values(wins).forEach(x => { x.el.classList.remove('active'); x.tb.classList.remove('active'); });
-  }
+  const id = topVisibleWin();
+  if(id) focusWin(id);
+  else{ activeWinId = null; refreshActive(); }
 }
 
-function setMin(key, on){
-  const w = wins[key];
+function setMin(id, on){
+  const w = wins[id];
   if(!w) return;
   w.min = on;
   w.el.classList.toggle('min', on);
-  w.tb.classList.toggle('minimized', on);
+  syncWin(id);
   if(on){
-    if(activeKey === key) activeKey = null;
+    if(activeWinId === id) activeWinId = null;
     refocusTop();
   }
+  refreshActive();
 }
 
-function setMax(key, on){
-  const w = wins[key];
+function setMax(id, on){
+  const w = wins[id];
   if(!w) return;
   w.max = on;
   w.el.classList.toggle('max', on);
   const b = w.el.querySelector('[data-act="max"]');
   b.innerHTML = on ? CTRL_RESTORE : CTRL_MAX;
   b.title = on ? '이전 크기로' : '최대화';
+  syncWin(id);
 }
 
-function closeWin(key){
-  const w = wins[key];
-  if(!w) return;
-  w.el.remove();
-  w.tb.remove();
-  delete wins[key];
-  if(activeKey === key) activeKey = null;
-  refocusTop();
-  if(!Object.keys(wins).length) cascade = 0;
-  refreshStorage();
+function rectOf(w){ return { l: w.el.offsetLeft, t: w.el.offsetTop, w: w.el.offsetWidth, h: w.el.offsetHeight }; }
+function applyRect(w, r){
+  w.el.style.left = r.l + 'px'; w.el.style.top = r.t + 'px';
+  w.el.style.width = r.w + 'px'; w.el.style.height = r.h + 'px';
+  syncWin(w.id);
+}
+function snapRect(side){
+  const { w: LW, h: LH } = layerSize();
+  const half = Math.round(LW / 2);
+  return side === 'left' ? { l: 0, t: 0, w: half, h: LH } : { l: half, t: 0, w: LW - half, h: LH };
+}
+
+/* 반 화면에 붙이기 (+ 남은 반쪽을 다른 창으로 채우기) */
+function snapWin(id, side, assist){
+  const w = wins[id]; if(!w) return;
+  if(w.max) setMax(id, false);
+  if(!w.snap) w.prev = rectOf(w);
+  w.snap = side;
+  applyRect(w, snapRect(side));
+  if(!assist) return;
+  const other = side === 'left' ? 'right' : 'left';
+  if(Object.values(wins).some(x => x.id !== id && !x.min && x.snap === other)) return; // 이미 차 있음
+  const cand = topVisibleWin(id) || Object.values(wins).filter(x => x.id !== id).sort((a, b) => (+b.el.style.zIndex) - (+a.el.style.zIndex)).map(x => x.id)[0];
+  if(cand){
+    if(wins[cand].min) setMin(cand, false);
+    snapWin(cand, other, false);
+  }
+}
+function unsnap(w){
+  if(!w.snap) return;
+  w.snap = null;
+  if(w.prev) applyRect(w, { l: w.el.offsetLeft, t: w.el.offsetTop, w: w.prev.w, h: w.prev.h });
+}
+
+/* ◫ 버튼: 다른 창이 있으면 나란히, 이 창만 있고 탭이 여러 개면 탭 하나를 떼어 나란히 */
+function splitWin(id){
+  const w = wins[id]; if(!w) return;
+  const others = Object.values(wins).filter(x => x.id !== id);
+  if(!others.length && w.tabs.length > 1){
+    const key = w.active;
+    removeTab(id, key);
+    const nw = createWin(rectOf(w));
+    addTab(nw.id, key);
+    snapWin(id, 'left', false);
+    snapWin(nw.id, 'right', false);
+    focusWin(nw.id);
+    return;
+  }
+  snapWin(id, 'left', true);
+  focusWin(id);
+}
+
+/* 끌기 중 다른 창 제목줄 위에 있는지 */
+function barUnder(x, y, exceptId){
+  let best = null, bz = -1;
+  Object.values(wins).forEach(w => {
+    if(w.id === exceptId || w.min) return;
+    const r = w.bar.getBoundingClientRect();
+    const z = +w.el.style.zIndex || 0;
+    if(x >= r.left && x <= r.right && y >= r.top - 6 && y <= r.bottom + 6 && z > bz){ bz = z; best = w.id; }
+  });
+  return best;
+}
+function mergeWin(srcId, dstId, insertAt){
+  const src = wins[srcId], dst = wins[dstId];
+  if(!src || !dst) return;
+  const keys = src.tabs.slice(), act = src.active;
+  keys.forEach(k => { apps[k].winId = dstId; });
+  if(insertAt == null || insertAt > dst.tabs.length) dst.tabs.push(...keys);
+  else dst.tabs.splice(insertAt, 0, ...keys);
+  dst.active = act;
+  src.tabs = [];
+  destroyWin(srcId);
+  renderTabs(dstId);
+  focusWin(dstId);
+}
+function tabInsertIndex(w, x){
+  const els = [...w.tabsEl.querySelectorAll('.wtab')];
+  for(let i = 0; i < els.length; i++){
+    const r = els[i].getBoundingClientRect();
+    if(x < r.left + r.width / 2) return i;
+  }
+  return els.length;
+}
+
+/* 제목줄/탭 끌기: 이동 · 탭 순서 · 분리 · 합치기 · 반 화면 */
+function barGesture(e, winId, tabKey){
+  let w = wins[winId];
+  const sx = e.clientX, sy = e.clientY;
+  let mode = 'pending';
+  let grabDX = 0, grabDY = 0;
+  let mergeTarget = null, snapZone = null;
+  const { w: LW, h: LH } = layerSize();
+  const layerTop = winLayer.getBoundingClientRect().top;
+
+  // 끄는 동안 iframe이 마우스 이벤트를 가로채지 않게
+  document.body.classList.add('dragging');
+  try{ e.target.setPointerCapture && w.bar.setPointerCapture(e.pointerId); }catch(_){}
+  const clearMergeHL = () => Object.values(wins).forEach(x => x.el.classList.remove('merge-target'));
+  const startMove = ev => {
+    mode = 'move';
+    document.body.classList.add('dragging');
+    if(w.max || w.snap){
+      // 최대화·반 화면 상태에서 끌면 원래 크기로 돌아가며 커서 아래에 붙는다
+      const ratio = (sx - w.el.getBoundingClientRect().left) / Math.max(1, w.el.offsetWidth);
+      const prev = w.prev || defaultRect();
+      if(w.max) setMax(w.id, false);
+      w.snap = null;
+      applyRect(w, { l: 0, t: 0, w: prev.w, h: prev.h });
+      grabDX = Math.round(w.el.offsetWidth * ratio);
+      grabDY = sy - layerTop;
+      grabDY = Math.min(grabDY, 30);
+    }else{
+      grabDX = sx - w.el.offsetLeft;
+      grabDY = sy - layerTop - w.el.offsetTop;
+    }
+  };
+  const moveTo = ev => {
+    const ww = w.el.offsetWidth;
+    const nx = Math.max(80 - ww, Math.min(LW - 80, ev.clientX - grabDX));
+    const ny = Math.max(0, Math.min(LH - 38, ev.clientY - layerTop - grabDY));
+    w.el.style.left = nx + 'px';
+    w.el.style.top = ny + 'px';
+    syncWin(w.id);
+    // 합치기 대상
+    const t = barUnder(ev.clientX, ev.clientY, w.id);
+    if(t !== mergeTarget){ clearMergeHL(); mergeTarget = t; if(t) wins[t].el.classList.add('merge-target'); }
+    // 반 화면 / 전체 화면
+    const px = ev.clientX, py = ev.clientY - layerTop;
+    snapZone = mergeTarget ? null : px <= 8 ? 'left' : px >= LW - 8 ? 'right' : py <= 2 ? 'max' : null;
+    if(snapZone){
+      const r = snapZone === 'max' ? { l: 0, t: 0, w: LW, h: LH } : snapRect(snapZone);
+      snapPreview.style.display = 'block';
+      snapPreview.style.left = r.l + 6 + 'px'; snapPreview.style.top = r.t + 6 + 'px';
+      snapPreview.style.width = r.w - 12 + 'px'; snapPreview.style.height = r.h - 12 + 'px';
+    }else snapPreview.style.display = 'none';
+  };
+  const move = ev => {
+    const dx = ev.clientX - sx, dy = ev.clientY - sy;
+    if(mode === 'pending'){
+      if(Math.abs(dx) + Math.abs(dy) < 5) return;
+      if(tabKey && w.tabs.length > 1) mode = 'tab';
+      else startMove(ev);
+    }
+    if(mode === 'tab'){
+      const br = w.bar.getBoundingClientRect();
+      if(ev.clientY > br.bottom + 26 || ev.clientY < br.top - 26){
+        // 탭 떼어내기 → 새 창으로, 그대로 끌고 다님
+        const src = w;
+        const r = rectOf(src);
+        removeTab(src.id, tabKey);
+        const nw = createWin({ l: 0, t: 0, w: src.max || src.snap ? (src.prev ? src.prev.w : r.w) : r.w, h: src.max || src.snap ? (src.prev ? src.prev.h : r.h) : r.h });
+        addTab(nw.id, tabKey);
+        focusWin(nw.id);
+        w = nw;
+        mode = 'move';
+        document.body.classList.add('dragging');
+        grabDX = 90; grabDY = 18;
+      }else{
+        // 같은 줄 안에서 탭 순서 바꾸기
+        const from = w.tabs.indexOf(tabKey);
+        let to = tabInsertIndex(w, ev.clientX);
+        if(to > from) to--;
+        if(to !== from){
+          w.tabs.splice(from, 1);
+          w.tabs.splice(to, 0, tabKey);
+          renderTabs(w.id);
+        }
+        const te = w.tabsEl.querySelector(`.wtab[data-key="${tabKey}"]`);
+        if(te) te.classList.add('dragging');
+        return;
+      }
+    }
+    if(mode === 'move') moveTo(ev);
+  };
+  const up = ev => {
+    window.removeEventListener('pointermove', move);
+    window.removeEventListener('pointerup', up);
+    window.removeEventListener('pointercancel', up);
+    document.body.classList.remove('dragging');
+    snapPreview.style.display = 'none';
+    clearMergeHL();
+    if(mode === 'tab'){ renderTabs(w.id); return; }
+    if(mode !== 'move') return;
+    if(mergeTarget && wins[mergeTarget]){
+      mergeWin(w.id, mergeTarget, tabInsertIndex(wins[mergeTarget], ev.clientX));
+    }else if(snapZone === 'max'){
+      w.prev = rectOf(w);
+      setMax(w.id, true);
+    }else if(snapZone){
+      snapWin(w.id, snapZone, true);
+      focusWin(w.id);
+    }
+  };
+  window.addEventListener('pointermove', move);
+  window.addEventListener('pointerup', up);
+  window.addEventListener('pointercancel', up);
 }
 
 function startPointerDrag(e, onMove){
@@ -769,50 +1106,42 @@ function startPointerDrag(e, onMove){
   window.addEventListener('pointercancel', up);
 }
 
-function wireWindow(key){
-  const w = wins[key];
-  const el = w.el;
-  const bar = el.querySelector('.win-bar');
-
-  el.addEventListener('pointerdown', () => focusWin(key), true);
+function wireWindow(w){
+  const el = w.el, bar = w.bar;
+  el.addEventListener('pointerdown', () => focusWin(w.id), true);
 
   el.querySelector('.win-ctrls').addEventListener('click', e => {
     const b = e.target.closest('button');
     if(!b) return;
     e.stopPropagation();
     const act = b.dataset.act;
-    if(act === 'min') setMin(key, true);
-    else if(act === 'max') setMax(key, !w.max);
-    else if(act === 'close') closeWin(key);
+    if(act === 'split') splitWin(w.id);
+    else if(act === 'min') setMin(w.id, true);
+    else if(act === 'max'){
+      if(!w.max && !w.snap) w.prev = rectOf(w);
+      if(!w.max && w.snap){ w.snap = null; }
+      setMax(w.id, !w.max);
+    }
+    else if(act === 'close') w.tabs.slice().forEach(closeApp);
+  });
+
+  w.tabsEl.addEventListener('click', e => {
+    const x = e.target.closest('[data-close]');
+    if(x){ e.stopPropagation(); closeApp(x.dataset.close); }
   });
 
   bar.addEventListener('dblclick', e => {
-    if(e.target.closest('.win-ctrls')) return;
-    setMax(key, !w.max);
+    if(e.target.closest('.win-ctrls, .wtab-x')) return;
+    if(!w.max){ if(!w.snap) w.prev = rectOf(w); w.snap = null; }
+    setMax(w.id, !w.max);
   });
 
-  // 제목 표시줄을 잡고 끌어서 이동
   bar.addEventListener('pointerdown', e => {
-    if(e.button !== 0 || e.target.closest('.win-ctrls')) return;
-    const { w: LW, h: LH } = layerSize();
-    let x0 = el.offsetLeft, y0 = el.offsetTop;
-    let wasMax = w.max;
-    startPointerDrag(e, (dx, dy, ev) => {
-      if(wasMax){
-        if(Math.abs(dx) + Math.abs(dy) < 6) return;
-        // 최대화 상태에서 끌면: 원래 크기로 돌아가며 커서 아래에 붙는다
-        const ratio = e.clientX / Math.max(1, LW);
-        setMax(key, false);
-        wasMax = false;
-        x0 = Math.round(e.clientX - el.offsetWidth * ratio);
-        y0 = 0;
-      }
-      const ww = el.offsetWidth;
-      const nx = Math.max(80 - ww, Math.min(LW - 80, x0 + dx));
-      const ny = Math.max(0, Math.min(LH - 38, y0 + dy));
-      el.style.left = nx + 'px';
-      el.style.top = ny + 'px';
-    });
+    if(e.button !== 0 || e.target.closest('.win-ctrls, .wtab-x')) return;
+    const tab = e.target.closest('.wtab');
+    const key = tab ? tab.dataset.key : null;
+    if(key) activateTab(w.id, key);
+    barGesture(e, w.id, key);
   });
 
   // 가장자리/모서리를 잡고 크기 조절
@@ -820,50 +1149,51 @@ function wireWindow(key){
     h.addEventListener('pointerdown', e => {
       if(e.button !== 0 || w.max) return;
       e.stopPropagation();
+      w.snap = null;
       const dir = h.dataset.dir;
       const { w: LW, h: LH } = layerSize();
       const x0 = el.offsetLeft, y0 = el.offsetTop, w0 = el.offsetWidth, h0 = el.offsetHeight;
-      const MINW = 320, MINH = 200;
       startPointerDrag(e, (dx, dy) => {
         let x = x0, y = y0, ww = w0, hh = h0;
-        if(dir.includes('e')) ww = Math.min(LW - x0, Math.max(MINW, w0 + dx));
-        if(dir.includes('s')) hh = Math.min(LH - y0, Math.max(MINH, h0 + dy));
-        if(dir.includes('w')){ ww = Math.max(MINW, w0 - dx); x = x0 + w0 - ww; if(x < 0){ ww += x; x = 0; } }
-        if(dir.includes('n')){ hh = Math.max(MINH, h0 - dy); y = y0 + h0 - hh; if(y < 0){ hh += y; y = 0; } }
-        el.style.left = x + 'px'; el.style.top = y + 'px';
-        el.style.width = ww + 'px'; el.style.height = hh + 'px';
+        if(dir.includes('e')) ww = Math.min(LW - x0, Math.max(MIN_W, w0 + dx));
+        if(dir.includes('s')) hh = Math.min(LH - y0, Math.max(MIN_H, h0 + dy));
+        if(dir.includes('w')){ ww = Math.max(MIN_W, w0 - dx); x = x0 + w0 - ww; if(x < 0){ ww += x; x = 0; } }
+        if(dir.includes('n')){ hh = Math.max(MIN_H, h0 - dy); y = y0 + h0 - hh; if(y < 0){ hh += y; y = 0; } }
+        applyRect(w, { l: x, t: y, w: ww, h: hh });
       });
     });
   });
 }
 
-// 창이 화면 밖으로 사라지지 않게 (브라우저 크기 바뀔 때)
+// 브라우저 크기가 바뀌면: 반 화면 창은 다시 반으로, 나머지는 화면 안으로
 window.addEventListener('resize', () => {
   const { w: LW, h: LH } = layerSize();
-  Object.values(wins).forEach(x => {
-    const el = x.el;
-    if(el.offsetWidth > LW) el.style.width = Math.max(320, LW) + 'px';
-    if(el.offsetHeight > LH) el.style.height = Math.max(200, LH) + 'px';
+  Object.values(wins).forEach(w => {
+    const el = w.el;
+    if(w.snap){ applyRect(w, snapRect(w.snap)); return; }
+    if(el.offsetWidth > LW) el.style.width = Math.max(MIN_W, LW) + 'px';
+    if(el.offsetHeight > LH) el.style.height = Math.max(MIN_H, LH) + 'px';
     el.style.left = Math.max(80 - el.offsetWidth, Math.min(LW - 80, el.offsetLeft)) + 'px';
     el.style.top = Math.max(0, Math.min(LH - 38, el.offsetTop)) + 'px';
   });
+  syncAll();
 });
 
 document.getElementById('showDesktopBtn').addEventListener('click', () => {
-  const keys = Object.keys(wins);
-  const anyOpen = keys.some(k => !wins[k].min);
-  keys.forEach(k => setMin(k, anyOpen));
+  const ids = Object.keys(wins);
+  const anyOpen = ids.some(id => !wins[id].min);
+  ids.forEach(id => setMin(id, anyOpen));
   if(!anyOpen) refocusTop();
 });
 
 /* 창 제목 표시줄을 누른 직후처럼 포커스가 허브에 있을 때도
    방향키 등은 맨 앞 창의 앱으로 전달한다 (웹툰 ←/→ 이전화·다음화 등) */
 document.addEventListener('keydown', e => {
-  if(!activeKey || !wins[activeKey] || wins[activeKey].min) return;
+  if(!activeKey || !apps[activeKey]) return;
   if(bgPicker.classList.contains('show')) return;
   if(e.target && e.target.closest && e.target.closest('input,textarea,select')) return;
   try{
-    const doc = wins[activeKey].iframe.contentDocument;
+    const doc = apps[activeKey].iframe.contentDocument;
     if(!doc) return;
     const target = doc.activeElement || doc.body;
     const fwd = new KeyboardEvent('keydown', {
