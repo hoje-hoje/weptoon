@@ -14,7 +14,7 @@
     --chip-bg:rgba(0,0,0,.45); --chip-line:rgba(255,255,255,.18);
     --label:#fff; --label-shadow:0 1px 2px rgba(0,0,0,.95),0 0 6px rgba(0,0,0,.7),0 0 1px rgba(0,0,0,1);
     --wp1:#22314a; --wp2:#2a1f3d; --wp3:#161c28; --wp4:#0d121b; --wp5:#090c12;
-    --win-bar:#161a24; --win-bar-active:#1d2230; --win-line:#2a3142;
+    --win-bar:#0c0e14; --win-bar-active:#10131b; --tab-on:#242a38; --win-line:#2a3142;
     --taskbar:#0e1118;
     --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Pretendard",sans-serif;
   }
@@ -23,7 +23,7 @@
     --panel:#ffffff; --line:#e3e6ee;
     --text:#1c2333; --sub:#6b7288;
     --accent:#1cb894;
-    --win-bar:#eef0f5; --win-bar-active:#ffffff; --win-line:#cfd4df;
+    --win-bar:#d9dde7; --win-bar-active:#e3e7ef; --tab-on:#ffffff; --win-line:#cfd4df;
     --taskbar:#f6f7fb;
   }
   *{box-sizing:border-box;}
@@ -89,18 +89,30 @@
   .win-bar{height:38px;flex-shrink:0;display:flex;align-items:flex-end;gap:0;padding:0 0 0 6px;
     background:var(--win-bar);border-bottom:1px solid var(--win-line);cursor:default;user-select:none;-webkit-user-select:none;touch-action:none;}
   .win.active .win-bar{background:var(--win-bar-active);}
+  .win{background:var(--tab-on);}
   .win.merge-target .win-bar{background:color-mix(in srgb, var(--accent) 22%, var(--win-bar-active));box-shadow:inset 0 0 0 2px var(--accent);}
   /* 크롬처럼 탭: 끌어서 다른 창 제목줄에 놓으면 합쳐지고, 밖으로 끌면 분리 */
-  .win-tabs{display:flex;align-items:flex-end;gap:2px;min-width:0;flex:0 1 auto;height:100%;padding-top:5px;overflow:hidden;}
-  .wtab{position:relative;display:flex;align-items:center;gap:7px;height:33px;min-width:56px;max-width:210px;flex:0 1 210px;
-    padding:0 6px 0 11px;border-radius:9px 9px 0 0;color:var(--sub);font-size:12px;font-weight:700;cursor:default;}
-  .wtab:hover{background:rgba(128,128,128,.12);}
-  .wtab.on{background:var(--panel);color:var(--text);box-shadow:0 1px 0 var(--panel);}
-  .win.active .wtab.on{color:var(--text);}
-  .wtab.dragging{opacity:.75;}
+  .win-tabs{position:relative;display:flex;align-items:flex-end;gap:0;min-width:0;flex:0 1 auto;height:100%;padding:6px 0 0 4px;overflow:hidden;}
+  .wtab{position:relative;display:flex;align-items:center;gap:7px;height:32px;min-width:56px;max-width:220px;flex:0 1 220px;
+    padding:0 7px 0 12px;border-radius:9px 9px 0 0;color:var(--sub);font-size:12px;font-weight:700;cursor:default;
+    transition:transform .16s ease, background .12s;}
+  /* 탭 사이 구분선 (크롬처럼: 선택된 탭 양옆과 마우스 올린 탭에선 숨김) */
+  .wtab::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:var(--win-line);}
+  .wtab:first-child::before, .wtab.on::before, .wtab.on + .wtab::before, .wtab:hover::before, .wtab:hover + .wtab::before{display:none;}
+  .wtab:hover{background:rgba(128,128,128,.13);}
+  /* 선택된 탭은 아래 앱 화면과 이어 붙고, 아래 모서리가 바깥으로 휘어짐 */
+  .wtab.on{background:var(--tab-on);color:var(--text);z-index:2;box-shadow:0 1px 0 var(--tab-on);}
+  .wtab.on::after{content:'';position:absolute;bottom:0;left:-8px;right:-8px;height:8px;pointer-events:none;
+    background:
+      radial-gradient(circle at 0 0, transparent 7.5px, var(--tab-on) 8px) left bottom/8px 8px no-repeat,
+      radial-gradient(circle at 100% 0, transparent 7.5px, var(--tab-on) 8px) right bottom/8px 8px no-repeat;}
+  .win:not(.active) .wtab.on{color:var(--sub);}
   .wtab .wico{width:16px;height:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
   .wtab .wtitle{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .wtab-x{width:20px;height:20px;border-radius:6px;border:none;background:none;color:inherit;cursor:pointer;flex-shrink:0;
+  .win-tabs.reordering .wtab::before{display:none;}
+  .wtab.dragging{transition:none;z-index:5;background:var(--tab-on);color:var(--text);box-shadow:0 4px 14px rgba(0,0,0,.35);}
+  .tab-insert{position:absolute;top:8px;bottom:4px;width:3px;border-radius:2px;background:var(--accent);display:none;pointer-events:none;z-index:6;}
+  .wtab-x{width:20px;height:20px;border-radius:50%;border:none;background:none;color:inherit;cursor:pointer;flex-shrink:0;
     display:flex;align-items:center;justify-content:center;opacity:.6;padding:0;}
   .wtab-x:hover{background:rgba(128,128,128,.25);opacity:1;}
   .win-drag{flex:1;min-width:24px;height:100%;}
@@ -109,7 +121,7 @@
     display:flex;align-items:center;justify-content:center;opacity:.75;}
   .win-ctrls button:hover{background:rgba(128,128,128,.18);opacity:1;}
   .win-ctrls button.x:hover{background:#e81123;color:#fff;}
-  .win-body{position:relative;flex:1;min-height:0;background:var(--bg);}
+  .win-body{position:relative;flex:1;min-height:0;background:var(--tab-on);}
   /* 앱 화면(iframe)은 창 안이 아니라 이 층에 두고 창 위치에 맞춰 덮는다 → 탭을 옮겨도 앱이 새로 고쳐지지 않음 */
   .app-host{position:absolute;display:none;pointer-events:auto;background:#000;overflow:hidden;border-radius:0 0 7px 7px;}
   .app-host.flat{border-radius:0;}
@@ -976,13 +988,71 @@ function tabInsertIndex(w, x){
   return els.length;
 }
 
+/* ---- 같은 창 안 탭 순서 바꾸기 (크롬처럼 따라오고 비켜 주기) ---- */
+function beginTabDrag(w, key){
+  const els = [...w.tabsEl.querySelectorAll('.wtab')];
+  const rects = els.map(e => e.getBoundingClientRect());
+  const from = w.tabs.indexOf(key);
+  const stripR = w.tabsEl.getBoundingClientRect();
+  const el = els[from];
+  el.classList.add('dragging');
+  w.tabsEl.classList.add('reordering');
+  const gap = rects.length > 1 ? Math.max(0, rects[1].left - rects[0].right) : 0;
+  return { w, key, els, rects, from, to: from, el, stripR, step: rects[from].width + gap };
+}
+function moveTabDrag(d, dx){
+  if(!d) return;
+  const r0 = d.rects[d.from];
+  const slack = r0.width * 0.6; // 맨 끝 탭 너머까지 조금 더 끌 수 있게
+  dx = Math.max(d.stripR.left - r0.left - slack, Math.min(d.stripR.right - r0.right + slack, dx));
+  d.el.style.transform = `translateX(${dx}px)`;
+  const center = r0.left + r0.width / 2 + dx;
+  let to = 0;
+  d.rects.forEach((r, i) => { if(i !== d.from && center > r.left + r.width / 2) to++; });
+  d.to = to;
+  d.els.forEach((e, i) => {
+    if(i === d.from) return;
+    let shift = 0;
+    if(d.from < d.to && i > d.from && i <= d.to) shift = -d.step;
+    if(d.to < d.from && i >= d.to && i < d.from) shift = d.step;
+    e.style.transform = shift ? `translateX(${shift}px)` : '';
+  });
+}
+function endTabDrag(d, commit){
+  if(!d) return;
+  d.w.tabsEl.classList.remove('reordering');
+  d.els.forEach(e => { e.style.transform = ''; e.classList.remove('dragging'); });
+  if(commit && d.to !== d.from && wins[d.w.id]){
+    const tabs = d.w.tabs;
+    tabs.splice(d.from, 1);
+    tabs.splice(d.to, 0, d.key);
+  }
+  if(wins[d.w.id]) renderTabs(d.w.id);
+}
+
+/* 다른 창에 합칠 때 들어갈 자리 표시 */
+const tabInsertMark = document.createElement('div');
+tabInsertMark.className = 'tab-insert';
+function showTabInsert(w, idx){
+  const els = [...w.tabsEl.querySelectorAll('.wtab')];
+  const sr = w.tabsEl.getBoundingClientRect();
+  let x;
+  if(!els.length) x = 0;
+  else if(idx < els.length) x = els[idx].getBoundingClientRect().left - sr.left - 2;
+  else x = els[els.length - 1].getBoundingClientRect().right - sr.left + 1;
+  if(tabInsertMark.parentNode !== w.tabsEl) w.tabsEl.appendChild(tabInsertMark);
+  tabInsertMark.style.left = Math.max(0, x) + 'px';
+  tabInsertMark.style.display = 'block';
+}
+function hideTabInsert(){ tabInsertMark.style.display = 'none'; }
+
 /* 제목줄/탭 끌기: 이동 · 탭 순서 · 분리 · 합치기 · 반 화면 */
 function barGesture(e, winId, tabKey){
   let w = wins[winId];
   const sx = e.clientX, sy = e.clientY;
   let mode = 'pending';
   let grabDX = 0, grabDY = 0;
-  let mergeTarget = null, snapZone = null;
+  let mergeTarget = null, snapZone = null, tabDrag = null;
   const { w: LW, h: LH } = layerSize();
   const layerTop = winLayer.getBoundingClientRect().top;
 
@@ -1018,6 +1088,7 @@ function barGesture(e, winId, tabKey){
     // 합치기 대상
     const t = barUnder(ev.clientX, ev.clientY, w.id);
     if(t !== mergeTarget){ clearMergeHL(); mergeTarget = t; if(t) wins[t].el.classList.add('merge-target'); }
+    if(mergeTarget) showTabInsert(wins[mergeTarget], tabInsertIndex(wins[mergeTarget], ev.clientX)); else hideTabInsert();
     // 반 화면 / 전체 화면
     const px = ev.clientX, py = ev.clientY - layerTop;
     snapZone = mergeTarget ? null : px <= 8 ? 'left' : px >= LW - 8 ? 'right' : py <= 2 ? 'max' : null;
@@ -1032,13 +1103,14 @@ function barGesture(e, winId, tabKey){
     const dx = ev.clientX - sx, dy = ev.clientY - sy;
     if(mode === 'pending'){
       if(Math.abs(dx) + Math.abs(dy) < 5) return;
-      if(tabKey && w.tabs.length > 1) mode = 'tab';
+      if(tabKey && w.tabs.length > 1){ mode = 'tab'; tabDrag = beginTabDrag(w, tabKey); }
       else startMove(ev);
     }
     if(mode === 'tab'){
       const br = w.bar.getBoundingClientRect();
       if(ev.clientY > br.bottom + 26 || ev.clientY < br.top - 26){
         // 탭 떼어내기 → 새 창으로, 그대로 끌고 다님
+        endTabDrag(tabDrag, false); tabDrag = null;
         const src = w;
         const r = rectOf(src);
         removeTab(src.id, tabKey);
@@ -1050,17 +1122,8 @@ function barGesture(e, winId, tabKey){
         document.body.classList.add('dragging');
         grabDX = 90; grabDY = 18;
       }else{
-        // 같은 줄 안에서 탭 순서 바꾸기
-        const from = w.tabs.indexOf(tabKey);
-        let to = tabInsertIndex(w, ev.clientX);
-        if(to > from) to--;
-        if(to !== from){
-          w.tabs.splice(from, 1);
-          w.tabs.splice(to, 0, tabKey);
-          renderTabs(w.id);
-        }
-        const te = w.tabsEl.querySelector(`.wtab[data-key="${tabKey}"]`);
-        if(te) te.classList.add('dragging');
+        // 같은 줄 안에서 좌우로 끌기: 탭이 마우스를 따라오고 옆 탭들이 비켜 준다
+        moveTabDrag(tabDrag, dx);
         return;
       }
     }
@@ -1073,7 +1136,8 @@ function barGesture(e, winId, tabKey){
     document.body.classList.remove('dragging');
     snapPreview.style.display = 'none';
     clearMergeHL();
-    if(mode === 'tab'){ renderTabs(w.id); return; }
+    if(mode === 'tab'){ endTabDrag(tabDrag, true); tabDrag = null; return; }
+    hideTabInsert();
     if(mode !== 'move') return;
     if(mergeTarget && wins[mergeTarget]){
       mergeWin(w.id, mergeTarget, tabInsertIndex(wins[mergeTarget], ev.clientX));
