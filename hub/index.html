@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HYOJE HUB</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a0c11">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
 <style>
   :root{
     --bg:#0a0c11; --bg2:#0d121b;
@@ -182,6 +187,23 @@
   .bg-actions{display:flex;justify-content:flex-end;gap:10px;}
   .bg-actions button{padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:1px solid var(--line);background:none;color:var(--text);}
   .bg-actions .primary{background:var(--accent);color:#06121a;border:none;}
+  .bg-actions .danger{margin-right:auto;border-color:#5a2a2a;color:#ff8a87;}
+  /* 링크 앱 */
+  .lico{position:relative;display:inline-flex;align-items:center;justify-content:center;border-radius:22%;overflow:hidden;flex-shrink:0;
+    background:var(--c);color:#0b0e14;font-weight:800;line-height:1;}
+  .lico b{font-weight:800;}
+  .lico img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:8%;}
+  .tile .chip .lico{width:var(--ico,24px) !important;height:var(--ico,24px) !important;}
+  .fld{display:block;font-size:12px;color:var(--sub);margin-bottom:12px;}
+  .fld input,.fld select{display:block;width:100%;margin-top:6px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);
+    background:var(--bg);color:var(--text);font-size:13.5px;outline:none;}
+  .fld input:focus,.fld select:focus{border-color:var(--accent);}
+  .link-hint{font-size:12px;line-height:1.55;color:var(--sub);margin:-2px 0 16px;min-height:18px;}
+  .link-hint.warn{color:#f5b93a;}
+  .toast{position:fixed;left:50%;bottom:60px;transform:translateX(-50%);z-index:9800;padding:10px 16px;border-radius:10px;
+    background:var(--panel);color:var(--text);border:1px solid var(--line);font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,.35);
+    opacity:0;pointer-events:none;transition:opacity .2s;}
+  .toast.show{opacity:1;}
 </style>
 </head>
 <body>
@@ -211,10 +233,38 @@
   <div class="icon-grid" id="iconGrid"></div>
 </div>
 
+<div class="desk-menu" id="tileMenu"></div>
+<div class="toast" id="toast"></div>
+
+<div class="bg-picker" id="linkDlg">
+  <div class="bg-card">
+    <h2 id="linkDlgTitle">링크 앱 추가</h2>
+    <p>자주 가는 사이트를 바탕화면 앱으로 만들어요. 앱 목록은 이 브라우저에 저장돼서 꺼다 켜도, 인터넷이 끊겨도 남아 있어요. (사이트 내용을 보려면 인터넷이 필요해요)</p>
+    <label class="fld">주소<input id="linkUrl" type="url" placeholder="https://www.youtube.com" autocomplete="off" spellcheck="false"></label>
+    <label class="fld">이름<input id="linkName" type="text" placeholder="YouTube" autocomplete="off" maxlength="24"></label>
+    <label class="fld">여는 방식
+      <select id="linkMode">
+        <option value="popup">새 창으로 (추천)</option>
+        <option value="tab">새 탭으로</option>
+        <option value="inapp">허브 창 안에서 (되는 사이트만)</option>
+      </select>
+    </label>
+    <div class="link-hint" id="linkHint"></div>
+    <div class="bg-actions">
+      <button class="danger" id="linkDelete" style="display:none">앱 삭제</button>
+      <button id="linkCancel">취소</button>
+      <button class="primary" id="linkSave">추가</button>
+    </div>
+  </div>
+</div>
+
 <div class="desk-menu" id="deskMenu">
   <button data-size="large">큰 아이콘</button>
   <button data-size="medium">보통 아이콘</button>
   <button data-size="small">작은 아이콘</button>
+  <div class="sep"></div>
+  <button data-act="addlink">링크 앱 추가</button>
+  <button data-act="install" id="installMenuBtn" style="display:none">HYOJE HUB 앱으로 설치</button>
   <div class="sep"></div>
   <button data-act="arrange">아이콘 자동 정렬</button>
   <button data-act="bg">배경 바꾸기</button>
@@ -313,7 +363,7 @@ render();
 }
 
 /* ===== Home icon grid ===== */
-const ICONS = [
+const BASE_ICONS = [
   { key:'image', label:'이미지', color:'#57f0c1',
     svg:'<rect x="3" y="4.5" width="18" height="15" rx="2"/><circle cx="8.3" cy="9.5" r="1.5"/><path d="M21 15.5l-5.3-5.1a2 2 0 0 0-2.8 0L4 19"/>' },
   { key:'webtoon', label:'웹툰', color:'#c17bff',
@@ -331,7 +381,45 @@ const ICONS = [
   { key:'bg', label:'배경 바꾸기', color:'#e7ecf5',
     svg:'<rect x="3" y="5" width="13.5" height="11" rx="2"/><circle cx="7.6" cy="9.5" r="1.15"/><path d="M16.5 12.6l-3-2.9a1.5 1.5 0 0 0-2.1 0L6 15"/><path d="M19.2 14.5v4.6M17 16.8h4.4"/>' },
 ];
-const ICON_BY_KEY = Object.fromEntries(ICONS.map(ic => [ic.key, ic]));
+/* ===== 링크 앱 (유튜브·Claude 같은 사이트를 바탕화면 앱으로) =====
+   목록은 이 브라우저(localStorage)에 저장 → 인터넷이 끊겨도, 껐다 켜도 남아 있다 */
+const LINKS_KEY = 'hub_links';
+let links = [];
+try{ links = JSON.parse(localStorage.getItem(LINKS_KEY) || '[]') || []; }catch(_){ links = []; }
+function saveLinks(){ try{ localStorage.setItem(LINKS_KEY, JSON.stringify(links)); }catch(_){} }
+function linkKey(l){ return 'link:' + l.id; }
+function linkOf(key){ return key && key.startsWith('link:') ? links.find(l => linkKey(l) === key) : null; }
+function linkColor(host){
+  let h = 0; for(const ch of host) h = (h * 31 + ch.charCodeAt(0)) % 360;
+  return `hsl(${h} 70% 62%)`;
+}
+const ADD_ICON = { key:'addlink', label:'링크 앱 추가', color:'#9fe3ff',
+  svg:'<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/>' };
+const ICONS = [];
+const ICON_BY_KEY = {};
+function rebuildIconList(){
+  const bg = BASE_ICONS.find(ic => ic.key === 'bg');
+  const list = BASE_ICONS.filter(ic => ic.key !== 'bg');
+  links.forEach(l => {
+    let host = l.url; try{ host = new URL(l.url).hostname; }catch(_){}
+    list.push({ key: linkKey(l), label: l.name, color: linkColor(host), link: l, host });
+    APP_META[linkKey(l)] = { title: l.name };
+  });
+  list.push(ADD_ICON, bg);
+  ICONS.length = 0; ICONS.push(...list);
+  Object.keys(ICON_BY_KEY).forEach(k => delete ICON_BY_KEY[k]);
+  ICONS.forEach(ic => { ICON_BY_KEY[ic.key] = ic; });
+}
+rebuildIconList();
+/* 링크 앱 아이콘: 사이트 파비콘 (못 불러오면 첫 글자) */
+function iconHtml(ic, size){
+  if(!ic) return '';
+  if(!ic.link) return iconSvg(ic, size);
+  const letter = (ic.label || '?').trim().charAt(0).toUpperCase();
+  const fav = 'https://www.google.com/s2/favicons?sz=64&domain=' + encodeURIComponent(ic.host || '');
+  return `<span class="lico" style="width:${size}px;height:${size}px;--c:${ic.color};font-size:${Math.round(size * .62)}px">` +
+    `<b>${letter.replace(/[<>&"]/g, '')}</b><img src="${fav}" alt="" draggable="false" onerror="this.remove()"></span>`;
+}
 function iconSvg(ic, size){
   return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${ic.color}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ic.svg}</svg>`;
 }
@@ -481,16 +569,21 @@ function planDrop(keys){
   return plan;
 }
 
-ICONS.forEach(ic => {
+function tileInner(ic){
+  return `
+    <span class="chip" style="background:rgba(6,8,13,.82);border:1px solid ${ic.color}55;">${iconHtml(ic, 24)}</span>
+    <span class="label"></span>`;
+}
+function makeTile(ic){
   const btn = document.createElement('button');
   btn.className = 'tile';
-  btn.innerHTML = `
-    <span class="chip" style="background:rgba(6,8,13,.82);border:1px solid ${ic.color}55;">${iconSvg(ic, 24)}</span>
-    <span class="label">${ic.label}</span>`;
+  btn.innerHTML = tileInner(ic);
+  btn.querySelector('.label').textContent = ic.label;
   let dragged = false, toggledOnly = false;
   btn.addEventListener('click', e => {
     if(dragged || toggledOnly){ dragged = false; toggledOnly = false; e.preventDefault(); return; }
     if(ic.key === 'bg') openBgPicker();
+    else if(ic.key === 'addlink') openLinkDlg(null);
     else openApp(ic.key); // music app itself defaults to its video(MP4) home
   });
 
@@ -559,9 +652,24 @@ ICONS.forEach(ic => {
     window.addEventListener('pointercancel', up);
   });
 
+  btn.addEventListener('contextmenu', e => { e.preventDefault(); e.stopPropagation(); openTileMenu(ic.key, e); });
   tiles[ic.key] = btn;
   iconGrid.appendChild(btn);
-});
+}
+ICONS.forEach(makeTile);
+/* 링크 앱이 추가·수정·삭제되면 바탕화면 아이콘 다시 맞추기 */
+function refreshTiles(){
+  rebuildIconList();
+  Object.keys(tiles).forEach(k => {
+    if(!ICON_BY_KEY[k]){ tiles[k].remove(); delete tiles[k]; selected.delete(k); delete iconPt[k]; }
+  });
+  ICONS.forEach(ic => {
+    if(!tiles[ic.key]) makeTile(ic);
+    else if(ic.link){ tiles[ic.key].innerHTML = tileInner(ic); tiles[ic.key].querySelector('.label').textContent = ic.label; }
+  });
+  saveIconPt();
+  layoutIcons();
+}
 layoutIcons();
 window.addEventListener('resize', layoutIcons);
 
@@ -631,6 +739,8 @@ deskMenu.addEventListener('click', e => {
   if(b.dataset.size) setIconSize(b.dataset.size);
   else if(b.dataset.act === 'arrange') arrangeIcons();
   else if(b.dataset.act === 'bg') openBgPicker();
+  else if(b.dataset.act === 'addlink') openLinkDlg(null);
+  else if(b.dataset.act === 'install') promptInstall();
 });
 
 /* ===== Windows =====
@@ -678,7 +788,12 @@ function createApp(key){
   host.className = 'app-host';
   host.innerHTML = '<div class="loading-box"><div class="spinner"></div><span>불러오는 중...</span></div>';
   const iframe = document.createElement('iframe');
-  iframe.srcdoc = buildAppHtml(key);
+  const link = linkOf(key);
+  if(link){
+    iframe.src = link.url; // 다른 사이트: 허브 창 안에 그대로 띄움 (사이트가 막아 두면 빈 화면)
+    iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media');
+    iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+  }else iframe.srcdoc = buildAppHtml(key);
   iframe.addEventListener('load', () => {
     const lb = host.querySelector('.loading-box');
     if(lb) lb.classList.add('hide');
@@ -695,7 +810,7 @@ function createApp(key){
   const tb = document.createElement('button');
   tb.className = 'tb-app';
   tb.title = APP_META[key].title;
-  tb.innerHTML = iconSvg(ICON_BY_KEY[key], 16) + '<span></span>';
+  tb.innerHTML = iconHtml(ICON_BY_KEY[key], 16) + '<span></span>';
   tb.querySelector('span').textContent = APP_META[key].title;
   tb.addEventListener('click', () => {
     const a = apps[key]; if(!a) return;
@@ -751,7 +866,21 @@ function defaultRect(){
   };
 }
 
+function escHtml(t){ return String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function openApp(key){
+  const link = linkOf(key);
+  if(link && link.mode !== 'inapp'){
+    if(!navigator.onLine) toast('인터넷이 끊겨 있어요. 연결되면 다시 눌러 주세요.');
+    if(link.mode === 'tab') window.open(link.url, '_blank', 'noopener');
+    else{
+      const W = Math.min(1280, screen.availWidth - 80), H = Math.min(860, screen.availHeight - 80);
+      const L = Math.round((screen.availWidth - W) / 2), T = Math.round((screen.availHeight - H) / 2);
+      const win = window.open(link.url, 'hyoje_' + link.id, `popup=yes,width=${W},height=${H},left=${L},top=${T}`);
+      if(!win) window.open(link.url, '_blank', 'noopener'); // 팝업이 막혔으면 새 탭
+    }
+    return;
+  }
+  if(link && !navigator.onLine) toast('인터넷이 끊겨 있어서 사이트가 안 열릴 수 있어요.');
   const a = apps[key];
   if(a){
     const w = wins[a.winId];
@@ -770,9 +899,9 @@ function openApp(key){
 function renderTabs(id){
   const w = wins[id]; if(!w) return;
   w.tabsEl.innerHTML = w.tabs.map(k => `
-    <div class="wtab${k === w.active ? ' on' : ''}" data-key="${k}" title="${APP_META[k].title}">
-      <span class="wico">${iconSvg(ICON_BY_KEY[k], 15)}</span>
-      <span class="wtitle">${APP_META[k].title}</span>
+    <div class="wtab${k === w.active ? ' on' : ''}" data-key="${k}" title="${escHtml(APP_META[k].title)}">
+      <span class="wico">${iconHtml(ICON_BY_KEY[k], 15)}</span>
+      <span class="wtitle">${escHtml(APP_META[k].title)}</span>
       <button class="wtab-x" data-close="${k}" title="탭 닫기">${TAB_CLOSE}</button>
     </div>`).join('');
 }
@@ -1256,6 +1385,14 @@ document.getElementById('showDesktopBtn').addEventListener('click', () => {
   if(!anyOpen) refocusTop();
 });
 
+/* 다른 사이트(iframe)를 클릭하면 허브는 그 클릭을 못 받으므로, 포커스가 iframe으로 넘어간 걸 보고 창을 앞으로 */
+window.addEventListener('blur', () => setTimeout(() => {
+  const a = document.activeElement;
+  if(!a || a.tagName !== 'IFRAME') return;
+  const app = Object.values(apps).find(x => x.iframe === a);
+  if(app && app.winId) focusWin(app.winId);
+}, 0));
+
 /* 작업 표시줄 자동 숨김: 보이는 창이 없으면 항상 보이고,
    창이 있으면 화면 맨 아래에 마우스를 댈 때만 올라온다 */
 const taskbarEl = document.getElementById('taskbar');
@@ -1301,6 +1438,201 @@ document.addEventListener('keydown', e => {
     if(fwd.defaultPrevented) e.preventDefault();
   }catch(_){}
 });
+
+
+/* ===== 알림 ===== */
+let toastTimer = null;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* ===== 링크 앱 추가 / 수정 / 삭제 ===== */
+const linkDlg = document.getElementById('linkDlg');
+const linkUrl = document.getElementById('linkUrl');
+const linkName = document.getElementById('linkName');
+const linkMode = document.getElementById('linkMode');
+const linkHint = document.getElementById('linkHint');
+const linkDelete = document.getElementById('linkDelete');
+let editingLinkId = null;
+let nameTouched = false;
+const KNOWN_SITES = {
+  'youtube.com':'YouTube', 'youtu.be':'YouTube', 'music.youtube.com':'YouTube Music', 'claude.ai':'Claude',
+  'chatgpt.com':'ChatGPT', 'google.com':'Google', 'gemini.google.com':'Gemini', 'naver.com':'NAVER', 'comic.naver.com':'네이버 웹툰',
+  'netflix.com':'Netflix', 'instagram.com':'Instagram', 'x.com':'X', 'twitter.com':'X', 'github.com':'GitHub',
+  'notion.so':'Notion', 'docs.google.com':'Google Docs', 'drive.google.com':'Google Drive', 'mail.google.com':'Gmail',
+  'spotify.com':'Spotify', 'open.spotify.com':'Spotify', 'twitch.tv':'Twitch', 'chzzk.naver.com':'치지직', 'soundcloud.com':'SoundCloud',
+};
+// 다른 페이지 안에 띄우는 걸 막아 둔 대표 사이트들
+const NO_FRAME = ['youtube.com','claude.ai','chatgpt.com','google.com','naver.com','instagram.com','x.com','twitter.com','github.com',
+  'netflix.com','notion.so','spotify.com','twitch.tv','facebook.com','discord.com','gemini.google.com'];
+function normUrl(v){
+  v = (v || '').trim();
+  if(!v) return '';
+  if(!/^[a-z][a-z0-9+.-]*:/i.test(v)) v = 'https://' + v;
+  try{ const u = new URL(v); if(!/^https?:$/.test(u.protocol)) return ''; return u.href; }catch(_){ return ''; }
+}
+function hostOf(u){ try{ return new URL(u).hostname.replace(/^www\.|^m\./, ''); }catch(_){ return ''; } }
+function guessName(u){
+  const h = hostOf(u);
+  if(!h) return '';
+  if(KNOWN_SITES[h]) return KNOWN_SITES[h];
+  const base = Object.keys(KNOWN_SITES).find(k => h.endsWith('.' + k));
+  if(base) return KNOWN_SITES[base];
+  const parts = h.split('.');
+  const main = parts.length > 2 && parts[parts.length - 2].length <= 3 ? parts[parts.length - 3] : parts[Math.max(0, parts.length - 2)];
+  return main.charAt(0).toUpperCase() + main.slice(1);
+}
+function updateLinkHint(){
+  const u = normUrl(linkUrl.value);
+  const h = hostOf(u);
+  const blocked = h && NO_FRAME.some(d => h === d || h.endsWith('.' + d));
+  if(linkMode.value === 'inapp' && blocked){
+    linkHint.className = 'link-hint warn';
+    linkHint.textContent = '이 사이트는 보안 때문에 다른 페이지 안에 띄우는 걸 막아 둬서 빈 화면이 나와요. "새 창으로"를 써 주세요.';
+  }else if(linkMode.value === 'inapp'){
+    linkHint.className = 'link-hint';
+    linkHint.textContent = '허브 창 안에서 열리면 탭 합치기·반반 화면도 돼요. 안 열리는 사이트면 "새 창으로"로 바꿔 주세요.';
+  }else{
+    linkHint.className = 'link-hint';
+    linkHint.textContent = linkMode.value === 'popup' ? '주소창 없는 작은 창으로 열려요. 로그인도 그대로 유지돼요.' : '브라우저의 새 탭으로 열려요.';
+  }
+}
+function openLinkDlg(id){
+  const l = id ? links.find(x => x.id === id) : null;
+  editingLinkId = l ? l.id : null;
+  nameTouched = !!l;
+  document.getElementById('linkDlgTitle').textContent = l ? '링크 앱 수정' : '링크 앱 추가';
+  document.getElementById('linkSave').textContent = l ? '저장' : '추가';
+  linkDelete.style.display = l ? '' : 'none';
+  linkUrl.value = l ? l.url : '';
+  linkName.value = l ? l.name : '';
+  linkMode.value = l ? l.mode : 'popup';
+  updateLinkHint();
+  linkDlg.classList.add('show');
+  setTimeout(() => linkUrl.focus(), 30);
+}
+function closeLinkDlg(){ linkDlg.classList.remove('show'); }
+linkUrl.addEventListener('input', () => {
+  if(!nameTouched) linkName.value = guessName(normUrl(linkUrl.value));
+  updateLinkHint();
+});
+linkName.addEventListener('input', () => { nameTouched = true; });
+linkMode.addEventListener('change', updateLinkHint);
+document.getElementById('linkCancel').addEventListener('click', closeLinkDlg);
+linkDlg.addEventListener('pointerdown', e => { if(e.target === linkDlg) closeLinkDlg(); });
+linkDlg.addEventListener('keydown', e => {
+  if(e.key === 'Enter' && e.target.tagName === 'INPUT'){ e.preventDefault(); document.getElementById('linkSave').click(); }
+  if(e.key === 'Escape') closeLinkDlg();
+});
+document.getElementById('linkSave').addEventListener('click', () => {
+  const url = normUrl(linkUrl.value);
+  if(!url){ toast('주소를 확인해 주세요. 예: youtube.com'); linkUrl.focus(); return; }
+  const name = linkName.value.trim() || guessName(url) || '링크';
+  if(editingLinkId){
+    const l = links.find(x => x.id === editingLinkId);
+    const key = linkKey(l);
+    const changed = l.url !== url || l.mode !== linkMode.value;
+    Object.assign(l, { url, name, mode: linkMode.value });
+    if(changed && apps[key]) closeApp(key); // 주소·방식이 바뀌면 열린 창은 닫고 다음에 새로
+    else if(apps[key]){ APP_META[key] = { title: name }; }
+  }else{
+    links.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), url, name, mode: linkMode.value });
+  }
+  saveLinks();
+  refreshTiles();
+  Object.values(wins).forEach(w => renderTabs(w.id));
+  Object.values(apps).forEach(a => { const t = APP_META[a.key]; if(t){ a.tb.title = t.title; a.tb.querySelector('span').textContent = t.title; } });
+  closeLinkDlg();
+  toast(editingLinkId ? '저장했어요.' : `"${name}" 앱을 바탕화면에 추가했어요.`);
+});
+function deleteLink(id){
+  const l = links.find(x => x.id === id);
+  if(!l) return false;
+  if(!confirm(`"${l.name}" 앱을 바탕화면에서 지울까요?`)) return false;
+  const key = linkKey(l);
+  if(apps[key]) closeApp(key);
+  links = links.filter(x => x.id !== id);
+  saveLinks();
+  refreshTiles();
+  toast('앱을 지웠어요.');
+  return true;
+}
+linkDelete.addEventListener('click', () => { if(deleteLink(editingLinkId)) closeLinkDlg(); });
+
+/* 아이콘 오른쪽 클릭 메뉴 */
+const tileMenu = document.getElementById('tileMenu');
+function openTileMenu(key, e){
+  const l = linkOf(key);
+  if(!selected.has(key)) setSelected([key]);
+  let html = '';
+  if(key === 'addlink') html = '<button data-t="open">링크 앱 추가</button>';
+  else if(key === 'bg') html = '<button data-t="open">배경 바꾸기</button>';
+  else html = '<button data-t="open">열기</button>';
+  if(l){
+    html += '<button data-t="edit">이름·주소 바꾸기</button>';
+    html += '<div class="sep"></div><button data-t="del" style="color:#ff8a87">앱 삭제</button>';
+  }
+  tileMenu.innerHTML = html;
+  tileMenu.dataset.key = key;
+  tileMenu.style.display = 'block';
+  const mw = tileMenu.offsetWidth, mh = tileMenu.offsetHeight;
+  tileMenu.style.left = Math.min(e.clientX, window.innerWidth - mw - 4) + 'px';
+  tileMenu.style.top = Math.min(e.clientY, window.innerHeight - mh - 4) + 'px';
+}
+document.addEventListener('pointerdown', e => { if(!tileMenu.contains(e.target)) tileMenu.style.display = 'none'; }, true);
+tileMenu.addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  const key = tileMenu.dataset.key;
+  tileMenu.style.display = 'none';
+  const l = linkOf(key);
+  if(b.dataset.t === 'open'){
+    if(key === 'bg') openBgPicker();
+    else if(key === 'addlink') openLinkDlg(null);
+    else openApp(key);
+  }
+  else if(b.dataset.t === 'edit' && l) openLinkDlg(l.id);
+  else if(b.dataset.t === 'del' && l) deleteLink(l.id);
+});
+// 링크 앱 아이콘을 선택하고 Delete 키 → 삭제
+document.addEventListener('keydown', e => {
+  if(e.key !== 'Delete' || activeKey || linkDlg.classList.contains('show')) return;
+  if(document.activeElement && document.activeElement.closest('input,textarea,select')) return;
+  const ls = [...selected].map(linkOf).filter(Boolean);
+  if(ls.length === 1) deleteLink(ls[0].id);
+  else if(ls.length > 1 && confirm(`링크 앱 ${ls.length}개를 지울까요?`)){
+    ls.forEach(l => { const k = linkKey(l); if(apps[k]) closeApp(k); });
+    links = links.filter(x => !ls.includes(x));
+    saveLinks(); refreshTiles(); toast('앱을 지웠어요.');
+  }
+});
+
+/* ===== 링크(웹 주소)로 열었을 때: 오프라인에서도 열리게 + 데이터 지우지 않게 ===== */
+if(/^https?:$/.test(location.protocol)){
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(err => console.warn('service worker 등록 실패', err));
+  }
+  // 브라우저가 공간이 모자랄 때 이 사이트 데이터(웹툰·음악 등)를 임의로 지우지 않도록 요청
+  if(navigator.storage && navigator.storage.persist){
+    navigator.storage.persisted().then(p => { if(!p) navigator.storage.persist(); }).catch(() => {});
+  }
+}
+/* 크롬/엣지의 "앱으로 설치" (주소창 없는 진짜 앱 창) */
+let installEvt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  installEvt = e;
+  document.getElementById('installMenuBtn').style.display = '';
+});
+window.addEventListener('appinstalled', () => { installEvt = null; document.getElementById('installMenuBtn').style.display = 'none'; toast('설치했어요! 이제 바탕화면/시작 메뉴에서 열 수 있어요.'); });
+function promptInstall(){
+  if(!installEvt){ toast('브라우저 주소창 오른쪽의 설치 아이콘을 눌러 주세요.'); return; }
+  installEvt.prompt();
+  installEvt.userChoice.finally(() => { installEvt = null; document.getElementById('installMenuBtn').style.display = 'none'; });
+}
 
 /* ===== Theme (dark/light) — hub chrome + read by the music app ===== */
 const root = document.documentElement;

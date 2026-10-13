@@ -1,0 +1,15 @@
+{
+  "name": "HYOJE HUB",
+  "short_name": "HYOJE",
+  "description": "HYOJE 개인 허브 — 웹툰, 음악, 노래 검색, 가사 삽입기, PDF 자료실",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0a0c11",
+  "theme_color": "#0a0c11",
+  "lang": "ko",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
