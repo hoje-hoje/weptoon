@@ -271,8 +271,8 @@
     <label class="fld">이름<input id="linkName" type="text" placeholder="YouTube" autocomplete="off" maxlength="24"></label>
     <label class="fld">여는 방식
       <select id="linkMode">
-        <option value="popup">새 창으로 (추천)</option>
-        <option value="tab">새 탭으로</option>
+        <option value="tab">새 탭으로 (추천 · 전체 화면 유지)</option>
+        <option value="popup">새 창으로 (전체 화면이 풀려요)</option>
         <option value="inapp">허브 창 안에서 (되는 사이트만)</option>
       </select>
     </label>
@@ -1576,13 +1576,15 @@ function updateLinkHint(){
   const blocked = h && NO_FRAME.some(d => h === d || h.endsWith('.' + d));
   if(linkMode.value === 'inapp' && blocked){
     linkHint.className = 'link-hint warn';
-    linkHint.textContent = '이 사이트는 보안 때문에 다른 페이지 안에 띄우는 걸 막아 둬서 빈 화면이 나와요. "새 창으로"를 써 주세요.';
+    linkHint.textContent = '이 사이트는 보안 때문에 다른 페이지 안에 띄우는 걸 막아 둬서 빈 화면이 나와요. "새 탭으로"를 써 주세요.';
   }else if(linkMode.value === 'inapp'){
     linkHint.className = 'link-hint';
-    linkHint.textContent = '허브 창 안에서 열리면 탭 합치기·반반 화면도 돼요. 안 열리는 사이트면 "새 창으로"로 바꿔 주세요.';
+    linkHint.textContent = '허브 창 안에서 열리면 탭 합치기·반반 화면도 돼요. 안 열리는 사이트면 "새 탭으로"로 바꿔 주세요.';
   }else{
     linkHint.className = 'link-hint';
-    linkHint.textContent = linkMode.value === 'popup' ? '주소창 없는 작은 창으로 열려요. 로그인도 그대로 유지돼요.' : '브라우저의 새 탭으로 열려요.';
+    linkHint.textContent = linkMode.value === 'popup'
+      ? '주소창 없는 별도 창으로 열려요. 새 창이라 크롬북 전체 화면이 풀리고 아래 작업줄이 보여요.'
+      : '같은 브라우저 창의 새 탭으로 열려서 전체 화면이 그대로예요. 허브로 돌아올 땐 Ctrl+Tab (또는 Ctrl+1).';
   }
 }
 function openLinkDlg(id){
@@ -1594,7 +1596,7 @@ function openLinkDlg(id){
   linkDelete.style.display = l ? '' : 'none';
   linkUrl.value = l ? l.url : '';
   linkName.value = l ? l.name : '';
-  linkMode.value = l ? l.mode : 'popup';
+  linkMode.value = l ? l.mode : 'tab';
   updateLinkHint();
   linkDlg.classList.add('show');
   setTimeout(() => linkUrl.focus(), 30);
