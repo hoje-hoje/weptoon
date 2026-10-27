@@ -1,0 +1,32 @@
+{
+  "banner": {
+    "image": "",
+    "title": "STELLIVE",
+    "subtitle": "별들의 노래와 순간을 모아두는 곳"
+  },
+  "groups": [
+    { "id": "gangzi", "label": "대표", "name": "GANG ZI",  "color": "#7fa6ff" },
+    { "id": "gen1",   "label": "1기",  "name": "EVERYS",   "color": "#b9a4ff" },
+    { "id": "gen2",   "label": "2기",  "name": "UNIVERSE", "color": "#6fc3ff" },
+    { "id": "gen3",   "label": "3기",  "name": "CLICHÉ",   "color": "#ff9ccf" },
+    { "id": "gen4",   "label": "4기",  "name": "ABYSS",    "color": "#ffd27a" }
+  ],
+  "members": [
+    { "id": "gangzi",  "name": "강지",   "fullName": "",           "group": "gangzi", "color": "#3f7ef0", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "yuni",    "name": "유니",   "fullName": "아야츠노 유니", "group": "gen1",   "color": "#a9b8ff", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "huya",    "name": "후야",   "fullName": "사키하네 후야", "group": "gen1",   "color": "#9a6bd6", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "hina",    "name": "히나",   "fullName": "시라유키 히나", "group": "gen2",   "color": "#e3b38c", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "mashiro", "name": "마시로", "fullName": "네네코 마시로", "group": "gen2",   "color": "#9a9aa6", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "lize",    "name": "리제",   "fullName": "아카네 리제",   "group": "gen2",   "color": "#e0465e", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "tabi",    "name": "타비",   "fullName": "아라하시 타비", "group": "gen2",   "color": "#5ec8f0", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "shibuki", "name": "시부키", "fullName": "텐코 시부키",   "group": "gen3",   "color": "#b59cf0", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "rin",     "name": "린",     "fullName": "아오쿠모 린",   "group": "gen3",   "color": "#3f74e0", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "nana",    "name": "나나",   "fullName": "하나코 나나",   "group": "gen3",   "color": "#ff6f8e", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "riko",    "name": "리코",   "fullName": "유즈하 리코",   "group": "gen3",   "color": "#4fd6a0", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "toa",     "name": "토아",   "fullName": "",           "group": "gen4",   "color": "#8b5fd0", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "rang",    "name": "랑",     "fullName": "",           "group": "gen4",   "color": "#e6b84a", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "hiyori",  "name": "히요리", "fullName": "",           "group": "gen4",   "color": "#f6a6c7", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } },
+    { "id": "meri",    "name": "메리",   "fullName": "",           "group": "gen4",   "color": "#e8cf7a", "avatar": "", "banner": "", "bio": "", "birthday": "", "debut": "", "links": { "chzzk": "", "x": "", "youtube": "" } }
+  ],
+  "events": []
+}

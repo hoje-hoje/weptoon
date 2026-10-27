@@ -1,0 +1,348 @@
+/* 관리자 페이지 — 멤버 프로필, 배너, 기수, 일정, 올라온 것 지우기 */
+
+let draft = null;      // 고치는 중인 사이트 데이터
+let dirty = false;
+let pickedMember = null;
+let isAdmin = false;
+
+const pane = $('#pane');
+const clone = o => JSON.parse(JSON.stringify(o));
+const slug = s => String(s).trim().toLowerCase().replace(/[^\w가-힣-]+/g, '-').replace(/^-|-$/g, '') || 'id' + Date.now().toString(36);
+
+function markDirty() {
+  dirty = true;
+  $('#dirty').textContent = '저장 안 한 변경이 있어요';
+}
+addEventListener('beforeunload', e => { if (dirty) e.preventDefault(); });
+
+/* ─── 들어오기 ─── */
+let gated;
+async function gate(user) {
+  paintLogin(user);
+  const key = (user?.email || '') + '|' + !!window.google;
+  if (gated === key) return;
+  gated = key;
+  const g = $('#gate');
+  if (!LIVE) {
+    isAdmin = true;
+    g.innerHTML = `<p><b>미리보기 모드</b> — 서버가 아직 연결 안 돼서, 여기서 고친 뒤 <b>site.json 내려받기</b>로 받아<br>리포지토리의 <code>data/site.json</code> 에 덮어쓰면 반영돼요.</p>`;
+    return open();
+  }
+  if (!user) {
+    g.hidden = false; $('#app').hidden = true; $('#savebar').hidden = true;
+    g.innerHTML = `<h2>관리자 로그인</h2><p class="muted">Apps Script 의 ADMIN_EMAILS 에 넣은 구글 계정으로 로그인하세요</p><div id="login2"></div>`;
+    Auth.renderButton($('#login2'));
+    return;
+  }
+  g.innerHTML = '<p class="muted">확인하는 중…</p>';
+  try {
+    const { user: u } = await api('whoami');
+    isAdmin = u.admin;
+  } catch (e) { g.innerHTML = `<p>${esc(e.message)}</p>`; return; }
+  if (!isAdmin) { g.innerHTML = `<p>${esc(user.email)} 은(는) 관리자가 아니에요.</p>`; return; }
+  g.hidden = true;
+  open();
+}
+
+function open() {
+  if (!draft) draft = clone(Data.site);
+  $('#app').hidden = false;
+  $('#savebar').hidden = false;
+  $('#dlJson').hidden = LIVE;
+  route();
+}
+
+function paintLogin(user) {
+  const el = $('#login');
+  if (user) {
+    el.innerHTML = `<div class="me">${user.picture ? `<img src="${esc(user.picture)}" alt="" referrerpolicy="no-referrer">` : ''}<span>${esc(user.email)}</span><button class="tiny" id="logout">로그아웃</button></div>`;
+    $('#logout').onclick = () => Auth.logout();
+  } else Auth.renderButton(el);
+}
+
+/* ─── 탭 ─── */
+function route() {
+  if (!draft) return;
+  const tab = location.hash.slice(1) || 'site';
+  $$('#admTabs a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + tab));
+  pane.onclick = pane.oninput = pane.onchange = null;
+  ({ site: paneSite, groups: paneGroups, members: paneMembers, events: paneEvents, content: paneContent }[tab] || paneSite)();
+}
+addEventListener('hashchange', route);
+
+/* 이미지 칸: 주소/드라이브 id 를 직접 넣거나, 파일을 골라 드라이브에 올린다 */
+function imgField(label, value, key, wide) {
+  return `<label class="field"><span>${label} <em>주소나 드라이브 링크, 또는 파일 올리기</em></span>
+    <div class="imgf">
+      <span class="prev ${wide ? 'wide' : ''}" style="background-image:url('${esc(imgUrl(value, 400))}')"></span>
+      <input type="text" data-k="${key}" value="${esc(value || '')}" placeholder="https://… 또는 드라이브 링크">
+      <label class="btn sm">올리기<input type="file" accept="image/*" data-img="${key}" hidden></label>
+    </div></label>`;
+}
+
+// data-k="a.b.c" 칸을 고치면 대상 객체의 그 경로에 바로 넣는다
+function bindInputs(target) {
+  pane.oninput = e => {
+    const el = e.target;
+    if (!el.dataset.k) return;
+    const path = el.dataset.k.split('.');
+    let o = target();
+    while (path.length > 1) { const k = path.shift(); o = o[k] ||= {}; }
+    o[path[0]] = el.value;
+    if (el.closest('.imgf')) el.closest('.imgf').querySelector('.prev').style.backgroundImage = `url('${imgUrl(el.value, 400)}')`;
+    markDirty();
+  };
+  pane.onchange = async e => {
+    const el = e.target;
+    if (el.dataset.repaint) return route();
+    if (!el.dataset.img) return;
+    const f = el.files[0];
+    if (!f) return;
+    if (!LIVE) return toast('미리보기 모드에서는 주소를 직접 넣어 주세요', true);
+    const input = el.closest('.imgf').querySelector('input[type=text]');
+    try {
+      toast('올리는 중…');
+      const { id } = await api('uploadImage', { filename: f.name, mimeType: f.type, data: await fileToBase64(f) });
+      input.value = id;
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      toast('올렸어요');
+    } catch (err) { toast(err.message, true); }
+  };
+}
+
+/* ─── 사이트 ─── */
+function paneSite() {
+  draft.banner ||= {};
+  pane.innerHTML = `
+    <div class="editor">
+      <h2>첫화면 배너</h2>
+      <p class="muted sm">X 프로필 헤더처럼 맨 위에 크게 나와요. 비워두면 우주 그라데이션 + 로고가 나와요.</p>
+      ${imgField('배너 이미지 (가로로 긴 것, 3:1 정도)', draft.banner.image, 'banner.image', true)}
+      <div class="row">
+        <label class="field"><span>제목</span><input data-k="banner.title" value="${esc(draft.banner.title || '')}"></label>
+        <label class="field"><span>한 줄 소개</span><input data-k="banner.subtitle" value="${esc(draft.banner.subtitle || '')}"></label>
+      </div>
+    </div>`;
+  bindInputs(() => draft);
+}
+
+/* ─── 기수 ─── */
+function paneGroups() {
+  pane.innerHTML = `
+    <div class="editor">
+      <h2>기수 · 유닛</h2>
+      <p class="muted sm">순서대로 첫화면에 나와요. id 는 바꾸지 마세요 (멤버와 연결돼 있어요).</p>
+      ${draft.groups.map((g, i) => `
+        <div class="row">
+          <label class="field" style="flex:0 0 110px"><span>id</span><input value="${esc(g.id)}" disabled></label>
+          <label class="field"><span>기수</span><input data-k="groups.${i}.label" value="${esc(g.label)}"></label>
+          <label class="field"><span>이름</span><input data-k="groups.${i}.name" value="${esc(g.name)}"></label>
+          <label class="field" style="flex:0 0 auto"><span>색</span><input type="color" data-k="groups.${i}.color" value="${esc(g.color)}"></label>
+          <button class="icon-btn" data-gup="${i}" title="위로">↑</button>
+          <button class="icon-btn" data-gdel="${i}" title="지우기">${ICON.trash}</button>
+        </div>`).join('')}
+      <div><button class="btn sm" id="gAdd">＋ 기수 추가</button></div>
+    </div>`;
+  bindInputs(() => draft);
+  $('#gAdd').onclick = () => {
+    const n = draft.groups.length;
+    draft.groups.push({ id: 'gen' + n + '_' + Date.now().toString(36).slice(-3), label: n + '기', name: 'NEW', color: '#9fb4ff' });
+    markDirty(); route();
+  };
+  pane.onclick = e => {
+    const up = e.target.closest('[data-gup]'), del = e.target.closest('[data-gdel]');
+    if (up) { const i = +up.dataset.gup; if (i > 0) { [draft.groups[i - 1], draft.groups[i]] = [draft.groups[i], draft.groups[i - 1]]; markDirty(); route(); } }
+    if (del) {
+      const g = draft.groups[+del.dataset.gdel];
+      if (draft.members.some(m => m.group === g.id)) return toast('이 기수에 멤버가 있어서 못 지워요', true);
+      if (confirm(`${g.label} ${g.name} 지울까요?`)) { draft.groups.splice(+del.dataset.gdel, 1); markDirty(); route(); }
+    }
+  };
+}
+
+/* ─── 멤버 ─── */
+function paneMembers() {
+  const ms = draft.members;
+  if (!pickedMember || !ms.find(m => m.id === pickedMember)) pickedMember = ms[0]?.id;
+  const i = ms.findIndex(m => m.id === pickedMember);
+  const m = ms[i];
+  pane.innerHTML = `
+    <div class="two">
+      <div class="mlist">
+        ${ms.map(x => `<div class="mrow ${x.id === pickedMember ? 'on' : ''}" data-pick="${esc(x.id)}" style="--c:${esc(x.color)}">
+          ${avatarHtml(x, 'av')}<b>${esc(x.name)}</b><small>${esc(draft.groups.find(g => g.id === x.group)?.label || '')}</small></div>`).join('')}
+        <button class="btn sm" id="mAdd">＋ 멤버 추가</button>
+      </div>
+      ${m ? `<div class="editor">
+        <div class="row">
+          <label class="field"><span>이름 (목차·카드에 나오는 것)</span><input data-k="members.${i}.name" value="${esc(m.name)}" data-repaint></label>
+          <label class="field"><span>풀네임</span><input data-k="members.${i}.fullName" value="${esc(m.fullName || '')}"></label>
+        </div>
+        <div class="row">
+          <label class="field"><span>기수</span><select data-k="members.${i}.group" data-repaint>${draft.groups.map(g => `<option value="${esc(g.id)}" ${g.id === m.group ? 'selected' : ''}>${esc(g.label)} ${esc(g.name)}</option>`).join('')}</select></label>
+          <label class="field" style="flex:0 0 auto"><span>대표 색</span><input type="color" data-k="members.${i}.color" value="${esc(m.color)}"></label>
+          <label class="field"><span>생일 <em>MM-DD</em></span><input data-k="members.${i}.birthday" value="${esc(m.birthday || '')}" placeholder="03-14" pattern="\\d{2}-\\d{2}"></label>
+          <label class="field"><span>데뷔일</span><input type="date" data-k="members.${i}.debut" value="${esc(m.debut || '')}"></label>
+        </div>
+        ${imgField('프로필 사진 (카드·동그라미)', m.avatar, `members.${i}.avatar`)}
+        ${imgField('헤더 이미지 (멤버 페이지 위쪽, 3:1)', m.banner, `members.${i}.banner`, true)}
+        <label class="field"><span>소개</span><textarea data-k="members.${i}.bio">${esc(m.bio || '')}</textarea></label>
+        <div class="row">
+          <label class="field"><span>치지직</span><input type="url" data-k="members.${i}.links.chzzk" value="${esc(m.links?.chzzk || '')}" placeholder="https://chzzk.naver.com/…"></label>
+          <label class="field"><span>X</span><input type="url" data-k="members.${i}.links.x" value="${esc(m.links?.x || '')}" placeholder="https://x.com/…"></label>
+          <label class="field"><span>유튜브</span><input type="url" data-k="members.${i}.links.youtube" value="${esc(m.links?.youtube || '')}" placeholder="https://youtube.com/@…"></label>
+        </div>
+        <div class="row">
+          <button class="btn sm" data-mmove="-1">↑ 위로</button>
+          <button class="btn sm" data-mmove="1">↓ 아래로</button>
+          <span class="grow"></span>
+          <button class="btn sm" data-mdel style="color:var(--bad)">${ICON.trash} 멤버 지우기</button>
+        </div>
+        <p class="muted sm">id: ${esc(m.id)} · 저장하면 드라이브에 이 멤버 폴더(커버곡·오리곡…)가 자동으로 생겨요. 이름을 바꿔도 폴더는 따라와요.</p>
+      </div>` : ''}
+    </div>`;
+  bindInputs(() => draft);
+  pane.onclick = e => {
+    const p = e.target.closest('[data-pick]');
+    if (p) { pickedMember = p.dataset.pick; return route(); }
+    const mv = e.target.closest('[data-mmove]');
+    if (mv) {
+      const j = i + +mv.dataset.mmove;
+      if (j >= 0 && j < ms.length) { [ms[i], ms[j]] = [ms[j], ms[i]]; markDirty(); route(); }
+    }
+    if (e.target.closest('[data-mdel]') && confirm(`${m.name} 지울까요? (드라이브 폴더와 올라온 파일은 그대로 남아요)`)) {
+      ms.splice(i, 1); markDirty(); route();
+    }
+  };
+  $('#mAdd').onclick = () => {
+    const name = prompt('새 멤버 이름');
+    if (!name) return;
+    const id = prompt('영문 id (주소에 쓰여요, 나중에 못 바꿔요)', slug(name));
+    if (!id || ms.some(x => x.id === id)) return toast('id 가 비었거나 이미 있어요', true);
+    ms.push({ id: slug(id), name, fullName: '', group: draft.groups[draft.groups.length - 1]?.id || '', color: '#9fb4ff', avatar: '', banner: '', bio: '', birthday: '', debut: '', links: { chzzk: '', x: '', youtube: '' } });
+    pickedMember = slug(id);
+    markDirty(); route();
+  };
+}
+
+/* ─── 일정 ─── */
+const TYPES = { event: '이벤트', broadcast: '방송', release: '발매', etc: '기타' };
+function paneEvents() {
+  draft.events.sort((a, b) => (a.date < b.date ? -1 : 1));
+  pane.innerHTML = `
+    <div class="editor">
+      <h2>일정</h2>
+      <p class="muted sm">생일·데뷔 기념일은 멤버 정보에서 자동으로 들어가요. 여기는 그 외 이벤트.</p>
+      <div><button class="btn sm" id="eAdd">＋ 일정 추가</button></div>
+      ${draft.events.map((ev, i) => `
+        <div class="row" style="padding:12px;border-radius:12px;background:var(--raise)">
+          <label class="field" style="flex:0 0 150px"><span>시작</span><input type="date" data-k="events.${i}.date" value="${esc(ev.date)}"></label>
+          <label class="field" style="flex:0 0 150px"><span>끝 <em>하루면 비움</em></span><input type="date" data-k="events.${i}.end" value="${esc(ev.end || '')}"></label>
+          <label class="field" style="flex:0 0 110px"><span>종류</span><select data-k="events.${i}.type">${Object.entries(TYPES).map(([k, v]) => `<option value="${k}" ${ev.type === k ? 'selected' : ''}>${v}</option>`).join('')}</select></label>
+          <label class="field" style="flex:2 1 220px"><span>제목</span><input data-k="events.${i}.title" value="${esc(ev.title)}"></label>
+          <label class="field" style="flex:2 1 220px"><span>링크</span><input type="url" data-k="events.${i}.url" value="${esc(ev.url || '')}"></label>
+          <div class="field" style="flex:1 1 100%"><span>관련 멤버</span><div class="chips">
+            ${draft.members.map(m => `<button type="button" class="chip ${ev.members?.includes(m.id) ? 'on' : ''}" data-em="${i}:${esc(m.id)}" style="--c:${esc(m.color)}">${avatarHtml(m, 'av xs')}${esc(m.name)}</button>`).join('')}
+          </div></div>
+          <button class="btn sm" data-edel="${i}" style="color:var(--bad)">${ICON.trash} 지우기</button>
+        </div>`).join('')}
+    </div>`;
+  bindInputs(() => draft);
+  $('#eAdd').onclick = () => {
+    const d = new Date();
+    draft.events.unshift({ id: 'e' + Date.now().toString(36), date: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`, end: '', type: 'event', title: '새 일정', url: '', members: [] });
+    markDirty(); route();
+  };
+  pane.onclick = e => {
+    const em = e.target.closest('[data-em]');
+    if (em) {
+      const [i, id] = em.dataset.em.split(':');
+      const ev = draft.events[+i];
+      ev.members ||= [];
+      ev.members.includes(id) ? ev.members.splice(ev.members.indexOf(id), 1) : ev.members.push(id);
+      em.classList.toggle('on'); markDirty();
+    }
+    const del = e.target.closest('[data-edel]');
+    if (del && confirm('이 일정 지울까요?')) { draft.events.splice(+del.dataset.edel, 1); markDirty(); route(); }
+  };
+}
+
+/* ─── 올라온 것 ─── */
+let contentFilter = '';
+function paneContent() {
+  const q = contentFilter.toLowerCase();
+  const items = Data.items.filter(i => !q || (i.title + ' ' + i.by + ' ' + i.members.join(' ')).toLowerCase().includes(q));
+  pane.innerHTML = `
+    <div class="editor">
+      <div class="row">
+        <h2 style="margin-right:auto">올라온 것 <small class="muted">${Data.items.length}개</small></h2>
+        <input id="cq" placeholder="제목 · 올린 사람 · 멤버 id" value="${esc(contentFilter)}" style="padding:8px 12px;border-radius:10px;background:var(--raise);border:1px solid var(--line);min-width:240px">
+        ${LIVE ? '<button class="btn sm" id="refresh">드라이브 다시 읽기</button>' : ''}
+      </div>
+      <p class="muted sm">드라이브 폴더에 직접 넣은 파일은 10분 안에 저절로 나타나요. 바로 보고 싶으면 "드라이브 다시 읽기".</p>
+      <div style="overflow-x:auto"><table class="ctable">
+        <tr><th></th><th>제목</th><th>종류</th><th>멤버</th><th>올린 사람</th><th>날짜</th><th></th></tr>
+        ${items.map(it => `<tr>
+          <td><span class="s-th" style="display:block;width:56px;background-image:url('${esc(it.thumb || '')}')"></span></td>
+          <td class="t"><a href="${esc(it.open)}" target="_blank" rel="noopener">${esc(it.title)}</a></td>
+          <td>${KIND[it.kind]?.name || it.kind}</td>
+          <td>${esc(it.members.map(id => Data.member(id)?.name || id).join(', '))}${it.group ? ` <small class="muted">(${esc(Data.group(it.group)?.label || it.group)})</small>` : ''}</td>
+          <td>${esc(it.by || '-')}</td>
+          <td class="muted">${fmtDate(it.at)}</td>
+          <td><button class="icon-btn sm" data-cdel="${esc(it.id)}" title="지우기">${ICON.trash}</button></td>
+        </tr>`).join('')}
+      </table></div>
+    </div>`;
+  const cq = $('#cq');
+  cq.oninput = () => { contentFilter = cq.value; paneContent(); const n = $('#cq'); n.focus(); n.setSelectionRange(n.value.length, n.value.length); };
+  pane.oninput = null;
+  if ($('#refresh')) $('#refresh').onclick = async () => {
+    try { toast('읽는 중…'); const { items } = await api('refresh'); Data.set(Data.site, items); paneContent(); toast('다시 읽었어요'); }
+    catch (e) { toast(e.message, true); }
+  };
+  pane.onclick = async e => {
+    const d = e.target.closest('[data-cdel]');
+    if (!d) return;
+    const it = Data.item(d.dataset.cdel);
+    if (!confirm(`"${it.title}" 지울까요? ${it.src === 'drive' ? '(드라이브 휴지통으로 가요)' : ''}`)) return;
+    try {
+      if (LIVE) await api('remove', { id: it.id });
+      else store.set('demoItems', store.get('demoItems', []).filter(x => x.id !== it.id));
+      Data.items = Data.items.filter(x => x.id !== it.id);
+      paneContent(); toast('지웠어요');
+    } catch (err) { toast(err.message, true); }
+  };
+}
+
+/* ─── 저장 ─── */
+$('#saveBtn').onclick = async () => {
+  if (!LIVE) return downloadJson();
+  try {
+    $('#saveBtn').disabled = true;
+    $('#dirty').textContent = '저장하는 중… (드라이브 폴더도 맞추느라 조금 걸려요)';
+    const { site } = await api('saveSite', { site: draft });
+    Data.set(site, Data.items);
+    store.set('cache', { site, items: Data.items.map(({ _ok, ...x }) => x) });
+    dirty = false;
+    $('#dirty').textContent = '';
+    toast('저장했어요 ✦');
+  } catch (e) {
+    $('#dirty').textContent = e.message;
+  } finally { $('#saveBtn').disabled = false; }
+};
+$('#dlJson').onclick = downloadJson;
+function downloadJson() {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(draft, null, 2)], { type: 'application/json' }));
+  a.download = 'site.json';
+  a.click();
+  dirty = false;
+  $('#dirty').textContent = '받은 파일을 data/site.json 에 덮어쓰세요';
+}
+
+/* ─── 시작 ─── */
+starfield($('#sky'));
+Data.load().then(() => {
+  Auth.on(u => gate(u));
+  Auth.init();
+});

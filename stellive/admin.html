@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STELLIVE 관리자</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .adm { max-width: 1080px; margin: 0 auto; padding: 24px 20px 120px; display: flex; flex-direction: column; gap: 20px; }
+  .adm-top { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .adm-top h1 { font-family: Orbitron, sans-serif; font-size: 18px; letter-spacing: .1em; }
+  .adm .tabs { margin: 0; border-radius: 12px; background: var(--panel); border: 1px solid var(--line); }
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+  .row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+  .row > .field { flex: 1 1 160px; }
+  .imgf { display: flex; gap: 10px; align-items: center; }
+  .imgf .prev { width: 64px; height: 64px; border-radius: 10px; background: var(--raise2) center / cover; flex: none; border: 1px solid var(--line); }
+  .imgf .prev.wide { width: 140px; height: 48px; }
+  .imgf input[type=text] { flex: 1; }
+  .mlist { display: flex; flex-direction: column; gap: 6px; }
+  .mrow { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; background: var(--raise); border: 1px solid var(--line); cursor: pointer; }
+  .mrow.on { border-color: var(--a2); background: rgba(120, 164, 242, .12); }
+  .mrow small { color: var(--mute); margin-left: auto; font-size: 12px; }
+  .two { display: grid; grid-template-columns: 260px 1fr; gap: 16px; align-items: start; }
+  .editor { display: flex; flex-direction: column; gap: 14px; }
+  .savebar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; padding: 12px 20px; display: flex; gap: 10px; align-items: center; justify-content: flex-end;
+    background: rgba(8, 11, 32, .92); backdrop-filter: blur(16px); border-top: 1px solid var(--line2);
+  }
+  .savebar #dirty { color: var(--gold); font-size: 13px; margin-right: auto; }
+  .ctable { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ctable td, .ctable th { padding: 8px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+  .ctable th { color: var(--mute); font-weight: 600; }
+  .ctable td.t { max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .gate { text-align: center; padding: 60px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  textarea { resize: vertical; min-height: 70px; }
+  input[type=color] { width: 44px; height: 40px; padding: 2px; border-radius: 10px; border: 1px solid var(--line); background: transparent; }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="nebula" aria-hidden="true"></div>
+
+<div class="adm">
+  <div class="adm-top">
+    <a class="brand" href="./"><img src="assets/logo.svg" alt=""><span><b>STELLIVE</b><small>ADMIN</small></span></a>
+    <span class="grow"></span>
+    <div id="login"></div>
+  </div>
+  <div id="gate" class="panel gate"></div>
+  <div id="app" hidden>
+    <nav class="tabs" id="admTabs">
+      <a href="#site">사이트</a>
+      <a href="#groups">기수</a>
+      <a href="#members">멤버</a>
+      <a href="#events">일정</a>
+      <a href="#content">올라온 것</a>
+    </nav>
+    <section class="panel" id="pane" style="margin-top:16px;padding-top:18px"></section>
+  </div>
+</div>
+
+<div class="savebar" id="savebar" hidden>
+  <span id="dirty"></span>
+  <button class="btn ghost sm" id="dlJson">site.json 내려받기</button>
+  <button class="btn primary" id="saveBtn">저장</button>
+</div>
+
+<script src="config.js"></script>
+<script src="js/common.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

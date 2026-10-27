@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>STELLIVE ARCHIVE</title>
+<meta name="description" content="스텔라이브 멤버별 커버곡 · 오리곡 · 클립 · 팬아트 아카이브">
+<meta name="theme-color" content="#070a1f">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div class="nebula" aria-hidden="true"></div>
+
+<div class="shell">
+  <!-- 왼쪽 목차 -->
+  <aside id="side">
+    <a class="brand" href="#/">
+      <img src="assets/logo.svg" alt="">
+      <span><b>STELLIVE</b><small>ARCHIVE</small></span>
+    </a>
+    <nav>
+      <a href="#/" data-nav="home"><i>✦</i>홈</a>
+      <a href="#/calendar" data-nav="calendar"><i>✦</i>캘린더</a>
+      <a href="#/listen" data-nav="listen"><i>✦</i>노래 듣기</a>
+      <a href="#/group" data-nav="group"><i>✦</i>단체 · 합방</a>
+      <a href="#/stars" data-nav="stars"><i>✦</i>별표</a>
+    </nav>
+    <button class="btn primary side-up" data-upload="{}">＋ 올리기</button>
+    <div id="sideMembers"></div>
+    <div class="side-foot">
+      <div id="login"></div>
+      <a class="tiny" href="admin.html">관리자</a>
+    </div>
+  </aside>
+
+  <main id="main">
+    <header class="topbar">
+      <button class="icon-btn" id="menuBtn" aria-label="목차">
+        <svg viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <a class="brand mini" href="#/"><img src="assets/logo.svg" alt=""><b>STELLIVE</b></a>
+      <span class="grow"></span>
+      <button class="btn primary sm" id="uploadBtn">＋ 올리기</button>
+    </header>
+    <div id="view"></div>
+  </main>
+</div>
+
+<!-- 영상 창 (노래 재생할 때 오른쪽 아래에 뜬다) -->
+<div id="stage" data-view="mini" data-kind="">
+  <div class="stage-bar">
+    <button data-s="big" title="크게">⤢</button>
+    <button data-s="mini" title="작게">▭</button>
+    <button data-s="hidden" title="숨기기 (소리는 계속)">—</button>
+  </div>
+  <div class="stage-body">
+    <div id="ytWrap"><div id="ytHost"></div></div>
+    <video playsinline controls></video>
+    <iframe allow="autoplay; encrypted-media" allowfullscreen title="드라이브 미리보기"></iframe>
+  </div>
+</div>
+
+<!-- 아래 플레이어 -->
+<div id="player" hidden>
+  <input id="pSeek" type="range" min="0" max="1000" value="0" aria-label="재생 위치">
+  <div class="p-row">
+    <div class="p-now">
+      <span id="pThumb"></span>
+      <div><b id="pTitle"></b><small id="pSub"></small></div>
+      <button class="icon-btn" data-p="fav" title="별표"></button>
+    </div>
+    <div class="p-ctl">
+      <button class="icon-btn" data-p="shuffle" title="랜덤"></button>
+      <button class="icon-btn" data-p="prev" title="이전"></button>
+      <button class="icon-btn big" data-p="toggle" title="재생/일시정지"></button>
+      <button class="icon-btn" data-p="next" title="다음"></button>
+      <button class="icon-btn on" data-p="repeat" title="전체 반복"></button>
+    </div>
+    <div class="p-side">
+      <span id="pTime"></span>
+      <button class="icon-btn on" data-p="hide" title="영상 창 보이기/숨기기"></button>
+      <button class="icon-btn" data-p="queue" title="재생 목록">☰</button>
+    </div>
+  </div>
+</div>
+<div id="queue"><div class="q-head"><b>재생 목록</b><span></span></div><ol></ol></div>
+
+<!-- 보기 창 (클립, 팬아트) -->
+<div class="modal" id="viewer" hidden>
+  <div class="modal-box wide">
+    <button class="icon-btn close" data-close></button>
+    <div class="viewer-body"></div>
+    <div class="viewer-foot"></div>
+  </div>
+</div>
+
+<!-- 올리기 창 -->
+<div class="modal" id="upload" hidden>
+  <form class="modal-box" autocomplete="off">
+    <button type="button" class="icon-btn close" data-close></button>
+    <h2>올리기</h2>
+    <p class="hint" id="upHint"></p>
+
+    <label class="field"><span>종류</span>
+      <div class="chips" id="upKind"></div>
+    </label>
+
+    <label class="field"><span>멤버 <em>두 명 이상 고르면 합방으로 들어가요</em></span>
+      <div class="chips member-chips" id="upMembers"></div>
+    </label>
+
+    <label class="field"><span>단체곡이면 <em>기수 전체가 부른 곡 등</em></span>
+      <select id="upGroup"></select>
+    </label>
+
+    <label class="field"><span>제목</span>
+      <input id="upTitle" placeholder="비워두면 파일 이름으로">
+    </label>
+
+    <div class="seg" id="upMode">
+      <button type="button" data-m="link" aria-selected="true">링크 붙여넣기</button>
+      <button type="button" data-m="file" aria-selected="false">파일 올리기</button>
+    </div>
+
+    <label class="field" data-show="link"><span>링크 <em>유튜브 · 치지직 클립 · X · 구글 드라이브</em></span>
+      <input id="upUrl" type="url" placeholder="https://">
+    </label>
+    <label class="field drop" data-show="file" hidden>
+      <input id="upFile" type="file" accept="video/*,audio/*,image/*">
+      <span class="drop-txt">여기에 끌어다 놓거나 눌러서 고르기</span>
+    </label>
+
+    <div class="modal-actions">
+      <span class="grow" id="upStatus"></span>
+      <button type="submit" class="btn primary" id="upSubmit">올리기</button>
+    </div>
+  </form>
+</div>
+
+<script src="config.js"></script>
+<script src="js/common.js"></script>
+<script src="js/player.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
